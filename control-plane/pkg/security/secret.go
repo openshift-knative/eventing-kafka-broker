@@ -200,12 +200,16 @@ func sslConfig(protocol string, data map[string][]byte) ConfigOption {
 			}
 		}
 
+		// for public root CA just set TLS.Enabled to be true,
+		// but we can skip the TLS.Config settings
 		config.Net.TLS.Enable = true
-		config.Net.TLS.Config = &tls.Config{
-			MinVersion:   tls.VersionTLS12,
-			MaxVersion:   tls.VersionTLS13,
-			Certificates: tlsCerts,
-			RootCAs:      certPool,
+		if len(tlsCerts) > 0 || certPool != nil {
+			config.Net.TLS.Config = &tls.Config{
+				MinVersion:   tls.VersionTLS12,
+				MaxVersion:   tls.VersionTLS13,
+				Certificates: tlsCerts,
+				RootCAs:      certPool,
+			}
 		}
 
 		return nil
