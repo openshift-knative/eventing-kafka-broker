@@ -43,7 +43,8 @@ RUN ./generate_jdk.sh /build/dispatcher/target/dispatcher-1.0-SNAPSHOT.jar
 
 RUN cp /build/dispatcher/target/dispatcher-1.0-SNAPSHOT.jar /app/app.jar
 
-FROM quay.io/openshift-knative/17-jdk-centos7 as running
+# We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest as running
 
 COPY --from=builder /app /app
 
