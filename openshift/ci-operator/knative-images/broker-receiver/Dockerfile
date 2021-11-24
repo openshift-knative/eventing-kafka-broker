@@ -40,7 +40,7 @@ RUN ./generate_jdk.sh /build/receiver/target/receiver-1.0-SNAPSHOT.jar
 
 RUN cp /build/receiver/target/receiver-1.0-SNAPSHOT.jar /app/app.jar
 
-FROM quay.io/openshift-knative/17-jdk-centos7 as running
+FROM registry.access.redhat.com/ubi8/openjdk-17:latest as running
 
 COPY --from=builder /app /app
 
