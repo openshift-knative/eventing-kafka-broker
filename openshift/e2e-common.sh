@@ -136,6 +136,11 @@ function run_e2e_tests(){
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E suite failed"
 }
 
+function run_conformance_tests(){
+  go_test_e2e -timeout=30m ./test/e2e/conformance \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E conformance suite failed"
+}
+
 function run_e2e_new_tests(){
   go_test_e2e -timeout=30m ./test/e2e_new || fail_test "E2E (new) suite failed"
 }
