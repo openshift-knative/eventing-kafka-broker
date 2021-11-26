@@ -8,10 +8,10 @@ broker_cp_output_file="openshift/release/knative-eventing-kafka-broker-cp-ci.yam
 broker_dp_output_file="openshift/release/knative-eventing-kafka-broker-dp-ci.yaml"
 
 if [ "$release" == "ci" ]; then
-    image_prefix="registry.ci.openshift.org/openshift/knative-nightly:knative-eventing-kafka-broker-"
+    image_prefix="registry.ci.openshift.org/openshift/knative-nightly:knative-eventing-kafka-"
     tag=""
 else
-    image_prefix="registry.ci.openshift.org/openshift/knative-${release}:knative-eventing-kafka-broker-"
+    image_prefix="registry.ci.openshift.org/openshift/knative-${release}:knative-eventing-kafka-"
     tag=""
 fi
 

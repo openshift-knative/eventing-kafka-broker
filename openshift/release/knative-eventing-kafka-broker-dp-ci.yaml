@@ -517,7 +517,7 @@ spec:
               weight: 100
       containers:
         - name: kafka-sink-receiver
-          image: registry.ci.openshift.org/openshift/knative-v1.0.0:knative-eventing-kafka-broker-receiver
+          image: registry.ci.openshift.org/openshift/knative-v1.0.0:knative-eventing-kafka-sink-receiver
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
