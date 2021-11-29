@@ -4,6 +4,8 @@ export EVENTING_NAMESPACE="${EVENTING_NAMESPACE:-knative-eventing}"
 export SYSTEM_NAMESPACE=$EVENTING_NAMESPACE
 export ZIPKIN_NAMESPACE=$EVENTING_NAMESPACE
 export KNATIVE_DEFAULT_NAMESPACE=$EVENTING_NAMESPACE
+export CONFIG_MONITORING_CONFIG="test/config/monitoring.yaml"
+export CONFIG_TRACING_CONFIG="test/config/100-config-tracing.yaml"
 export EVENTING_KAFKA_BROKER_TEST_IMAGE_TEMPLATE=$(cat <<-END
 {{- with .Name }}
 {{- if eq . "event-sender"}}$KNATIVE_EVENTING_KAFKA_BROKER_TEST_EVENT_SENDER{{end -}}
@@ -128,6 +130,20 @@ EOF
 
   oc apply -f ${DP_RELEASE_YAML}
   wait_until_pods_running $EVENTING_NAMESPACE || return 1
+}
+
+function install_tracing {
+  deploy_zipkin
+  enable_eventing_tracing
+}
+
+function deploy_zipkin {
+  oc apply -f ${CONFIG_MONITORING_CONFIG}
+  wait_until_pods_running $EVENTING_NAMESPACE || return 1
+}
+
+function enable_eventing_tracing {
+  oc apply -f ${CONFIG_TRACING_CONFIG}
 }
 
 function run_e2e_tests(){
