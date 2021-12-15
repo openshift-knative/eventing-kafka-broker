@@ -20,6 +20,9 @@ import (
 	"context"
 	"log"
 
+	"knative.dev/pkg/injection"
+	"knative.dev/pkg/signals"
+
 	"knative.dev/pkg/configmap"
 	"knative.dev/pkg/controller"
 	"knative.dev/pkg/injection/sharedmain"
@@ -46,22 +49,32 @@ func main() {
 		log.Fatal("cannot process environment variables with prefix SINK", err)
 	}
 
-	sharedmain.Main(
+	sharedmain.MainNamed(
+		signals.NewContext(),
 		component,
 
 		// Broker controller
-		func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
-			return broker.NewController(ctx, watcher, &broker.Configs{Env: *brokerEnv})
+		injection.NamedControllerConstructor{
+			Name: "broker-controller",
+			ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
+				return broker.NewController(ctx, watcher, &broker.Configs{Env: *brokerEnv})
+			},
 		},
 
 		// Trigger controller
-		func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
-			return trigger.NewController(ctx, watcher, brokerEnv)
+		injection.NamedControllerConstructor{
+			Name: "trigger-controller",
+			ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
+				return trigger.NewController(ctx, watcher, brokerEnv)
+			},
 		},
 
 		// KafkaSink controller
-		func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
-			return sink.NewController(ctx, watcher, sinkEnv)
+		injection.NamedControllerConstructor{
+			Name: "sink-controller",
+			ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
+				return sink.NewController(ctx, watcher, sinkEnv)
+			},
 		},
 	)
 }
