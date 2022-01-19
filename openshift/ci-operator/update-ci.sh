@@ -45,11 +45,13 @@ echo "Generating PROW files in $OPENSHIFT"
 make jobs
 make ci-operator-config
 # We have to do this manually, see: https://docs.ci.openshift.org/docs/how-tos/notification/
-echo "==== Adding reporter_config to periodics ===="
-# These version MUST match the ocp version we used above
-for OCP_VERSION in 47; do
-    sed -i "/  name: periodic-ci-openshift-knative-eventing-kafka-broker-release-${VERSION}-${OCP_VERSION}-e2e-aws-ocp-${OCP_VERSION}-continuous\n  spec:/ r $TMPDIR/reporterConfig" "$PERIODIC_CONFIG"
-done
+if [[ "$VERSION" != "next" ]]; then
+  echo "==== Adding reporter_config to periodics ===="
+  # These version MUST match the ocp version we used above
+  for OCP_VERSION in 49; do
+      sed -i "/  name: periodic-ci-openshift-knative-eventing-kafka-broker-release-${VERSION}-${OCP_VERSION}-e2e-aws-ocp-${OCP_VERSION}-continuous/ r $TMPDIR/reporterConfig" "$PERIODIC_CONFIG"
+  done
+fi
 echo "==== Changes made to $OPENSHIFT ===="
 git status
 echo "==== Commit changes to $OPENSHIFT and create a PR"
