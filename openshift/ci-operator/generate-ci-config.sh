@@ -265,6 +265,7 @@ for img in $core_images; do
   to_image=$(echo ${image_base//[_.]/-})
   to_image=$(echo ${to_image//v0/upgrade-v0})
   to_image=$(echo ${to_image//migrate/storage-version-migration})
+  to_image=$(echo ${to_image//kafka-kafka-/kafka-})
   cat <<EOF
 - dockerfile_path: openshift/ci-operator/knative-images/$image_base/Dockerfile
   from: base
