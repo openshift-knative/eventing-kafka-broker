@@ -49,3 +49,8 @@ rm dp_sink.yaml
 resolve_resources data-plane/config/source dp_source.yaml $image_prefix $tag
 cat dp_source.yaml >> $broker_dp_output_file
 rm dp_source.yaml
+
+# The DP folder for Channel:
+resolve_resources data-plane/config/channel dp_channel.yaml $image_prefix $tag
+cat dp_channel.yaml >> $broker_dp_output_file
+rm dp_channel.yaml
