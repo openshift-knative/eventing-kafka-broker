@@ -17,7 +17,7 @@ git checkout openshift/main -- openshift OWNERS Makefile
 
 # Remove GH Action hooks from upstream
 rm -rf .github/workflows
-git commit -sm ":fire: remove unneeded workflows" .github/
+git commit --allow-empty -sm ":fire: remove unneeded workflows" .github/
 
 # Generate our OCP artifacts
 make generate-dockerfiles
