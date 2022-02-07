@@ -17,21 +17,32 @@ cat >> "$TMPDIR"/midstream_branches <<EOF
 0.3
 EOF
 
-git branch --list -a "upstream/release-0.*" | cut -f3 -d'/' | cut -f2 -d'-' > "$TMPDIR"/upstream_branches
-git branch --list -a "openshift/release-v0.*" | cut -f3 -d'/' | cut -f2 -d'v' | cut -f1,2 -d'.' >> "$TMPDIR"/midstream_branches
+git branch --list -a "upstream/release-*" | cut -f3 -d'/' | cut -f2 -d'-' > "$TMPDIR"/upstream_branches
+git branch --list -a "openshift/release-*" | cut -f3 -d'/' | cut -f2 -d'v' | cut -f1,2 -d'.' >> "$TMPDIR"/midstream_branches
 
 sort -o "$TMPDIR"/midstream_branches "$TMPDIR"/midstream_branches
 sort -o "$TMPDIR"/upstream_branches "$TMPDIR"/upstream_branches
 comm -32 "$TMPDIR"/upstream_branches "$TMPDIR"/midstream_branches > "$TMPDIR"/new_branches
 
-UPSTREAM_BRANCH=$(cat "$TMPDIR"/new_branches)
-if [ -z "$UPSTREAM_BRANCH" ]; then
+branches=$(cat "$TMPDIR"/new_branches)
+UPSTREAM_BRANCHES=($branches)
+
+if [ "${#UPSTREAM_BRANCHES[@]}" == 0 ]; then
     echo "no new branch, exiting"
     exit 0
 fi
-echo "found upstream branch: $UPSTREAM_BRANCH"
-readonly UPSTREAM_TAG="v$UPSTREAM_BRANCH.0"
-readonly MIDSTREAM_BRANCH="release-v$UPSTREAM_BRANCH"
-openshift/release/create-release-branch.sh "$UPSTREAM_TAG" "$MIDSTREAM_BRANCH"
-# we would check the error code, but we 'set -e', so assume we're fine
-git push openshift "$MIDSTREAM_BRANCH"
+
+echo "Found upstream branches: ${UPSTREAM_BRANCHES[@]}"
+
+for branch in "${UPSTREAM_BRANCHES[@]}"; do
+  upstream_tag="knative-v${branch}.0"
+  # First, try "knative-v" prefix. The upstream tags have a different naming scheme since 1.0
+  if ! git ls-remote --tags upstream | grep "${upstream_tag}" &>/dev/null; then
+    upstream_tag="v${branch}.0"
+  fi
+  midstream_branch="release-v${branch}"
+  openshift/release/create-release-branch.sh "$upstream_tag" "$midstream_branch"
+  # we would check the error code, but we 'set -e', so assume we're fine
+  git push openshift "$midstream_branch"
+done
+
