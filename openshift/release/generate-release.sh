@@ -19,6 +19,14 @@ fi
 # The generic CP root folder
 resolve_resources control-plane/config/100-broker $broker_cp_output_file $image_prefix $tag
 
+resolve_resources control-plane/config/100-channel cp_channel.yaml $image_prefix $tag
+cat cp_channel.yaml >> $broker_cp_output_file
+rm cp_channel.yaml
+
+resolve_resources control-plane/config/100-kafka-internal cp_kafka_internal.yaml $image_prefix $tag
+cat cp_kafka_internal.yaml >> $broker_cp_output_file
+rm cp_kafka_internal.yaml
+
 resolve_resources control-plane/config/100-sink cp_sink.yaml $image_prefix $tag
 cat cp_sink.yaml >> $broker_cp_output_file
 rm cp_sink.yaml
