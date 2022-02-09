@@ -24,7 +24,6 @@ function resolve_resources(){
         -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}broker-dispatcher${image_tag}+" \
         -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}broker-receiver${image_tag}+" \
         -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}broker-\4${image_tag}+g" \
-        -e '/^[ \t]*#/d' \
         -e '/^[ \t]*$/d' \
         "$yaml" >> $resolved_file_name
   done
