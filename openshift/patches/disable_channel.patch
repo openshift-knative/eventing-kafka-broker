@@ -1,0 +1,13 @@
+diff --git a/control-plane/config/200-controller/500-controller.yaml b/control-plane/config/200-controller/500-controller.yaml
+index 4e1f3ca0..aa9248be 100644
+--- a/control-plane/config/200-controller/500-controller.yaml
++++ b/control-plane/config/200-controller/500-controller.yaml
+@@ -51,6 +51,8 @@ spec:
+       containers:
+         - name: controller
+           image: ko://knative.dev/eventing-kafka-broker/control-plane/cmd/kafka-controller
++          args:
++            -- "--disable-controllers=channel-controller"
+           imagePullPolicy: IfNotPresent
+           env:
+             - name: BROKER_DATA_PLANE_CONFIG_MAP_NAMESPACE
