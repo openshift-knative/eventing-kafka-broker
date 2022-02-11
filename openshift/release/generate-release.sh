@@ -2,6 +2,9 @@
 
 source $(dirname $0)/resolve.sh
 
+git apply openshift/patches/*
+git commit -am ":fire: Apply carried patches."
+
 release=$1
 
 broker_cp_output_file="openshift/release/knative-eventing-kafka-broker-cp-ci.yaml"
