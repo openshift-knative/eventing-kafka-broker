@@ -116,16 +116,16 @@ $image_deps
 resources:
   '*':
     limits:
-      memory: 6Gi
+      memory: 2Gi
     requests:
-      cpu: 4
-      memory: 6Gi
+      cpu: 500m
+      memory: 2Gi
   'bin':
     limits:
-      memory: 6Gi
+      memory: 2Gi
     requests:
-      cpu: 4
-      memory: 6Gi
+      cpu: 500m
+      memory: 2Gi
 images:
 EOF
 
