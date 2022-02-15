@@ -519,8 +519,6 @@ spec:
       containers:
         - name: controller
           image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-kafka-broker-kafka-controller
-          args:
-            - "--disable-controllers=channel-controller"          
           imagePullPolicy: IfNotPresent
           env:
             - name: BROKER_DATA_PLANE_CONFIG_MAP_NAMESPACE
