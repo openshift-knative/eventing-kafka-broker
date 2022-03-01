@@ -1,0 +1,78 @@
+diff --git a/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml b/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
+index ea50753e..cba4a0ce 100644
+--- a/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
++++ b/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
+@@ -34,7 +34,7 @@ spec:
+         kafka.eventing.knative.dev/release: devel
+     spec:
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+       serviceAccountName: kafka-controller
+ 
+       # To avoid node becoming SPOF, spread our replicas to different nodes.
+diff --git a/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml b/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
+index b7cc21b0..f4cbe4aa 100644
+--- a/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
++++ b/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
+@@ -43,7 +43,7 @@ spec:
+ 
+       serviceAccountName: kafka-webhook-eventing
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+ 
+       containers:
+         - name: kafka-webhook-eventing
+diff --git a/data-plane/config/broker/500-dispatcher.yaml b/data-plane/config/broker/500-dispatcher.yaml
+index 58b80679..dd21633e 100644
+--- a/data-plane/config/broker/500-dispatcher.yaml
++++ b/data-plane/config/broker/500-dispatcher.yaml
+@@ -35,7 +35,7 @@ spec:
+     spec:
+       serviceAccountName: knative-kafka-broker-data-plane
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+       containers:
+         - name: kafka-broker-dispatcher
+           image: ${KNATIVE_KAFKA_DISPATCHER_IMAGE}
+diff --git a/data-plane/config/broker/500-receiver.yaml b/data-plane/config/broker/500-receiver.yaml
+index 7d0ff726..d32105a7 100644
+--- a/data-plane/config/broker/500-receiver.yaml
++++ b/data-plane/config/broker/500-receiver.yaml
+@@ -35,7 +35,7 @@ spec:
+     spec:
+       serviceAccountName: knative-kafka-broker-data-plane
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+       # To avoid node becoming SPOF, spread our replicas to different nodes.
+       affinity:
+         podAntiAffinity:
+diff --git a/data-plane/config/sink/500-receiver.yaml b/data-plane/config/sink/500-receiver.yaml
+index 248672c4..1450ed7a 100644
+--- a/data-plane/config/sink/500-receiver.yaml
++++ b/data-plane/config/sink/500-receiver.yaml
+@@ -35,7 +35,7 @@ spec:
+     spec:
+       serviceAccountName: knative-kafka-sink-data-plane
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+       # To avoid node becoming SPOF, spread our replicas to different nodes.
+       affinity:
+         podAntiAffinity:
+diff --git a/data-plane/config/source/500-dispatcher.yaml b/data-plane/config/source/500-dispatcher.yaml
+index 3be219bf..99492c7a 100644
+--- a/data-plane/config/source/500-dispatcher.yaml
++++ b/data-plane/config/source/500-dispatcher.yaml
+@@ -35,7 +35,7 @@ spec:
+     spec:
+       serviceAccountName: knative-kafka-source-data-plane
+       securityContext:
+-        runAsNonRoot: true
++        runAsNonRoot: false
+       containers:
+         - name: kafka-source-dispatcher
+           image: ${KNATIVE_KAFKA_DISPATCHER_IMAGE}
