@@ -48,6 +48,10 @@ import (
 const (
 	// TopicPrefix is the Kafka Broker topic prefix - (topic name: knative-broker-<broker-namespace>-<broker-name>).
 	TopicPrefix = "knative-broker-"
+
+	// private annotation for changing the topic
+	// NOTE: this may go away in a future release
+	externalTopicAnnotation = "x-kafka.eventing.knative.dev/external.topic"
 )
 
 type Reconciler struct {
@@ -232,26 +236,42 @@ func (r *Reconciler) reconcileKind(ctx context.Context, broker *eventing.Broker)
 
 func (r *Reconciler) reconcileBrokerTopic(broker *eventing.Broker, securityOption kafka.ConfigOption, statusConditionManager base.StatusConditionManager, topicConfig *kafka.TopicConfig, logger *zap.Logger) (string, reconciler.Event) {
 
-	topicName := kafka.BrokerTopic(TopicPrefix, broker)
 	saramaConfig, err := kafka.GetSaramaConfig(securityOption)
 	if err != nil {
-		return "", statusConditionManager.FailedToCreateTopic(topicName, fmt.Errorf("error getting cluster admin config: %w", err))
+		return "", statusConditionManager.FailedToResolveConfig(fmt.Errorf("error getting cluster admin config: %w", err))
 	}
 
 	kafkaClusterAdminClient, err := r.NewKafkaClusterAdminClient(topicConfig.BootstrapServers, saramaConfig)
 	if err != nil {
-		return "", statusConditionManager.FailedToCreateTopic(topicName, fmt.Errorf("cannot obtain Kafka cluster admin, %w", err))
+		return "", statusConditionManager.FailedToResolveConfig(fmt.Errorf("cannot obtain Kafka cluster admin, %w", err))
 	}
 	defer kafkaClusterAdminClient.Close()
 
-	topic, err := kafka.CreateTopicIfDoesntExist(kafkaClusterAdminClient, logger, topicName, topicConfig)
-	if err != nil {
-		return "", statusConditionManager.FailedToCreateTopic(topic, err)
+	// if we have a custom topic annotation
+	// the topic is externally manged and we do NOT need to create it
+	topicName, externalTopic := isExternalTopic(broker)
+	if externalTopic {
+		isPresentAndValid, err := kafka.AreTopicsPresentAndValid(kafkaClusterAdminClient, topicName)
+		if err != nil {
+			return "", statusConditionManager.TopicsNotPresentOrInvalidErr([]string{topicName}, err)
+		}
+		if !isPresentAndValid {
+			// The topic might be invalid.
+			return "", statusConditionManager.TopicsNotPresentOrInvalid([]string{topicName})
+		}
+	} else {
+		// no external topic, we create it
+		topicName = kafka.BrokerTopic(TopicPrefix, broker)
+
+		topic, err := kafka.CreateTopicIfDoesntExist(kafkaClusterAdminClient, logger, topicName, topicConfig)
+		if err != nil {
+			return "", statusConditionManager.FailedToCreateTopic(topic, err)
+		}
 	}
 
-	statusConditionManager.TopicReady(topic)
-	logger.Debug("Topic created", zap.Any("topic", topic))
-	return topic, nil
+	statusConditionManager.TopicReady(topicName)
+	logger.Debug("Topic created", zap.Any("topic", topicName))
+	return topicName, nil
 }
 
 func (r *Reconciler) FinalizeKind(ctx context.Context, broker *eventing.Broker) reconciler.Event {
@@ -351,27 +371,34 @@ func (r *Reconciler) finalizeKind(ctx context.Context, broker *eventing.Broker) 
 }
 
 func (r *Reconciler) finalizeBrokerTopic(broker *eventing.Broker, securityOption kafka.ConfigOption, topicConfig *kafka.TopicConfig, logger *zap.Logger) reconciler.Event {
-	saramaConfig, err := kafka.GetSaramaConfig(securityOption)
-	if err != nil {
-		// even in error case, we return `normal`, since we are fine with leaving the
-		// topic undeleted e.g. when we lose connection
-		return fmt.Errorf("error getting cluster admin sarama config: %w", err)
-	}
 
-	kafkaClusterAdminClient, err := r.NewKafkaClusterAdminClient(topicConfig.BootstrapServers, saramaConfig)
-	if err != nil {
-		// even in error case, we return `normal`, since we are fine with leaving the
-		// topic undeleted e.g. when we lose connection
-		return fmt.Errorf("cannot obtain Kafka cluster admin, %w", err)
-	}
-	defer kafkaClusterAdminClient.Close()
+	// External topics are not managed by the broker,
+	// therefore we do not delete them
+	_, externalTopic := isExternalTopic(broker)
+	if !externalTopic {
+		saramaConfig, err := kafka.GetSaramaConfig(securityOption)
+		if err != nil {
+			// even in error case, we return `normal`, since we are fine with leaving the
+			// topic undeleted e.g. when we lose connection
+			return fmt.Errorf("error getting cluster admin sarama config: %w", err)
+		}
 
-	topic, err := kafka.DeleteTopic(kafkaClusterAdminClient, kafka.BrokerTopic(TopicPrefix, broker))
-	if err != nil {
-		return err
-	}
+		kafkaClusterAdminClient, err := r.NewKafkaClusterAdminClient(topicConfig.BootstrapServers, saramaConfig)
+		if err != nil {
+			// even in error case, we return `normal`, since we are fine with leaving the
+			// topic undeleted e.g. when we lose connection
+			return fmt.Errorf("cannot obtain Kafka cluster admin, %w", err)
+		}
+		defer kafkaClusterAdminClient.Close()
 
-	logger.Debug("Topic deleted", zap.String("topic", topic))
+		topic, err := kafka.DeleteTopic(kafkaClusterAdminClient, kafka.BrokerTopic(TopicPrefix, broker))
+		if err != nil {
+			return err
+		}
+
+		logger.Debug("Topic deleted", zap.String("topic", topic))
+		return nil
+	}
 	return nil
 }
 
@@ -501,4 +528,9 @@ func (r *Reconciler) removeFinalizerCM(ctx context.Context, finalizer string, cm
 
 func finalizerCM(object metav1.Object) string {
 	return fmt.Sprintf("%s/%s-%s", "kafka.brokers.eventing.knative.dev", object.GetNamespace(), object.GetName())
+}
+
+func isExternalTopic(broker *eventing.Broker) (string, bool) {
+	topicAnnotationValue, ok := broker.Annotations[externalTopicAnnotation]
+	return topicAnnotationValue, ok
 }
