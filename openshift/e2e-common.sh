@@ -131,7 +131,7 @@ EOF
 
 function run_e2e_tests(){
 
-  go_test_e2e -timeout=100m ./test/e2e/ \
+  go_test_e2e -timeout=100m -short ./test/e2e/ \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E suite failed"
 }
 
