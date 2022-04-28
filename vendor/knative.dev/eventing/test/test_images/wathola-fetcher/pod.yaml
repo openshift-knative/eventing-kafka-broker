@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
     - name: wathola-fetcher
-      image: ko://knative.dev/eventing/test/test_images/wathola-fetcher
+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-wathola-fetcher
