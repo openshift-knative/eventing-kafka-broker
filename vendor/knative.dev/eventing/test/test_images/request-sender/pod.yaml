@@ -5,5 +5,5 @@ metadata:
 spec:
   containers:
     - name: request-sender
-      image: ko://knative.dev/eventing/test/test_images/request-sender
+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-request-sender
 

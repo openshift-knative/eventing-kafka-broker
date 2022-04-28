@@ -8,5 +8,5 @@ metadata:
 spec:
   containers:
     - name: performance
-      image: ko://knative.dev/eventing/test/test_images/performance
+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-performance
 
