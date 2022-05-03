@@ -85,7 +85,8 @@ function install_serverless() {
   unset OPENSHIFT_CI
   pushd $operator_dir
 
-  ./hack/install.sh && header "Serverless Operator installed successfully" || failed=1
+  # We want just eventing
+  INSTALL_SERVING="false" ENABLE_TRACING="true" ./hack/install.sh && header "Serverless Operator installed successfully" || failed=1
   popd
   return $failed
 }
