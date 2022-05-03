@@ -149,21 +149,21 @@ EOF
 function run_e2e_tests() {
 
   go_test_e2e -timeout=100m -short ./test/e2e/ \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E suite failed"
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 
   go_test_e2e -timeout=100m -short ./test/e2e_channel/ \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E Channel suite failed"
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
 
 function run_conformance_tests() {
   go_test_e2e -timeout=100m ./test/e2e/conformance \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E conformance suite failed"
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 
   go_test_e2e -timeout=100m ./test/e2e_channel/conformance \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || fail_test "E2E Channel conformance suite failed"
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
 
 function run_e2e_new_tests() {
-  go_test_e2e -timeout=100m ./test/e2e_new/... || fail_test "E2E (new) suite failed"
-  go_test_e2e -timeout=100m ./test/e2e_new_channel/... || fail_test "E2E (new) Channel suite failed"
+  go_test_e2e -timeout=100m ./test/e2e_new/... || return $?
+  go_test_e2e -timeout=100m ./test/e2e_new_channel/... || return $?
 }
