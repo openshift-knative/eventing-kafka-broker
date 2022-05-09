@@ -35,9 +35,9 @@ import (
 
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/config"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/contract"
-	kafka "knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/kafka"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/base"
 	. "knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/channel"
+	kafka "knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/kafka"
 )
 
 const (
@@ -193,8 +193,7 @@ func ChannelAddressable(env *config.Env) func(obj duckv1.KRShaped) {
 
 		channel.Status.Address.URL = &apis.URL{
 			Scheme: "http",
-			Host:   network.GetServiceHostname(env.IngressName, env.SystemNamespace),
-			Path:   fmt.Sprintf("/%s/%s", channel.Namespace, channel.Name),
+			Host:   fmt.Sprintf("%s.%s.svc.%s", resources.MakeChannelServiceName(channel.Name), channel.Namespace, network.GetClusterDomainName()),
 		}
 
 		channel.GetConditionSet().Manage(&channel.Status).MarkTrue(base.ConditionAddressable)
