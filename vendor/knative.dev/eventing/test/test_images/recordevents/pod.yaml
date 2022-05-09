@@ -5,5 +5,5 @@ metadata:
 spec:
   containers:
     - name: recordevents
-      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-recordevents
+      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-recordevents
 

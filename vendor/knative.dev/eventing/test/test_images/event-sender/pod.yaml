@@ -5,5 +5,5 @@ metadata:
 spec:
   containers:
     - name: event-sender
-      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-event-sender
+      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-event-sender
 
