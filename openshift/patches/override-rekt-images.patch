@@ -7,7 +7,7 @@ index 7cd5e8e5..ddaafaaf 100644
    containers:
      - name: library
 -      image: ko://knative.dev/eventing/test/test_images/event-library
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-event-library
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-event-library
        imagePullPolicy: "IfNotPresent"
  
  ---
@@ -20,7 +20,7 @@ index 207c3d68..63858bce 100644
    containers:
      - name: flaker
 -      image: ko://knative.dev/eventing/test/test_images/event-flaker
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-event-flaker
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-event-flaker
        imagePullPolicy: "IfNotPresent"
        env:
          - name: "K_SINK"
@@ -46,7 +46,7 @@ index f480b459..4454798b 100644
        containers:
        - name: heartbeats
 -        image: ko://knative.dev/eventing/test/test_images/heartbeats
-+        image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-heartbeats
++        image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-heartbeats
          args:
          - --period=1
          env:
@@ -59,7 +59,7 @@ index eb823ca8..fe032ba8 100644
    containers:
      - name: event-sender
 -      image: ko://knative.dev/eventing/test/test_images/event-sender
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-event-sender
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-event-sender
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/heartbeats/pod.yaml b/vendor/knative.dev/eventing/test/test_images/heartbeats/pod.yaml
 index 5b212ebe..ba435ce0 100644
@@ -70,7 +70,7 @@ index 5b212ebe..ba435ce0 100644
    containers:
      - name: heartbeats
 -      image: ko://knative.dev/eventing/test/test_images/heartbeats
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-heartbeats
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-heartbeats
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/performance/pod.yaml b/vendor/knative.dev/eventing/test/test_images/performance/pod.yaml
 index dbe1a975..57e23e9f 100644
@@ -81,7 +81,7 @@ index dbe1a975..57e23e9f 100644
    containers:
      - name: performance
 -      image: ko://knative.dev/eventing/test/test_images/performance
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-performance
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-performance
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/print/pod.yaml b/vendor/knative.dev/eventing/test/test_images/print/pod.yaml
 index 478e16c0..61f55c89 100644
@@ -92,7 +92,7 @@ index 478e16c0..61f55c89 100644
    containers:
      - name: helloworld
 -      image: ko://knative.dev/eventing/test/test_images/print
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-print
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-print
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/recordevents/pod.yaml b/vendor/knative.dev/eventing/test/test_images/recordevents/pod.yaml
 index 0cd61e5d..409311db 100644
@@ -103,7 +103,7 @@ index 0cd61e5d..409311db 100644
    containers:
      - name: recordevents
 -      image: ko://knative.dev/eventing/test/test_images/recordevents
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-recordevents
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-recordevents
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/request-sender/pod.yaml b/vendor/knative.dev/eventing/test/test_images/request-sender/pod.yaml
 index 20a694ca..0c5b005d 100644
@@ -114,7 +114,7 @@ index 20a694ca..0c5b005d 100644
    containers:
      - name: request-sender
 -      image: ko://knative.dev/eventing/test/test_images/request-sender
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-request-sender
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-request-sender
  
 diff --git a/vendor/knative.dev/eventing/test/test_images/wathola-fetcher/pod.yaml b/vendor/knative.dev/eventing/test/test_images/wathola-fetcher/pod.yaml
 index d6377098..11fb917a 100644
@@ -125,7 +125,7 @@ index d6377098..11fb917a 100644
    containers:
      - name: wathola-fetcher
 -      image: ko://knative.dev/eventing/test/test_images/wathola-fetcher
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-wathola-fetcher
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-wathola-fetcher
 diff --git a/vendor/knative.dev/eventing/test/test_images/wathola-forwarder/pod.yaml b/vendor/knative.dev/eventing/test/test_images/wathola-forwarder/pod.yaml
 index 33e87291..576f5841 100644
 --- a/vendor/knative.dev/eventing/test/test_images/wathola-forwarder/pod.yaml
@@ -135,7 +135,7 @@ index 33e87291..576f5841 100644
    containers:
      - name: wathola-forwarder
 -      image: ko://knative.dev/eventing/test/test_images/wathola-forwarder
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-wathola-forwarder
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-wathola-forwarder
 diff --git a/vendor/knative.dev/eventing/test/test_images/wathola-receiver/pod.yaml b/vendor/knative.dev/eventing/test/test_images/wathola-receiver/pod.yaml
 index 860e97a4..961487dc 100644
 --- a/vendor/knative.dev/eventing/test/test_images/wathola-receiver/pod.yaml
@@ -145,7 +145,7 @@ index 860e97a4..961487dc 100644
    containers:
      - name: wathola-receiver
 -      image: ko://knative.dev/eventing/test/test_images/wathola-receiver
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-wathola-receiver
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-wathola-receiver
 diff --git a/vendor/knative.dev/eventing/test/test_images/wathola-sender/pod.yaml b/vendor/knative.dev/eventing/test/test_images/wathola-sender/pod.yaml
 index cd9faf12..b7b3e033 100644
 --- a/vendor/knative.dev/eventing/test/test_images/wathola-sender/pod.yaml
@@ -155,4 +155,4 @@ index cd9faf12..b7b3e033 100644
    containers:
      - name: wathola-sender
 -      image: ko://knative.dev/eventing/test/test_images/wathola-sender
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-wathola-sender
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-wathola-sender
