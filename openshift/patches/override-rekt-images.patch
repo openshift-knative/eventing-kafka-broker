@@ -33,7 +33,7 @@ index 80f37d08..860600a1 100644
    containers:
      - name: eventshub
 -      image: {{ .image }}
-+      image: registry.ci.openshift.org/openshift/knative-v1.2.1:knative-eventing-test-eventshub
++      image: registry.ci.openshift.org/openshift/knative-v1.2.3:knative-eventing-kafka-broker-test-eventshub
        imagePullPolicy: "IfNotPresent"
        env:
          - name: "SYSTEM_NAMESPACE"
