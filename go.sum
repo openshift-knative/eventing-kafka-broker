@@ -1353,8 +1353,6 @@ knative.dev/control-protocol v0.0.0-20220118185434-ad4ce9e9d455/go.mod h1:xiTC5Q
 knative.dev/eventing v0.29.0/go.mod h1:u5T5NZTDUsLR7yJwp5MDnBnDX5MhywD3yK3Rq+7gTtI=
 knative.dev/eventing v0.29.1 h1:RUqdDW4oD51oRCbdsuJGYfPmV5LPob0jY4HbhpYZvH0=
 knative.dev/eventing v0.29.1/go.mod h1:u5T5NZTDUsLR7yJwp5MDnBnDX5MhywD3yK3Rq+7gTtI=
-knative.dev/eventing-kafka v0.29.1 h1:5pbQBvbQEkcPr0ZTDmItXdozQCZNkzV9QTiqMDXU0JI=
-knative.dev/eventing-kafka v0.29.1/go.mod h1:Y9+hHdaYCmD46PPOU2pAfWCUXJyIfgJOnkWZwsBAEoU=
 knative.dev/eventing-kafka v0.29.2-0.20220509133632-92269f443a89 h1:BmW22avWQgRynbUgyoMSRE7eTcj4Pn70kFT9bTPLT7I=
 knative.dev/eventing-kafka v0.29.2-0.20220509133632-92269f443a89/go.mod h1:Y9+hHdaYCmD46PPOU2pAfWCUXJyIfgJOnkWZwsBAEoU=
 knative.dev/hack v0.0.0-20220118141833-9b2ed8471e30 h1:UkNpCWCMM5C4AeQ8aTrPTuR/6OeARiqk+LEQ6tuMP7c=
