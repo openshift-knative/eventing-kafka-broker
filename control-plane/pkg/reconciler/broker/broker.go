@@ -343,23 +343,28 @@ func (r *Reconciler) finalizeKind(ctx context.Context, broker *eventing.Broker) 
 		return fmt.Errorf("failed to resolve broker config: %w", err)
 	}
 
-	secret, err := security.Secret(ctx, &security.MTConfigMapSecretLocator{ConfigMap: brokerConfig}, r.SecretProviderFunc())
-	if err != nil {
-		return fmt.Errorf("failed to get secret: %w", err)
-	}
-	if secret != nil {
-		logger.Debug("Secret reference",
-			zap.String("apiVersion", secret.APIVersion),
-			zap.String("name", secret.Name),
-			zap.String("namespace", secret.Namespace),
-			zap.String("kind", secret.Kind),
-		)
-	}
+	// External topics are not managed by the broker,
+	// therefore we do not delete them
+	_, externalTopic := isExternalTopic(broker)
+	if !externalTopic {
+		secret, err := security.Secret(ctx, &security.MTConfigMapSecretLocator{ConfigMap: brokerConfig}, r.SecretProviderFunc())
+		if err != nil {
+			return fmt.Errorf("failed to get secret: %w", err)
+		}
+		if secret != nil {
+			logger.Debug("Secret reference",
+				zap.String("apiVersion", secret.APIVersion),
+				zap.String("name", secret.Name),
+				zap.String("namespace", secret.Namespace),
+				zap.String("kind", secret.Kind),
+			)
+		}
 
-	// get security option for Sarama with secret info in it
-	securityOption := security.NewSaramaSecurityOptionFromSecret(secret)
-	if err := r.finalizeBrokerTopic(broker, securityOption, topicConfig, logger); err != nil {
-		return err
+		// get security option for Sarama with secret info in it
+		securityOption := security.NewSaramaSecurityOptionFromSecret(secret)
+		if err := r.finalizeBrokerTopic(broker, securityOption, topicConfig, logger); err != nil {
+			return err
+		}
 	}
 
 	// TODO(pierDipi) remove after some releases (released in 1.4)
@@ -371,34 +376,27 @@ func (r *Reconciler) finalizeKind(ctx context.Context, broker *eventing.Broker) 
 }
 
 func (r *Reconciler) finalizeBrokerTopic(broker *eventing.Broker, securityOption kafka.ConfigOption, topicConfig *kafka.TopicConfig, logger *zap.Logger) reconciler.Event {
-
-	// External topics are not managed by the broker,
-	// therefore we do not delete them
-	_, externalTopic := isExternalTopic(broker)
-	if !externalTopic {
-		saramaConfig, err := kafka.GetSaramaConfig(securityOption)
-		if err != nil {
-			// even in error case, we return `normal`, since we are fine with leaving the
-			// topic undeleted e.g. when we lose connection
-			return fmt.Errorf("error getting cluster admin sarama config: %w", err)
-		}
-
-		kafkaClusterAdminClient, err := r.NewKafkaClusterAdminClient(topicConfig.BootstrapServers, saramaConfig)
-		if err != nil {
-			// even in error case, we return `normal`, since we are fine with leaving the
-			// topic undeleted e.g. when we lose connection
-			return fmt.Errorf("cannot obtain Kafka cluster admin, %w", err)
-		}
-		defer kafkaClusterAdminClient.Close()
-
-		topic, err := kafka.DeleteTopic(kafkaClusterAdminClient, kafka.BrokerTopic(TopicPrefix, broker))
-		if err != nil {
-			return err
-		}
-
-		logger.Debug("Topic deleted", zap.String("topic", topic))
-		return nil
+	saramaConfig, err := kafka.GetSaramaConfig(securityOption)
+	if err != nil {
+		// even in error case, we return `normal`, since we are fine with leaving the
+		// topic undeleted e.g. when we lose connection
+		return fmt.Errorf("error getting cluster admin sarama config: %w", err)
 	}
+
+	kafkaClusterAdminClient, err := r.NewKafkaClusterAdminClient(topicConfig.BootstrapServers, saramaConfig)
+	if err != nil {
+		// even in error case, we return `normal`, since we are fine with leaving the
+		// topic undeleted e.g. when we lose connection
+		return fmt.Errorf("cannot obtain Kafka cluster admin, %w", err)
+	}
+	defer kafkaClusterAdminClient.Close()
+
+	topic, err := kafka.DeleteTopic(kafkaClusterAdminClient, kafka.BrokerTopic(TopicPrefix, broker))
+	if err != nil {
+		return err
+	}
+
+	logger.Debug("Topic deleted", zap.String("topic", topic))
 	return nil
 }
 
