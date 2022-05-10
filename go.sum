@@ -1364,6 +1364,8 @@ knative.dev/eventing v0.30.3-0.20220420143529-0764365a1b4d h1:OIDb44JxKnzl3tszyQ
 knative.dev/eventing v0.30.3-0.20220420143529-0764365a1b4d/go.mod h1:JCqC8evTls1WiBTmYhPEGME6OQD8HFnLQjFPImwOEOg=
 knative.dev/eventing-kafka v0.30.0 h1:lnPg5WtkmVDXi79rVyahdZdkWZLIuUOc6vs2FYHrJhU=
 knative.dev/eventing-kafka v0.30.0/go.mod h1:lKCBbrb3BwzSardpZZuftbXjk/gScuHy7D7cwaOAQdk=
+knative.dev/eventing-kafka v0.30.1-0.20220509122433-a5f80fcb248a h1:+61Y6qEl/JRGfmT9mbhrCRwQ3cigt5vulTeQFJ8Mw8U=
+knative.dev/eventing-kafka v0.30.1-0.20220509122433-a5f80fcb248a/go.mod h1:lKCBbrb3BwzSardpZZuftbXjk/gScuHy7D7cwaOAQdk=
 knative.dev/hack v0.0.0-20220224013837-e1785985d364 h1:wOysRDkzacHlM2OEQoM5ayNT+s/Zymzk5Tv17RL++3g=
 knative.dev/hack v0.0.0-20220224013837-e1785985d364/go.mod h1:PHt8x8yX5Z9pPquBEfIj0X66f8iWkWfR0S/sarACJrI=
 knative.dev/hack/schema v0.0.0-20220224013837-e1785985d364/go.mod h1:ffjwmdcrH5vN3mPhO8RrF2KfNnbHeCE2C60A+2cv3U0=
