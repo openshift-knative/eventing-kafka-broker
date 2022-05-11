@@ -235,7 +235,7 @@ public class IngressProducerReconcilableStore implements IngressReconcilerListen
     private static final Logger logger = LoggerFactory.getLogger(ProducerHolder.class);
 
     private final KafkaProducer<String, CloudEvent> producer;
-    private final AutoCloseable producerMeterBinder;
+    private final AsyncCloseable producerMeterBinder;
 
     ProducerHolder(final KafkaProducer<String, CloudEvent> producer) {
       this.producer = producer;
@@ -259,10 +259,9 @@ public class IngressProducerReconcilableStore implements IngressReconcilerListen
     }
 
     private Future<Void> closeNow() {
-      return AsyncCloseable.compose(
-        producer::close,
-        AsyncCloseable.wrapAutoCloseable(this.producerMeterBinder)
-      ).close();
+      return AsyncCloseable
+        .compose(this.producerMeterBinder, producer::close)
+        .close();
     }
   }
 

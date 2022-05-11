@@ -17,7 +17,6 @@ package dev.knative.eventing.kafka.broker.dispatcher.main;
 
 import dev.knative.eventing.kafka.broker.contract.DataPlaneContract;
 import dev.knative.eventing.kafka.broker.contract.DataPlaneContract.EgressConfig;
-import dev.knative.eventing.kafka.broker.core.AsyncCloseable;
 import dev.knative.eventing.kafka.broker.core.metrics.Metrics;
 import dev.knative.eventing.kafka.broker.core.security.AuthProvider;
 import dev.knative.eventing.kafka.broker.core.security.KafkaClientsAuth;
@@ -49,7 +48,6 @@ import dev.knative.eventing.kafka.broker.dispatcher.impl.filter.subscriptionsapi
 import dev.knative.eventing.kafka.broker.dispatcher.impl.filter.subscriptionsapi.SuffixFilter;
 import dev.knative.eventing.kafka.broker.dispatcher.impl.http.WebClientCloudEventSender;
 import io.cloudevents.CloudEvent;
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.vertx.circuitbreaker.CircuitBreaker;
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
@@ -66,6 +64,10 @@ import io.vertx.kafka.client.common.TopicPartition;
 import io.vertx.kafka.client.common.tracing.ConsumerTracer;
 import io.vertx.kafka.client.consumer.KafkaConsumer;
 import io.vertx.kafka.client.producer.KafkaProducer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
@@ -81,11 +83,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static dev.knative.eventing.kafka.broker.core.utils.Logging.keyValue;
 
@@ -165,7 +162,7 @@ public class ConsumerVerticleFactoryImpl implements ConsumerVerticleFactory {
        KafkaClientsAuth.attachCredentials(producerConfigs, credentials);
 
        final KafkaConsumer<Object, CloudEvent> consumer = createConsumer(vertx, consumerConfigs);
-       AutoCloseable metricsCloser = Metrics.register(consumer.unwrap());
+       final var metricsCloser = Metrics.register(consumer.unwrap());
 
        final var egressConfig =
          egress.hasEgressConfig() ?
@@ -223,7 +220,7 @@ public class ConsumerVerticleFactoryImpl implements ConsumerVerticleFactory {
        // Set all the built objects in the consumer verticle
        consumerVerticle.setRecordDispatcher(recordDispatcher);
        consumerVerticle.setConsumer(consumer);
-       consumerVerticle.setCloser(AsyncCloseable.wrapAutoCloseable(metricsCloser));
+       consumerVerticle.setCloser(metricsCloser);
      })
        .mapEmpty();
 
