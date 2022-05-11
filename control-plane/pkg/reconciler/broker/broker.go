@@ -49,9 +49,8 @@ const (
 	// TopicPrefix is the Kafka Broker topic prefix - (topic name: knative-broker-<broker-namespace>-<broker-name>).
 	TopicPrefix = "knative-broker-"
 
-	// private annotation for changing the topic
-	// NOTE: this may go away in a future release
-	externalTopicAnnotation = "x-kafka.eventing.knative.dev/external.topic"
+	// ExternalTopicAnnotation for using external kafka topic for the broker
+	ExternalTopicAnnotation = "kafka.eventing.knative.dev/external.topic"
 )
 
 type Reconciler struct {
@@ -528,6 +527,6 @@ func finalizerCM(object metav1.Object) string {
 }
 
 func isExternalTopic(broker *eventing.Broker) (string, bool) {
-	topicAnnotationValue, ok := broker.Annotations[externalTopicAnnotation]
+	topicAnnotationValue, ok := broker.Annotations[ExternalTopicAnnotation]
 	return topicAnnotationValue, ok
 }
