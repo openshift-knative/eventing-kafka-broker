@@ -58,21 +58,6 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("failed to get kubeconfig: %w", err)
 	}
 
-	sourceMigrator := &KafkaSourceMigrator{
-		kcs: kcs.NewForConfigOrDie(config),
-		k8s: kubernetes.NewForConfigOrDie(config),
-	}
-	if err := sourceMigrator.Migrate(ctx); err != nil {
-		return fmt.Errorf("source migration failed: %w", err)
-	}
-
-	sourceDeleter := &kafkaSourceDeleter{
-		k8s: kubernetes.NewForConfigOrDie(config),
-	}
-	if err := sourceDeleter.Delete(ctx); err != nil {
-		return fmt.Errorf("source deletion failed: %w", err)
-	}
-
 	channelPreMigrationDeleter := &kafkaChannelPreMigrationDeleter{
 		k8s: kubernetes.NewForConfigOrDie(config),
 	}
