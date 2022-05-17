@@ -42,7 +42,7 @@ public final class KafkaResponseHandler implements ResponseHandler {
 
   private final String topic;
   private final KafkaProducer<String, CloudEvent> producer;
-  private final AutoCloseable producerMeterBinder;
+  private final AsyncCloseable producerMeterBinder;
 
   /**
    * All args constructor.
@@ -111,9 +111,8 @@ public final class KafkaResponseHandler implements ResponseHandler {
 
   @Override
   public Future<Void> close() {
-    return CompositeFuture.all(
-      this.producer.close(),
-      AsyncCloseable.wrapAutoCloseable(producerMeterBinder).close()
-    ).mapEmpty();
+    return AsyncCloseable
+    .compose(producerMeterBinder, this.producer::close)
+    .close();
   }
 }
