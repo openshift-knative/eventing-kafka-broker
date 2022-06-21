@@ -18,6 +18,8 @@ failed=0
 
 (( !failed )) && run_e2e_tests || failed=1
 
+(( !failed )) && run_e2e_new_tests || failed=1
+
 (( failed )) && dump_cluster_state
 
 (( failed )) && exit 1
