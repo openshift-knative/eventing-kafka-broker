@@ -90,10 +90,16 @@ EOF
   export GOPATH=/tmp/go
   local failed=0
   pushd $operator_dir || return $?
-  OPENSHIFT_CI="true" make generated-files install-kafka || failed=$?
+  OPENSHIFT_CI="true" make generated-files install-operator || failed=$?
   popd || return $?
 
-  oc apply -f openshift/knative-eventing.yaml
+  local eventing_cr="$(mktemp -t eventing-XXXXX.yaml)"
+  cp openshift/knative-eventing.yaml "$eventing_cr"
+  enable_tracing "$eventing_cr"
+  oc apply -f "$eventing_cr"
+
+  # Install KnativeKafka after installing KnativeEventing with tracing enabled
+  oc apply -f openshift/knative-kafka.yaml
 
   oc wait --for=condition=Ready knativekafkas.operator.serverless.openshift.io knative-kafka -n knative-eventing --timeout=900s
   oc wait --for=condition=Ready knativeeventing.operator.knative.dev knative-eventing -n knative-eventing --timeout=900s
@@ -122,4 +128,81 @@ function run_e2e_new_tests() {
   ./test/scripts/first-event-delay.sh || return $?
   go_test_e2e -timeout=100m ./test/e2e_new/... || return $?
   go_test_e2e -timeout=100m ./test/e2e_new_channel/... || return $?
+}
+
+function deploy_zipkin {
+  header "Installing Zipkin in namespace ${ZIPKIN_NAMESPACE}"
+  cat <<EOF | oc apply -f - || return $?
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+  namespace: ${ZIPKIN_NAMESPACE}
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 9411
+  selector:
+    app: zipkin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+  namespace: ${ZIPKIN_NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  template:
+    metadata:
+      labels:
+        app: zipkin
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: zipkin
+        image: ghcr.io/openzipkin/zipkin:2
+        ports:
+        - containerPort: 9411
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        resources:
+          limits:
+            memory: 1000Mi
+          requests:
+            memory: 256Mi
+---
+EOF
+
+  echo ">> Waiting until Zipkin is available"
+  kubectl wait deployment --all --timeout=600s --for=condition=Available -n ${ZIPKIN_NAMESPACE} || return 1
+}
+
+function enable_tracing {
+  local custom_resource tracing_endpoint tracing_patch
+  custom_resource=${1:?Pass a custom resource to be patched as arg[1]}
+
+  tracing_patch="$(mktemp -t tracing-XXXXX.yaml)"
+  cat - << EOF > "$tracing_patch"
+spec:
+  config:
+    tracing:
+      backend: zipkin
+      debug: "true"
+      enable: "true"
+      sample-rate: "1.0"
+      zipkin-endpoint: "http://zipkin.${ZIPKIN_NAMESPACE}.svc.cluster.local:9411/api/v2/spans"
+EOF
+
+  yq merge --inplace --arrays=append --overwrite "$custom_resource" "$tracing_patch"
+
+  rm -f "${tracing_patch}"
 }
