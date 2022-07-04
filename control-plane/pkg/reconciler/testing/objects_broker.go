@@ -48,6 +48,8 @@ const (
 	BrokerNamespace = "test-namespace"
 	BrokerName      = "test-broker"
 
+	SecretFinalizerName = "kafka.eventing/" + BrokerUUID
+
 	TriggerName      = "test-trigger"
 	TriggerNamespace = "test-namespace"
 
@@ -77,6 +79,12 @@ func NewBroker(options ...reconcilertesting.BrokerOption) runtime.Object {
 			options...,
 		)...,
 	)
+}
+
+func BrokerSecretWithFinalizer(ns, name, finalizerName string) *corev1.Secret {
+	secret := NewSSLSecret(ns, name)
+	secret.Finalizers = append(secret.Finalizers, finalizerName)
+	return secret
 }
 
 func NewDeletedBroker(options ...reconcilertesting.BrokerOption) runtime.Object {
@@ -136,6 +144,7 @@ func WithBrokerConfig(reference *duckv1.KReference) func(*eventing.Broker) {
 }
 
 type CMOption func(cm *corev1.ConfigMap)
+type SecretOption func(secret *corev1.Secret)
 
 func BrokerConfig(bootstrapServers string, numPartitions, replicationFactor int, options ...CMOption) *corev1.ConfigMap {
 	cm := &corev1.ConfigMap{
@@ -164,6 +173,12 @@ func BrokerConfigFinalizer(finalizerName string) CMOption {
 func BrokerConfigFinalizerRemove(finalizerName string) CMOption {
 	return func(cm *corev1.ConfigMap) {
 		cm.Finalizers = sets.NewString(cm.Finalizers...).Delete(finalizerName).List()
+	}
+}
+
+func BrokerSecretFinalizer(finalizerName string) SecretOption {
+	return func(secret *corev1.Secret) {
+		secret.Finalizers = append(secret.Finalizers, finalizerName)
 	}
 }
 
