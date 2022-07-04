@@ -1113,6 +1113,7 @@ func brokerReconciliation(t *testing.T, format string, env config.Env) {
 				finalizerUpdatedEvent,
 			},
 			WantUpdates: []clientgotesting.UpdateActionImpl{
+				SecretFinalizerUpdate("secret-1", SecretFinalizerName),
 				ConfigMapUpdate(&env, &contract.Contract{
 					Resources: []*contract.Resource{
 						{
@@ -1789,6 +1790,30 @@ func ConfigMapFinalizerUpdateRemove(name string, opts ...CMOption) clientgotesti
 	)
 }
 
+func SecretFinalizerUpdate(secretName, finalizerName string) clientgotesting.UpdateActionImpl {
+	return clientgotesting.NewUpdateAction(
+		schema.GroupVersionResource{
+			Group:    "*",
+			Version:  "v1",
+			Resource: "Secret",
+		},
+		ConfigMapNamespace,
+		BrokerSecretWithFinalizer(ConfigMapNamespace, secretName, finalizerName),
+	)
+}
+
+func SecretFinalizerUpdateRemove(secretName string) clientgotesting.UpdateActionImpl {
+	return clientgotesting.NewUpdateAction(
+		schema.GroupVersionResource{
+			Group:    "*",
+			Version:  "v1",
+			Resource: "Secret",
+		},
+		ConfigMapNamespace,
+		NewSSLSecret(ConfigMapNamespace, secretName),
+	)
+}
+
 func TestBrokerFinalizer(t *testing.T) {
 	t.Parallel()
 
@@ -1919,6 +1944,55 @@ func brokerFinalization(t *testing.T, format string, env config.Env) {
 					Generation: 2,
 				}),
 				ConfigMapFinalizerUpdateRemove(ConfigMapFinalizerName),
+			},
+			OtherTestData: map[string]interface{}{
+				testProber: probertesting.MockProber(prober.StatusNotReady),
+			},
+		},
+		{
+			Name: "Reconciled normal - with auth config",
+			Objects: []runtime.Object{
+				NewDeletedBroker(
+					WithBrokerConfig(KReference(BrokerConfig(bootstrapServers, 20, 5,
+						BrokerAuthConfig("secret-1"),
+					))),
+					BrokerConfigMapSecretAnnotation("secret-1"),
+				),
+				BrokerSecretWithFinalizer(ConfigMapNamespace, "secret-1", SecretFinalizerName),
+				BrokerConfig(bootstrapServers, 20, 5, BrokerAuthConfig("secret-1")),
+				NewConfigMapFromContract(&contract.Contract{
+					Resources: []*contract.Resource{
+						{
+							Uid:     BrokerUUID,
+							Topics:  []string{BrokerTopic()},
+							Ingress: &contract.Ingress{Path: receiver.Path(BrokerNamespace, BrokerName)},
+						},
+					},
+					Generation: 1,
+				}, &env),
+				NewService(),
+				BrokerReceiverPod(env.SystemNamespace, map[string]string{
+					"annotation_to_preserve": "value_to_preserve",
+				}),
+				BrokerDispatcherPod(env.SystemNamespace, map[string]string{
+					"annotation_to_preserve": "value_to_preserve",
+				}),
+			},
+			Key: testKey,
+			WantUpdates: []clientgotesting.UpdateActionImpl{
+				ConfigMapUpdate(&env, &contract.Contract{
+					Resources:  []*contract.Resource{},
+					Generation: 2,
+				}),
+				BrokerReceiverPodUpdate(env.SystemNamespace, map[string]string{
+					base.VolumeGenerationAnnotationKey: "2",
+					"annotation_to_preserve":           "value_to_preserve",
+				}),
+				BrokerDispatcherPodUpdate(env.SystemNamespace, map[string]string{
+					base.VolumeGenerationAnnotationKey: "2",
+					"annotation_to_preserve":           "value_to_preserve",
+				}),
+				SecretFinalizerUpdateRemove("secret-1"),
 			},
 			OtherTestData: map[string]interface{}{
 				testProber: probertesting.MockProber(prober.StatusNotReady),
