@@ -70,11 +70,6 @@ function timeout() {
   return 0
 }
 
-function kafka_setup() {
-  echo ">> Prepare to deploy Strimzi"
-  ./test/kafka/kafka_setup.sh || fail_test "Failed to set up Kafka cluster"
-}
-
 function install_serverless() {
   header "Installing Serverless Operator"
 
