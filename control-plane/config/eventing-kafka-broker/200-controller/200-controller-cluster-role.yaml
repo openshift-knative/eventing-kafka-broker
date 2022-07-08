@@ -68,8 +68,14 @@ rules:
     verbs:
       - list
       - get
-      - update
       - watch
+
+  - apiGroups:
+      - "*"
+    resources:
+      - secrets/finalizers
+    verbs:
+      - update
 
   # Scheduler permissions
   - apiGroups:
