@@ -48,6 +48,8 @@ eventing_kafka_broker="${artifacts_dir}eventing-kafka-broker.yaml"
 eventing_kafka_channel="${artifacts_dir}eventing-kafka-channel.yaml"
 eventing_kafka_sink="${artifacts_dir}eventing-kafka-sink.yaml"
 
+eventing_kafka="${artifacts_dir}eventing-kafka.yaml"
+
 # the Broker Control Plane parts
 resolve_resources control-plane/config/eventing-kafka-broker/100-broker $eventing_kafka_controller "$image_prefix" "$tag"
 resolve_resources control-plane/config/eventing-kafka-broker/100-sink $eventing_kafka_controller "$image_prefix" "$tag"
@@ -64,3 +66,11 @@ resolve_resources data-plane/config/channel $eventing_kafka_channel "$image_pref
 
 # Post-install jobs
 resolve_resources control-plane/config/post-install $eventing_kafka_post_install "$image_prefix" "$tag"
+
+# One file with everything
+cat $eventing_kafka_controller >> $eventing_kafka
+cat $eventing_kafka_post_install >> $eventing_kafka
+cat $eventing_kafka_source >> $eventing_kafka
+cat $eventing_kafka_broker >> $eventing_kafka
+cat $eventing_kafka_channel >> $eventing_kafka
+cat $eventing_kafka_sink >> $eventing_kafka
