@@ -27,12 +27,12 @@ import (
 
 	cetest "github.com/cloudevents/sdk-go/v2/test"
 	"github.com/openzipkin/zipkin-go/model"
+	tracinghelper "knative.dev/eventing/test/conformance/helpers/tracing"
 	"knative.dev/eventing/test/rekt/resources/channel_impl"
 	"knative.dev/eventing/test/rekt/resources/subscription"
 	"knative.dev/eventing/test/rekt/resources/svc"
 	"knative.dev/pkg/system"
 	_ "knative.dev/pkg/system/testing"
-	pkgtracing "knative.dev/pkg/test/tracing"
 	"knative.dev/reconciler-test/pkg/environment"
 	"knative.dev/reconciler-test/pkg/eventshub"
 	. "knative.dev/reconciler-test/pkg/eventshub/assert"
@@ -104,60 +104,60 @@ func eventWithTraceExported() *feature.Feature {
 func channelHasMatchingTraceTree(sourceName, sinkName, channelName, eventID string) func(ctx context.Context, t feature.T) {
 	return func(ctx context.Context, t feature.T) {
 		testNS := environment.FromContext(ctx).Namespace()
-		expectedTree := pkgtracing.TestSpanTree{
+		expectedTree := tracinghelper.TestSpanTree{
 			Note: "1. Sender pod sends event to the Kafka Channel",
-			Span: pkgtracing.MatchHTTPSpanNoReply(
+			Span: tracinghelper.MatchHTTPSpanNoReply(
 				model.Client,
-				pkgtracing.WithHTTPURL(
+				tracinghelper.WithHTTPURL(
 					fmt.Sprintf("%s-kn-channel.%s.svc", channelName, testNS),
 					"",
 				),
-				pkgtracing.WithLocalEndpointServiceName(sourceName),
+				tracinghelper.WithLocalEndpointServiceName(sourceName),
 			),
-			Children: []pkgtracing.TestSpanTree{
+			Children: []tracinghelper.TestSpanTree{
 				{
 					Note: "2. Kafka Channel Receiver getting the message",
-					Span: pkgtracing.MatchHTTPSpanNoReply(
+					Span: tracinghelper.MatchHTTPSpanNoReply(
 						model.Server,
-						pkgtracing.WithLocalEndpointServiceName("kafka-channel-receiver"),
+						tracinghelper.WithLocalEndpointServiceName("kafka-channel-receiver"),
 						tracing.WithMessageIDSource(eventID, sourceName),
 					),
-					Children: []pkgtracing.TestSpanTree{
+					Children: []tracinghelper.TestSpanTree{
 						{
 							Note: "3. Kafka Channel Receiver storing message to Kafka",
-							Span: pkgtracing.MatchSpan(
+							Span: tracinghelper.MatchSpan(
 								model.Producer,
-								pkgtracing.WithLocalEndpointServiceName("kafka-channel-receiver"),
+								tracinghelper.WithLocalEndpointServiceName("kafka-channel-receiver"),
 							),
-							Children: []pkgtracing.TestSpanTree{
+							Children: []tracinghelper.TestSpanTree{
 								{
 									Note: "4. Kafka Channel Dispatcher reading message from Kafka",
-									Span: pkgtracing.MatchSpan(
+									Span: tracinghelper.MatchSpan(
 										model.Consumer,
-										pkgtracing.WithLocalEndpointServiceName("kafka-channel-dispatcher"),
+										tracinghelper.WithLocalEndpointServiceName("kafka-channel-dispatcher"),
 										tracing.WithMessageIDSource(eventID, sourceName),
 									),
-									Children: []pkgtracing.TestSpanTree{
+									Children: []tracinghelper.TestSpanTree{
 										{
 											Note: "5. Kafka Channel Dispatcher sending message to sink",
-											Span: pkgtracing.MatchHTTPSpanNoReply(
+											Span: tracinghelper.MatchHTTPSpanNoReply(
 												model.Client,
-												pkgtracing.WithHTTPURL(
+												tracinghelper.WithHTTPURL(
 													fmt.Sprintf("%s.%s.svc", sinkName, testNS),
 													"/",
 												),
-												pkgtracing.WithLocalEndpointServiceName("kafka-channel-dispatcher"),
+												tracinghelper.WithLocalEndpointServiceName("kafka-channel-dispatcher"),
 											),
-											Children: []pkgtracing.TestSpanTree{
+											Children: []tracinghelper.TestSpanTree{
 												{
 													Note: "6. The target Pod receiving message",
-													Span: pkgtracing.MatchHTTPSpanNoReply(
+													Span: tracinghelper.MatchHTTPSpanNoReply(
 														model.Server,
-														pkgtracing.WithHTTPHostAndPath(
+														tracinghelper.WithHTTPHostAndPath(
 															fmt.Sprintf("%s.%s.svc", sinkName, testNS),
 															"/",
 														),
-														pkgtracing.WithLocalEndpointServiceName(sinkName),
+														tracinghelper.WithLocalEndpointServiceName(sinkName),
 													),
 												},
 											},

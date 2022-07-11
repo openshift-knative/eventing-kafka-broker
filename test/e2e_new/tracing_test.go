@@ -27,10 +27,10 @@ import (
 
 	cetest "github.com/cloudevents/sdk-go/v2/test"
 	"github.com/openzipkin/zipkin-go/model"
+	tracinghelper "knative.dev/eventing/test/conformance/helpers/tracing"
 	"knative.dev/eventing/test/rekt/resources/broker"
 	"knative.dev/eventing/test/rekt/resources/trigger"
 	"knative.dev/pkg/system"
-	pkgtracing "knative.dev/pkg/test/tracing"
 	"knative.dev/reconciler-test/pkg/environment"
 	"knative.dev/reconciler-test/pkg/eventshub"
 	"knative.dev/reconciler-test/pkg/feature"
@@ -120,60 +120,60 @@ func brokerHasMatchingTraceTree(sourceName, sinkName, brokerName, eventID string
 	return func(ctx context.Context, t feature.T) {
 		testNS := environment.FromContext(ctx).Namespace()
 		systemNS := knative.KnativeNamespaceFromContext(ctx)
-		expectedTree := pkgtracing.TestSpanTree{
+		expectedTree := tracinghelper.TestSpanTree{
 			Note: "1. Sender pod sends event to the Broker Ingress",
-			Span: pkgtracing.MatchHTTPSpanNoReply(
+			Span: tracinghelper.MatchHTTPSpanNoReply(
 				model.Client,
-				pkgtracing.WithHTTPURL(
+				tracinghelper.WithHTTPURL(
 					fmt.Sprintf("kafka-broker-ingress.%s.svc", systemNS),
 					fmt.Sprintf("/%s/%s", testNS, brokerName),
 				),
-				pkgtracing.WithLocalEndpointServiceName(sourceName),
+				tracinghelper.WithLocalEndpointServiceName(sourceName),
 			),
-			Children: []pkgtracing.TestSpanTree{
+			Children: []tracinghelper.TestSpanTree{
 				{
 					Note: "2. Kafka Broker Receiver getting the message",
-					Span: pkgtracing.MatchHTTPSpanNoReply(
+					Span: tracinghelper.MatchHTTPSpanNoReply(
 						model.Server,
-						pkgtracing.WithLocalEndpointServiceName("kafka-broker-receiver"),
+						tracinghelper.WithLocalEndpointServiceName("kafka-broker-receiver"),
 						tracing.WithMessageIDSource(eventID, sourceName),
 					),
-					Children: []pkgtracing.TestSpanTree{
+					Children: []tracinghelper.TestSpanTree{
 						{
 							Note: "3. Kafka Broker Receiver storing message to Kafka",
-							Span: pkgtracing.MatchSpan(
+							Span: tracinghelper.MatchSpan(
 								model.Producer,
-								pkgtracing.WithLocalEndpointServiceName("kafka-broker-receiver"),
+								tracinghelper.WithLocalEndpointServiceName("kafka-broker-receiver"),
 							),
-							Children: []pkgtracing.TestSpanTree{
+							Children: []tracinghelper.TestSpanTree{
 								{
 									Note: "4. Kafka Broker Dispatcher reading message from Kafka",
-									Span: pkgtracing.MatchSpan(
+									Span: tracinghelper.MatchSpan(
 										model.Consumer,
-										pkgtracing.WithLocalEndpointServiceName("kafka-broker-dispatcher"),
+										tracinghelper.WithLocalEndpointServiceName("kafka-broker-dispatcher"),
 										tracing.WithMessageIDSource(eventID, sourceName),
 									),
-									Children: []pkgtracing.TestSpanTree{
+									Children: []tracinghelper.TestSpanTree{
 										{
 											Note: "5. Kafka Broker Dispatcher sending message to sink",
-											Span: pkgtracing.MatchHTTPSpanNoReply(
+											Span: tracinghelper.MatchHTTPSpanNoReply(
 												model.Client,
-												pkgtracing.WithHTTPURL(
+												tracinghelper.WithHTTPURL(
 													fmt.Sprintf("%s.%s.svc", sinkName, testNS),
 													"/",
 												),
-												pkgtracing.WithLocalEndpointServiceName("kafka-broker-dispatcher"),
+												tracinghelper.WithLocalEndpointServiceName("kafka-broker-dispatcher"),
 											),
-											Children: []pkgtracing.TestSpanTree{
+											Children: []tracinghelper.TestSpanTree{
 												{
 													Note: "6. The target Pod receiving message",
-													Span: pkgtracing.MatchHTTPSpanNoReply(
+													Span: tracinghelper.MatchHTTPSpanNoReply(
 														model.Server,
-														pkgtracing.WithHTTPHostAndPath(
+														tracinghelper.WithHTTPHostAndPath(
 															fmt.Sprintf("%s.%s.svc", sinkName, testNS),
 															"/",
 														),
-														pkgtracing.WithLocalEndpointServiceName(sinkName),
+														tracinghelper.WithLocalEndpointServiceName(sinkName),
 													),
 												},
 											},
