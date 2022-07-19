@@ -26,7 +26,6 @@ COPY /data-plane/dispatcher/pom.xml dispatcher/pom.xml
 COPY /data-plane/contract/pom.xml contract/pom.xml
 COPY /data-plane/mvnw .
 COPY /data-plane/.mvn/wrapper .mvn/wrapper
-COPY /data-plane/docker/generate_jdk.sh .
 
 # Install dependencies. Note: don't build a single submodule (recever or dispatcher) since it just slows down
 # consecutive builds.
@@ -36,9 +35,7 @@ COPY /data-plane/ .
 
 RUN ./mvnw package -pl=receiver -Drelease -am -DskipTests -Deditorconfig.skip --no-transfer-progress
 
-RUN ./generate_jdk.sh /build/receiver/target/receiver-1.0-SNAPSHOT.jar
-
-RUN cp /build/receiver/target/receiver-1.0-SNAPSHOT.jar /app/app.jar
+RUN mkdir /app && cp /build/receiver/target/receiver-1.0-SNAPSHOT.jar /app/app.jar
 
 # We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
 FROM registry.access.redhat.com/ubi8/openjdk-17-runtime as running
@@ -49,5 +46,4 @@ USER 185
 
 COPY --from=builder /app /app
 
-# Configure PATH
-ENV PATH="/app/jdk/bin:${PATH}"
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
