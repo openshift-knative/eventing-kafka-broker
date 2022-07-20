@@ -1,0 +1,12 @@
+diff --git a/vendor/knative.dev/eventing-kafka/pkg/common/kafka/offset/offsets.go b/vendor/knative.dev/eventing-kafka/pkg/common/kafka/offset/offsets.go
+index 5caab169..43a33f5d 100644
+--- a/vendor/knative.dev/eventing-kafka/pkg/common/kafka/offset/offsets.go
++++ b/vendor/knative.dev/eventing-kafka/pkg/common/kafka/offset/offsets.go
+@@ -37,6 +37,7 @@ func InitOffsets(ctx context.Context, kafkaClient sarama.Client, kafkaAdminClien
+ 	if err != nil {
+ 		return -1, err
+ 	}
++	defer offsetManager.Close()
+ 
+ 	totalPartitions, topicPartitions, err := retrieveAllPartitions(topics, kafkaClient)
+ 	if err != nil {
