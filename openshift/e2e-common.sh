@@ -103,9 +103,23 @@ EOF
 
 function run_e2e_tests() {
 
+  echo "Running e2e tests, directory ./test/e2e/"
   go_test_e2e -timeout=100m -short ./test/e2e/ \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 
+  echo "Running e2e tests, directory ./test/e2e_broker/"
+  go_test_e2e -timeout=100m -short ./test/e2e_broker/ \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
+
+  echo "Running e2e tests, directory ./test/e2e_sink/"
+  go_test_e2e -timeout=100m -short ./test/e2e_sink/ \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
+
+  echo "Running e2e tests, directory ./test/e2e_source/"
+  go_test_e2e -timeout=100m -short ./test/e2e_source/ \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
+
+  echo "Running e2e tests, directory ./test/e2e_channel/"
   go_test_e2e -timeout=100m -short ./test/e2e_channel/ \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
