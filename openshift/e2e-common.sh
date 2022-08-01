@@ -103,6 +103,8 @@ EOF
 
 function run_e2e_tests() {
 
+  export BROKER_CLASS="Kafka"
+
   echo "Running e2e tests, directory ./test/e2e/"
   go_test_e2e -timeout=100m -short ./test/e2e/ \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
