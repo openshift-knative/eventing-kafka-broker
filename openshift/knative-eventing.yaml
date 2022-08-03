@@ -13,3 +13,9 @@ spec:
           kind: ConfigMap
           name: kafka-broker-config
           namespace: knative-eventing
+    tracing:
+      backend: zipkin
+      debug: "true"
+      enable: "true"
+      sample-rate: "1.0"
+      zipkin-endpoint: "http://zipkin.knative-eventing.svc.cluster.local:9411/api/v2/spans"

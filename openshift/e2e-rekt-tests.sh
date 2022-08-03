@@ -16,8 +16,6 @@ failed=0
 
 (( !failed )) && install_serverless || failed=1
 
-(( !failed )) && deploy_zipkin || failed=1
-
 (( !failed )) && run_e2e_new_tests || failed=1
 
 (( failed )) && dump_cluster_state
