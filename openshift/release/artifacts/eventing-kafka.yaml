@@ -1213,7 +1213,7 @@ spec:
         kafka.eventing.knative.dev/release: v1.3.2
     spec:
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: true
       serviceAccountName: kafka-controller
 
       # To avoid node becoming SPOF, spread our replicas to different nodes.
@@ -1669,7 +1669,7 @@ spec:
 
       serviceAccountName: kafka-webhook-eventing
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: true
 
       containers:
         - name: kafka-webhook-eventing
