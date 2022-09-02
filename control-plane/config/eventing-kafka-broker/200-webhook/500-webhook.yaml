@@ -43,7 +43,7 @@ spec:
 
       serviceAccountName: kafka-webhook-eventing
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: true
 
       containers:
         - name: kafka-webhook-eventing
