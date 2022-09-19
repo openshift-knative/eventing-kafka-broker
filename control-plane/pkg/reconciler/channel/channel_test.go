@@ -514,6 +514,9 @@ func TestReconcileKind(t *testing.T) {
 					kafka.BootstrapServersConfigMapKey: ChannelBootstrapServers,
 				}),
 				NewConfigMapWithBinaryData(&env, nil),
+				eventingrekttesting.NewSubscription(Subscription1Name, ChannelNamespace,
+					eventingrekttesting.WithSubscriptionUID(Subscription1UUID),
+				),
 			},
 			Key: testKey,
 			WantUpdates: []clientgotesting.UpdateActionImpl{
@@ -1167,6 +1170,11 @@ func TestReconcileKind(t *testing.T) {
 								Uid:           Subscription1UUID,
 								DeliveryOrder: contract.DeliveryOrder_ORDERED,
 								ReplyStrategy: &contract.Egress_ReplyUrl{ReplyUrl: "http://" + Subscription1ReplyURI},
+								Reference: &contract.Reference{
+									Name:      Subscription1Name,
+									Namespace: ChannelNamespace,
+									Uuid:      Subscription1UUID,
+								},
 							}},
 						},
 					},
@@ -1223,6 +1231,9 @@ func TestReconcileKind(t *testing.T) {
 				}),
 				NewConfigMapWithBinaryData(&env, nil),
 				NewLegacySASLSSLSecret("ns-1", "secret-1"),
+				eventingrekttesting.NewSubscription(Subscription1Name, ChannelNamespace,
+					eventingrekttesting.WithSubscriptionUID(Subscription1UUID),
+				),
 			},
 			Key: testKey,
 			WantUpdates: []clientgotesting.UpdateActionImpl{
@@ -1264,6 +1275,11 @@ func TestReconcileKind(t *testing.T) {
 								Uid:           Subscription1UUID,
 								DeliveryOrder: contract.DeliveryOrder_ORDERED,
 								ReplyStrategy: &contract.Egress_ReplyUrl{ReplyUrl: "http://" + Subscription1ReplyURI},
+								Reference: &contract.Reference{
+									Name:      Subscription1Name,
+									Namespace: ChannelNamespace,
+									Uuid:      Subscription1UUID,
+								},
 							}},
 						},
 					},
@@ -1320,6 +1336,9 @@ func TestReconcileKind(t *testing.T) {
 				}),
 				NewConfigMapWithBinaryData(&env, nil),
 				NewLegacySASLSecret("ns-1", "secret-1"),
+				eventingrekttesting.NewSubscription(Subscription1Name, ChannelNamespace,
+					eventingrekttesting.WithSubscriptionUID(Subscription1UUID),
+				),
 			},
 			Key: testKey,
 			WantUpdates: []clientgotesting.UpdateActionImpl{

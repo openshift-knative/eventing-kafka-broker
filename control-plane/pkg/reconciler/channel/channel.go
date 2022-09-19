@@ -518,7 +518,7 @@ func (r *Reconciler) getSubscriberConfig(ctx context.Context, channel *messaging
 		return nil, fmt.Errorf("failed to resolve Subscription.Spec.Subscriber: empty subscriber URI")
 	}
 	subscriptionName, err := r.getSubscriptionName(channel, subscriber)
-	if err != nil {
+	if err != nil && !apierrors.IsNotFound(err) {
 		return nil, fmt.Errorf("failed to extract subscription name for subscriber %v: %w", subscriber, err)
 	}
 
@@ -527,12 +527,15 @@ func (r *Reconciler) getSubscriberConfig(ctx context.Context, channel *messaging
 		ConsumerGroup: consumerGroup(channel, subscriber),
 		DeliveryOrder: DefaultDeliveryOrder,
 		Uid:           string(subscriber.UID),
-		Reference: &contract.Reference{
+		ReplyStrategy: &contract.Egress_DiscardReply{},
+	}
+
+	if subscriptionName != "" {
+		egress.Reference = &contract.Reference{
 			Uuid:      string(subscriber.UID),
 			Namespace: channel.GetNamespace(),
 			Name:      subscriptionName,
-		},
-		ReplyStrategy: &contract.Egress_DiscardReply{},
+		}
 	}
 
 	if subscriber.ReplyURI != nil {
