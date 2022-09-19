@@ -52,7 +52,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static dev.knative.eventing.kafka.broker.core.utils.Logging.keyValue;
 
