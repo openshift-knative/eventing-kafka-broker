@@ -9,14 +9,11 @@ defaults:
   run:
     shell: bash
 
-env:
-  KO_FLAGS: "--platform=all --sbom=none"
-
 jobs:
   multiarch-build:
     name: Build multiarch test images
-    # Run this only if the pull request was merged. In that case it should be safe to
-    # run on pull_request_target event which has privileged access to the repository.
+    # Run this only after the pull request was merged. In that case it should be safe to
+    # run on pull_request_target event with privileged access to the repository and secrets.
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
@@ -30,7 +27,7 @@ jobs:
       - name: Setup ko
         uses: imjasonh/setup-ko@v0.6
         with:
-          version: v0.12.0 # ko version
+          version: v0.12.0
 
       - name: Check out code
         uses: actions/checkout@v2
@@ -38,24 +35,24 @@ jobs:
           path: ./src/github.com/${{ github.repository }}
 
       - name: Correct GOPATH
+        working-directory: ${GOPATH}/src/github.com/${{ github.repository }}
         run: |
-          cd "${GOPATH}/src/github.com/${{ github.repository }}"
           module="$(head -n 1 go.mod | awk '{ print $2 }')"
           mkdir -p "${GOPATH}/src/${module}"
           mv "${GOPATH}/src/github.com/${{ github.repository }}" "${GOPATH}/src/${module}"
-
           echo "CANONICAL_GO_REPO=${GOPATH}/src/${module}" >> $GITHUB_ENV
 
       - name: Login to quay.io
         env:
-          quay_user: ${{ secrets QUAY_USER }}
+          quay_user: ${{ secrets.QUAY_USER }}
           quay_password: ${{ secrets.QUAY_PASSWORD }}
         run: |
           ko login -u="${quay_user}" -p="${quay_password}" quay.io
 
-      - name: Build and push images
+      - name: Build and push multiarch test images
+        working-directory: ${CANONICAL_GO_REPO}
         run: |
-          cd "${CANONICAL_GO_REPO}"
-          # TODO: Parse TEST_IMAGE_TAG from current branch
+          # Remove knative-v prefix and parse major and minor version
+          major_minor=$(echo ${GITHUB_BASE_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
           make test-images DOCKER_REPO_OVERRIDE=quay.io/${{ github.repository }}/ \
-            KO_FLAGS="${{ KO_FLAGS }}" TEST_IMAGE_TAG=v1.4
+            KO_FLAGS="--platform=all --sbom=none" TEST_IMAGE_TAG=v${major_minor}
