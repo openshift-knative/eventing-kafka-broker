@@ -6,10 +6,12 @@ GOOS=linux
 # Ignore errors if there are no images.
 CONTROL_PLANE_IMAGES=./control-plane/cmd/kafka-controller ./control-plane/cmd/webhook-kafka ./control-plane/cmd/post-install
 TEST_IMAGES=$(shell find ./test/test_images ./vendor/knative.dev/reconciler-test/cmd ./vendor/knative.dev/eventing/test/test_images -mindepth 1 -maxdepth 1 -type d 2> /dev/null)
-KO_DOCKER_REPO=${DOCKER_REPO_OVERRIDE}
 BRANCH=
 TEST=
 IMAGE=
+TEST_IMAGE_TAG=latest
+DOCKER_REPO_OVERRIDE=
+KO_FLAGS=
 
 # Guess location of openshift/release repo. NOTE: override this if it is not correct.
 OPENSHIFT=${CURDIR}/../../github.com/openshift/release
@@ -42,12 +44,12 @@ test-reconciler:
 # Requires ko 0.2.0 or newer.
 test-images:
 	for img in $(TEST_IMAGES); do \
-		ko resolve --tags=latest -RBf $$img ; \
+		KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko build --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -B $$img ; \
 	done
 .PHONY: test-images
 
 test-image-single:
-	ko resolve --tags=latest -RBf test/test_images/$(IMAGE)
+	KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko build --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -B test/test_images/$(IMAGE)
 .PHONY: test-image-single
 
 # Run make DOCKER_REPO_OVERRIDE=<your_repo> test-e2e-local if test images are available
