@@ -45,7 +45,7 @@ jobs:
       - name: Build and push multiarch test images
         run: |
           echo "Building images from ${GITHUB_REF}@${GITHUB_SHA}"
-          # Remove knative-v prefix and parse major and minor version
+          # Remove release-v prefix and parse major and minor version
           major_minor=$(echo ${GITHUB_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
           make test-images DOCKER_REPO_OVERRIDE=quay.io/${{ github.repository }}/ \
             KO_FLAGS="--platform=all --sbom=none" TEST_IMAGE_TAG=v${major_minor}
