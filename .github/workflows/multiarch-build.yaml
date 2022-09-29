@@ -1,0 +1,10 @@
+name: Multiarch builds
+
+on:
+  push:
+    branches: ['release-v*']
+
+jobs:
+  multiarch-build:
+    uses: openshift-knative/hack/.github/workflows/multiarch-build.yaml@main
+    secrets: inherit
