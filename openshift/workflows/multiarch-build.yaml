@@ -1,4 +1,4 @@
-name: Build multiarch images
+name: Multiarch builds
 
 on:
   pull_request_target:
@@ -11,13 +11,11 @@ defaults:
 
 jobs:
   multiarch-build:
-    name: Build multiarch test images
+    name: Build test images
     # Run this only after the pull request was merged. In that case it should be safe to
     # run on pull_request_target event with privileged access to the repository and secrets.
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    env:
-      GOPATH: ${{ github.workspace }}
     steps:
       - name: Setup Golang
         uses: actions/setup-go@v2
@@ -44,12 +42,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          path: ${GOPATH}/src/github.com/${{ github.repository }}
+          path: ./src/github.com/${{ github.repository }}
 
       - name: Build and push multiarch test images
-        working-directory: ${GOPATH}/src/github.com/${{ github.repository }}
+        working-directory: ./src/github.com/${{ github.repository }}
         run: |
           # Remove knative-v prefix and parse major and minor version
-          major_minor=$(echo ${GITHUB_BASE_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
+          major_minor=$(echo ${GITHUB_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
           make test-images DOCKER_REPO_OVERRIDE=quay.io/${{ github.repository }}/ \
             KO_FLAGS="--platform=all --sbom=none" TEST_IMAGE_TAG=v${major_minor}
