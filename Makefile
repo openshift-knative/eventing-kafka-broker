@@ -9,9 +9,7 @@ TEST_IMAGES=$(shell find ./test/test_images ./vendor/knative.dev/reconciler-test
 BRANCH=
 TEST=
 IMAGE=
-TEST_IMAGE_TAG=latest
-DOCKER_REPO_OVERRIDE=
-KO_FLAGS=
+TEST_IMAGE_TAG ?= latest
 
 # Guess location of openshift/release repo. NOTE: override this if it is not correct.
 OPENSHIFT=${CURDIR}/../../github.com/openshift/release
