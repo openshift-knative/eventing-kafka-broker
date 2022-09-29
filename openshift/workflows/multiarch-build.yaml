@@ -34,19 +34,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install make
 
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          path: ./src/github.com/${{ github.repository }}
-
-      - name: Correct GOPATH
-        working-directory: ${GOPATH}/src/github.com/${{ github.repository }}
-        run: |
-          module="$(head -n 1 go.mod | awk '{ print $2 }')"
-          mkdir -p "${GOPATH}/src/${module}"
-          mv "${GOPATH}/src/github.com/${{ github.repository }}" "${GOPATH}/src/${module}"
-          echo "CANONICAL_GO_REPO=${GOPATH}/src/${module}" >> $GITHUB_ENV
-
       - name: Login to quay.io
         env:
           quay_user: ${{ secrets.QUAY_USER }}
@@ -54,8 +41,13 @@ jobs:
         run: |
           ko login -u="${quay_user}" -p="${quay_password}" quay.io
 
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          path: ${GOPATH}/src/github.com/${{ github.repository }}
+
       - name: Build and push multiarch test images
-        working-directory: ${CANONICAL_GO_REPO}
+        working-directory: ${GOPATH}/src/github.com/${{ github.repository }}
         run: |
           # Remove knative-v prefix and parse major and minor version
           major_minor=$(echo ${GITHUB_BASE_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
