@@ -41,12 +41,10 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v2
-        with:
-          path: ./src/github.com/${{ github.repository }}
 
       - name: Build and push multiarch test images
-        working-directory: ./src/github.com/${{ github.repository }}
         run: |
+          echo "Building images from ${GITHUB_REF}@${GITHUB_SHA}"
           # Remove knative-v prefix and parse major and minor version
           major_minor=$(echo ${GITHUB_REF#release-v} | awk -F \. '{printf "%d.%d", $1, $2}')
           make test-images DOCKER_REPO_OVERRIDE=quay.io/${{ github.repository }}/ \
