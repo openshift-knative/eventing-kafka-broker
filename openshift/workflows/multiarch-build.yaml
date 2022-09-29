@@ -19,7 +19,7 @@ jobs:
     env:
       GOPATH: ${{ github.workspace }}
     steps:
-      - name: Set up Golang
+      - name: Setup Golang
         uses: actions/setup-go@v2
         with:
           go-version: 1.17.x
@@ -28,6 +28,11 @@ jobs:
         uses: imjasonh/setup-ko@v0.6
         with:
           version: v0.12.0
+
+      - name: Setup make
+        run: |
+          sudo apt-get update
+          sudo apt-get install make
 
       - name: Check out code
         uses: actions/checkout@v2
