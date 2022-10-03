@@ -5,7 +5,8 @@ CGO_ENABLED=0
 GOOS=linux
 # Ignore errors if there are no images.
 CONTROL_PLANE_IMAGES=./control-plane/cmd/kafka-controller ./control-plane/cmd/webhook-kafka ./control-plane/cmd/post-install
-TEST_IMAGES=$(shell find ./test/test_images ./vendor/knative.dev/reconciler-test/cmd ./vendor/knative.dev/eventing/test/test_images -mindepth 1 -maxdepth 1 -type d 2> /dev/null)
+TEST_IMAGES=$(shell find ./test/test_images -mindepth 1 -maxdepth 1 -type d 2> /dev/null)
+TEST_IMAGES_ALL=$(shell find ./test/test_images ./vendor/knative.dev/reconciler-test/cmd ./vendor/knative.dev/eventing/test/test_images -mindepth 1 -maxdepth 1 -type d 2> /dev/null)
 BRANCH=
 TEST=
 IMAGE=
@@ -40,11 +41,18 @@ test-reconciler:
 .PHONY: test-reconciler
 
 # Requires ko 0.2.0 or newer.
+# Target used by github actions.
 test-images:
 	for img in $(TEST_IMAGES); do \
-		KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko resolve --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -RBf $$img ; \
+		KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko resolve --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -RBf $$img || exit $?; \
 	done
 .PHONY: test-images
+
+test-images-all:
+	for img in $(TEST_IMAGES_ALL); do \
+		KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko resolve --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -RBf $$img || exit $?; \
+	done
+.PHONY: test-images-all
 
 test-image-single:
 	KO_DOCKER_REPO=$(DOCKER_REPO_OVERRIDE) ko resolve --tags=$(TEST_IMAGE_TAG) $(KO_FLAGS) -RBf test/test_images/$(IMAGE)
@@ -64,7 +72,7 @@ test-e2e-local:
 # Generate Dockerfiles used by ci-operator. The files need to be committed manually.
 generate-dockerfiles:
 	./openshift/ci-operator/generate-dockerfiles.sh openshift/ci-operator/knative-images $(CONTROL_PLANE_IMAGES)
-	./openshift/ci-operator/generate-dockerfiles.sh openshift/ci-operator/knative-test-images $(TEST_IMAGES)
+	./openshift/ci-operator/generate-dockerfiles.sh openshift/ci-operator/knative-test-images $(TEST_IMAGES_ALL)
 .PHONY: generate-dockerfiles
 
 # Generate an aggregated knative release yaml file, as well as a CI file with replaced image references
