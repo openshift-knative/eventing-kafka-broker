@@ -25,14 +25,15 @@ import (
 	kedav1alpha1 "knative.dev/eventing-kafka-broker/third_party/pkg/apis/keda/v1alpha1"
 	"knative.dev/eventing-kafka/pkg/apis/bindings/v1beta1"
 	"knative.dev/pkg/kmeta"
-	"knative.dev/pkg/reconciler"
 
 	kafkainternals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing/v1alpha1"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka"
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/security"
 )
 
 const (
-	defaultKafkaLagThreshold = 10
+	defaultKafkaLagThreshold           = 10
+	defaultKafkaActivationLagThreshold = 0
 )
 
 func GenerateScaleTarget(cg *kafkainternals.ConsumerGroup) *kedav1alpha1.ScaleTarget {
@@ -53,6 +54,11 @@ func GenerateScaleTriggers(cg *kafkainternals.ConsumerGroup, triggerAuthenticati
 		return nil, err
 	}
 
+	activationLagThreshold, err := GetInt32ValueFromMap(cg.Annotations, KedaAutoscalingKafkaActivationLagThreshold, defaultKafkaActivationLagThreshold)
+	if err != nil {
+		return nil, err
+	}
+
 	allowIdleConsumers := "false"
 	if cg.Status.Placements != nil {
 		allowIdleConsumers = "true"
@@ -60,11 +66,12 @@ func GenerateScaleTriggers(cg *kafkainternals.ConsumerGroup, triggerAuthenticati
 
 	for _, topic := range cg.Spec.Template.Spec.Topics {
 		triggerMetadata := map[string]string{
-			"bootstrapServers":   bootstrapServers,
-			"consumerGroup":      consumerGroup,
-			"topic":              topic,
-			"lagThreshold":       strconv.Itoa(int(*lagThreshold)),
-			"allowIdleConsumers": allowIdleConsumers,
+			"bootstrapServers":       bootstrapServers,
+			"consumerGroup":          consumerGroup,
+			"topic":                  topic,
+			"lagThreshold":           strconv.Itoa(int(*lagThreshold)),
+			"activationLagThreshold": strconv.Itoa(int(*activationLagThreshold)),
+			"allowIdleConsumers":     allowIdleConsumers,
 		}
 
 		trigger := kedav1alpha1.ScaleTriggers{
@@ -83,10 +90,36 @@ func GenerateScaleTriggers(cg *kafkainternals.ConsumerGroup, triggerAuthenticati
 	return triggers, nil
 }
 
-func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, saslType *string) (*kedav1alpha1.TriggerAuthentication, *corev1.Secret, error) {
+func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, saslType *string, protocol *string, caCert *string) (*kedav1alpha1.TriggerAuthentication, *corev1.Secret, error) {
 
 	secretTargetRefs := make([]kedav1alpha1.AuthSecretTargetRef, 0, 8)
-	var secret corev1.Secret
+
+	secret := corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      cg.Name,
+			Namespace: cg.Namespace,
+			OwnerReferences: []metav1.OwnerReference{
+				*kmeta.NewControllerRef(cg),
+			},
+		},
+		Data:       make(map[string][]byte),
+		StringData: make(map[string]string),
+	}
+
+	if saslType != nil {
+		switch *saslType {
+		case "SCRAM-SHA-256":
+			secret.StringData["sasl"] = "scram_sha256"
+		case "SCRAM-SHA-512":
+			secret.StringData["sasl"] = "scram_sha512"
+		case "PLAIN":
+			secret.StringData["sasl"] = "plaintext"
+		default:
+			return nil, nil, fmt.Errorf("SASL type value %q is not supported", *saslType)
+		}
+	} else {
+		secret.StringData["sasl"] = "plaintext" //default
+	}
 
 	triggerAuth := &kedav1alpha1.TriggerAuthentication{
 		ObjectMeta: metav1.ObjectMeta{
@@ -105,35 +138,8 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, saslType *s
 	}
 
 	if cg.Spec.Template.Spec.Auth.NetSpec != nil {
-		secret = corev1.Secret{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      cg.Name,
-				Namespace: cg.Namespace,
-				OwnerReferences: []metav1.OwnerReference{
-					*kmeta.NewControllerRef(cg),
-				},
-			},
-			Data:       make(map[string][]byte),
-			StringData: make(map[string]string),
-		}
 
 		if cg.Spec.Template.Spec.Auth.NetSpec.SASL.Enable {
-
-			if saslType != nil {
-				switch *saslType {
-				case "SCRAM-SHA-256":
-					secret.StringData["sasl"] = "scram_sha256"
-				case "SCRAM-SHA-512":
-					secret.StringData["sasl"] = "scram_sha512"
-				case "PLAIN":
-					secret.StringData["sasl"] = "plaintext"
-				default:
-					return nil, nil, fmt.Errorf("SASL type value %q is not supported", *saslType)
-				}
-			} else {
-				secret.StringData["sasl"] = "plaintext" //default
-			}
-
 			sasl := kedav1alpha1.AuthSecretTargetRef{Parameter: "sasl", Name: secret.Name, Key: "sasl"}
 			secretTargetRefs = append(secretTargetRefs, sasl)
 
@@ -156,37 +162,43 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, saslType *s
 		}
 	}
 
-	if cg.Spec.Template.Spec.Auth.AuthSpec != nil && cg.Spec.Template.Spec.Auth.AuthSpec.Secret.Ref.Name != "" {
-		host := kedav1alpha1.AuthSecretTargetRef{
-			Parameter: "host", //TODO: parameter name?
-			Name:      cg.Spec.Template.Spec.Auth.AuthSpec.Secret.Ref.Name,
-			Key:       "", //TODO: key value?
-		}
-		secretTargetRefs = append(secretTargetRefs, host)
-		triggerAuth.Spec.SecretTargetRef = secretTargetRefs
+	if cg.Spec.Template.Spec.Auth.SecretSpec != nil && cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name != "" {
 
-		return triggerAuth, nil, nil
+		if saslType != nil { //SASL enabled
+			sasl := kedav1alpha1.AuthSecretTargetRef{Parameter: "sasl", Name: secret.Name, Key: "sasl"}
+			secretTargetRefs = append(secretTargetRefs, sasl)
+
+			if protocol != nil {
+				user := kedav1alpha1.AuthSecretTargetRef{Parameter: "username", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.SaslUserKey}
+				secretTargetRefs = append(secretTargetRefs, user)
+			} else {
+				username := kedav1alpha1.AuthSecretTargetRef{Parameter: "username", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.SaslUsernameKey}
+				secretTargetRefs = append(secretTargetRefs, username)
+			}
+
+			password := kedav1alpha1.AuthSecretTargetRef{Parameter: "password", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.SaslPasswordKey}
+			secretTargetRefs = append(secretTargetRefs, password)
+		}
+
+		if caCert != nil { // TLS enabled
+			secret.StringData["tls"] = "enable"
+			tls := kedav1alpha1.AuthSecretTargetRef{Parameter: "tls", Name: secret.Name, Key: "tls"}
+			secretTargetRefs = append(secretTargetRefs, tls)
+
+			ca := kedav1alpha1.AuthSecretTargetRef{Parameter: "ca", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.CaCertificateKey}
+			secretTargetRefs = append(secretTargetRefs, ca)
+
+			cert := kedav1alpha1.AuthSecretTargetRef{Parameter: "cert", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.UserCertificate}
+			secretTargetRefs = append(secretTargetRefs, cert)
+
+			key := kedav1alpha1.AuthSecretTargetRef{Parameter: "key", Name: cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name, Key: security.UserKey}
+			secretTargetRefs = append(secretTargetRefs, key)
+		}
+
+		triggerAuth.Spec.SecretTargetRef = secretTargetRefs
 	}
 
 	return triggerAuth, &secret, nil
-}
-
-// scaleObjectCreated makes a new reconciler event with event type Normal, and
-// reason ScaledObjectCreated.
-func ScaleObjectCreated(namespace, name string) reconciler.Event {
-	return reconciler.NewEvent(corev1.EventTypeNormal, "ScaledObjectCreated", "ScaledObject created: \"%s/%s\"", namespace, name)
-}
-
-// scaleObjectUpdated makes a new reconciler event with event type Normal, and
-// reason ScaledObjectUpdated.
-func ScaleObjectUpdated(namespace, name string) reconciler.Event {
-	return reconciler.NewEvent(corev1.EventTypeNormal, "ScaledObjectUpdated", "ScaledObject updated: \"%s/%s\"", namespace, name)
-}
-
-// scaleObjectFailed makes a new reconciler event with event type Warning, and
-// reason ScaleObjectFailed.
-func ScaleObjectFailed(namespace, name string, err error) reconciler.Event {
-	return reconciler.NewEvent(corev1.EventTypeWarning, "ScaleObjectFailed", "ScaledObject failed to create: \"%s/%s\", %w", namespace, name, err)
 }
 
 func addAuthSecretTargetRef(parameter string, secretKeyRef v1beta1.SecretValueFromSource, secretTargetRefs []kedav1alpha1.AuthSecretTargetRef) []kedav1alpha1.AuthSecretTargetRef {
@@ -213,6 +225,7 @@ func SetAutoscalingAnnotations(objannotations map[string]string) map[string]stri
 		setAnnotation(objannotations, KedaAutoscalingPollingIntervalAnnotation, cgannotations)
 		setAnnotation(objannotations, KedaAutoscalingCooldownPeriodAnnotation, cgannotations)
 		setAnnotation(objannotations, KedaAutoscalingKafkaLagThreshold, cgannotations)
+		setAnnotation(objannotations, KedaAutoscalingKafkaActivationLagThreshold, cgannotations)
 		return cgannotations
 	}
 	return nil
