@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
     - name: wathola-forwarder
-      image: ko://knative.dev/eventing/test/test_images/wathola-forwarder
+      image: registry.ci.openshift.org/openshift/knative-nightly:knative-eventing-kafka-broker-test-wathola-forwarder
