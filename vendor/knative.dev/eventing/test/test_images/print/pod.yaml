@@ -5,5 +5,5 @@ metadata:
 spec:
   containers:
     - name: helloworld
-      image: ko://knative.dev/eventing/test/test_images/print
+      image: registry.ci.openshift.org/openshift/knative-nightly:knative-eventing-kafka-broker-test-print
 
