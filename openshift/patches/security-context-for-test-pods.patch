@@ -107,7 +107,7 @@ index 5dea70f1..1cc5d766 100644
 +          {{ end }}
 +        allowPrivilegeEscalation: {{ .containerSecurityContext.allowPrivilegeEscalation }}
 +      {{ end }}
-       image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-eventshub:knative-v1.6
+       image: {{ .image }}
        imagePullPolicy: "IfNotPresent"
        {{ if .withReadiness }}
 diff --git a/vendor/knative.dev/reconciler-test/pkg/eventshub/resources.go b/vendor/knative.dev/reconciler-test/pkg/eventshub/resources.go
