@@ -4,7 +4,8 @@ export EVENTING_NAMESPACE="${EVENTING_NAMESPACE:-knative-eventing}"
 export SYSTEM_NAMESPACE=$EVENTING_NAMESPACE
 export TRACING_NAMESPACE=$EVENTING_NAMESPACE
 export KNATIVE_DEFAULT_NAMESPACE=$EVENTING_NAMESPACE
-export TEST_IMAGE_TEMPLATE=${TEST_IMAGE_TEMPLATE:-$(
+
+default_test_image_template=$(
   cat <<-END
 {{- with .Name }}
 {{- if eq . "event-sender"}}$KNATIVE_EVENTING_KAFKA_BROKER_TEST_EVENT_SENDER{{end -}}
@@ -22,7 +23,9 @@ export TEST_IMAGE_TEMPLATE=${TEST_IMAGE_TEMPLATE:-$(
 {{- if eq . "request-sender"}}$KNATIVE_EVENTING_KAFKA_BROKER_TEST_REQUEST_SENDER{{end -}}
 {{end -}}
 END
-)}
+)
+
+export TEST_IMAGE_TEMPLATE=${TEST_IMAGE_TEMPLATE:-$default_test_image_template}
 
 # shellcheck disable=SC1090
 source "$(dirname "$0")/../test/e2e-common.sh"
