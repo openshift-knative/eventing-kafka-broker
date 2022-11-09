@@ -5,12 +5,6 @@ source "$(dirname "$0")/e2e-common.sh"
 
 set -Eeuox pipefail
 
-export TEST_IMAGE_TEMPLATE="${EVENTING_KAFKA_BROKER_TEST_IMAGE_TEMPLATE}"
-
-env
-
-scale_up_workers || exit 1
-
 failed=0
 
 (( !failed )) && install_serverless || failed=1
