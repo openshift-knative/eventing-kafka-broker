@@ -230,6 +230,28 @@ index 00000000..6a9dcf78
 +	}
 +	return func(map[string]interface{}) {}
 +}
+--
+diff --git a/vendor/knative.dev/eventing/test/lib/creation.go b/vendor/knative.dev/eventing/test/lib/creation.go
+index cb28f16e..2b73db56 100644
+--- a/vendor/knative.dev/eventing/test/lib/creation.go
++++ b/vendor/knative.dev/eventing/test/lib/creation.go
+@@ -32,6 +32,7 @@ import (
+ 	duckv1 "knative.dev/pkg/apis/duck/v1"
+ 	"knative.dev/pkg/reconciler"
+ 	pkgtest "knative.dev/pkg/test"
++	pkgsecurity "knative.dev/pkg/test/security"
+
+ 	eventingv1 "knative.dev/eventing/pkg/apis/eventing/v1"
+ 	flowsv1 "knative.dev/eventing/pkg/apis/flows/v1"
+@@ -428,6 +429,8 @@ func (c *Client) CreatePodOrFail(pod *corev1.Pod, options ...func(*corev1.Pod, *
+ 		}
+ 	}
+
++	pkgsecurity.AllowRestrictedPodSecurityStandard(context.Background(), c.Kube, pod)
++
+ 	c.applyAdditionalEnv(&pod.Spec)
+
+ 	// the following retryable errors are expected when creating a blank Pod:
 -- 
 2.37.3
 
