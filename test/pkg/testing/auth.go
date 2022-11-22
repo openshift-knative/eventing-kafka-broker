@@ -48,6 +48,17 @@ func Ssl(t *testing.T, client *testlib.Client) map[string][]byte {
 	}
 }
 
+func TlsNoAuth(t *testing.T, client *testlib.Client) map[string][]byte {
+	caSecret, err := client.Kube.CoreV1().Secrets(KafkaClusterNamespace).Get(context.Background(), CaSecretName, metav1.GetOptions{})
+	assert.Nil(t, err)
+
+	return map[string][]byte{
+		"protocol":  []byte("SSL"),
+		"ca.crt":    caSecret.Data["ca.crt"],
+		"user.skip": []byte("true"),
+	}
+}
+
 func SaslPlaintextScram512(t *testing.T, client *testlib.Client) map[string][]byte {
 
 	saslUserSecret, err := client.Kube.CoreV1().Secrets(KafkaClusterNamespace).Get(context.Background(), SaslUserSecretName, metav1.GetOptions{})
