@@ -56,3 +56,10 @@ spec:
           name: "*"
         operation: Describe
         host: "*"
+      # Required ACL rule to be able to delete topics
+      # (Note: this is needed to be able to successfully delete KafkaChannel resources)
+      - resource:
+          type: topic
+          name: "*"
+        operation: Delete
+        host: "*"
