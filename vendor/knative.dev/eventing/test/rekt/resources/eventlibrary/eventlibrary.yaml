@@ -29,7 +29,7 @@ spec:
   restartPolicy: "Never"
   containers:
     - name: library
-      image: ko://knative.dev/eventing/test/test_images/event-library
+      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-event-library:knative-nightly
       imagePullPolicy: "IfNotPresent"
       {{ if .containerSecurityContext }}
       securityContext:
