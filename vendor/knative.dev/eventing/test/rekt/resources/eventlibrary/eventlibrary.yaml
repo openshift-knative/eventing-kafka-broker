@@ -23,7 +23,7 @@ spec:
   restartPolicy: "Never"
   containers:
     - name: library
-      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-event-library:knative-v1.6
+      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-event-library:knative-v1.7
       imagePullPolicy: "IfNotPresent"
 
 ---

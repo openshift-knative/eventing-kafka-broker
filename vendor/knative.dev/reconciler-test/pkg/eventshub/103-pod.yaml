@@ -47,7 +47,7 @@ spec:
           {{ end }}
         allowPrivilegeEscalation: {{ .containerSecurityContext.allowPrivilegeEscalation }}
       {{ end }}
-      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-eventshub:knative-v1.6
+      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-eventshub:knative-v1.7
       imagePullPolicy: "IfNotPresent"
       {{ if .withReadiness }}
       readinessProbe:

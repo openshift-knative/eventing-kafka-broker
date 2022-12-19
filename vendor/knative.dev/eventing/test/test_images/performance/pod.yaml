@@ -8,5 +8,5 @@ metadata:
 spec:
   containers:
     - name: performance
-      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-performance:knative-v1.6
+      image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-performance:knative-v1.7
 
