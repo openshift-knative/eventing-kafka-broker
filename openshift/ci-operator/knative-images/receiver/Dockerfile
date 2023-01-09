@@ -20,6 +20,7 @@ WORKDIR /build
 
 COPY /data-plane/pom.xml .
 COPY /data-plane/.editorconfig .
+COPY /data-plane/vertx-kafka/pom.xml vertx-kafka/pom.xml
 COPY /data-plane/core/pom.xml core/pom.xml
 COPY /data-plane/receiver/pom.xml receiver/pom.xml
 COPY /data-plane/dispatcher/pom.xml dispatcher/pom.xml
