@@ -48,6 +48,7 @@ import (
 	internalv1alpha1 "knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/clientset/versioned/typed/eventing/v1alpha1"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/injection/reconciler/eventing/v1alpha1/consumergroup"
 	kafkainternalslisters "knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/listers/eventing/v1alpha1"
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/counter"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/keda"
 
@@ -95,6 +96,10 @@ type Reconciler struct {
 
 	KafkaFeatureFlags *config.KafkaFeatureFlags
 	KedaClient        kedaclientset.Interface
+
+	// DeleteConsumerGroupMetadataCounter is an in-memory counter to count how many times we have
+	// tried to delete consumer group metadata from Kafka.
+	DeleteConsumerGroupMetadataCounter *counter.Counter
 }
 
 func (r Reconciler) ReconcileKind(ctx context.Context, cg *kafkainternals.ConsumerGroup) reconciler.Event {
@@ -167,6 +172,18 @@ func (r Reconciler) FinalizeKind(ctx context.Context, cg *kafkainternals.Consume
 		}
 	}
 
+	if err := r.deleteConsumerGroupMetadata(ctx, cg); err != nil {
+		// We retry a few times to delete Consumer group metadata from Kafka before giving up.
+		if v := r.DeleteConsumerGroupMetadataCounter.Inc(string(cg.GetUID())); v <= 5 {
+			return err
+		}
+		r.DeleteConsumerGroupMetadataCounter.Del(string(cg.GetUID()))
+	}
+
+	return nil
+}
+
+func (r Reconciler) deleteConsumerGroupMetadata(ctx context.Context, cg *kafkainternals.ConsumerGroup) error {
 	saramaSecurityOption, err := r.newAuthConfigOption(ctx, cg)
 	if err != nil {
 		return fmt.Errorf("failed to create config options for Kafka cluster auth: %w", err)
@@ -605,7 +622,7 @@ func (r *Reconciler) isKEDAEnabled(ctx context.Context, namespace string) bool {
 
 func (r Reconciler) ensureContractConfigmapsExist(ctx context.Context, scheduler Scheduler) error {
 	selector := labels.SelectorFromSet(map[string]string{
-		"app": scheduler.StatefulSetName,
+		"app":         scheduler.StatefulSetName,
 		"app-version": "v2",
 	})
 	pods, err := r.PodLister.
