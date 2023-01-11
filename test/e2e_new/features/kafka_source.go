@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"knative.dev/eventing-kafka/test/rekt/resources/kafkasource"
+	"knative.dev/eventing-kafka/test/rekt/resources/kafkatopic"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 	"knative.dev/reconciler-test/pkg/feature"
 	"knative.dev/reconciler-test/resources/svc"
@@ -39,6 +40,7 @@ func SetupAndCleanupKafkaSources(n int) *feature.Feature {
 		topicName := feature.MakeRandomK8sName("topic") // A k8s name is also a valid topic name.
 		name := fmt.Sprintf("%s%d", prefix, i)
 
+		f.Setup("install kafka topic", kafkatopic.Install(topicName))
 		f.Setup(fmt.Sprintf("install kafkasource %s", name), kafkasource.Install(
 			name,
 			kafkasource.WithBootstrapServers(testingpkg.BootstrapServersPlaintextArr),
