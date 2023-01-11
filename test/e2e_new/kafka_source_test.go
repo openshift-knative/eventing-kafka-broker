@@ -28,6 +28,7 @@ import (
 	"knative.dev/reconciler-test/pkg/knative"
 
 	"knative.dev/eventing-kafka-broker/test/e2e_new/features"
+	testingpkg "knative.dev/eventing-kafka-broker/test/pkg"
 )
 
 func TestKafkaSourceCreateSecretsAfterKafkaSource(t *testing.T) {
@@ -43,4 +44,26 @@ func TestKafkaSourceCreateSecretsAfterKafkaSource(t *testing.T) {
 	)
 
 	env.Test(ctx, t, features.CreateSecretsAfterKafkaSource())
+}
+
+func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
+
+	// Always use the same namespace for multiple tests
+	namespace := "kafka-source-deleted-recreated"
+
+	testingpkg.RunMultipleN(t, 10, func(t *testing.T) {
+		// Note: don't call t.Parallel() here since each test run will conflict with each other
+
+		ctx, env := global.Environment(
+			knative.WithKnativeNamespace(system.Namespace()),
+			knative.WithLoggingConfig,
+			knative.WithTracingConfig,
+			k8s.WithEventListener,
+			environment.InNamespace(namespace),
+			environment.Managed(t),
+		)
+
+		env.Test(ctx, t, features.SetupNamespace(namespace))
+		env.Test(ctx, t, features.SetupAndCleanupKafkaSources(50))
+	})
 }
