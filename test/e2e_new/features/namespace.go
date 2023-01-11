@@ -46,3 +46,17 @@ func SetupNamespace(name string) *feature.Feature {
 
 	return f
 }
+
+func CleanupNamespace(name string) *feature.Feature {
+	f := feature.NewFeatureNamed("delete namespace")
+
+	f.Setup(fmt.Sprintf("install namespace %s", name), func(ctx context.Context, t feature.T) {
+		err := kubeclient.Get(ctx).CoreV1().Namespaces().Delete(ctx, name, metav1.DeleteOptions{})
+		if err != nil && !apierrors.IsNotFound(err) {
+			t.Fatal(err)
+		}
+
+	})
+
+	return f
+}

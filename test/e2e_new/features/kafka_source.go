@@ -28,10 +28,9 @@ import (
 	testingpkg "knative.dev/eventing-kafka-broker/test/pkg"
 )
 
-func SetupAndCleanupKafkaSources(n int) *feature.Feature {
+func SetupAndCleanupKafkaSources(prefix string, n int) *feature.Feature {
 	f := feature.NewFeatureNamed("setup and cleanup KafkaSources")
 
-	prefix := "kafka-source-"
 	sink := "sink"
 
 	f.Setup("install a sink", svc.Install(sink, "app", "rekt"))

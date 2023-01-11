@@ -20,6 +20,7 @@
 package e2e_new
 
 import (
+	"fmt"
 	"testing"
 
 	"knative.dev/pkg/system"
@@ -28,7 +29,6 @@ import (
 	"knative.dev/reconciler-test/pkg/knative"
 
 	"knative.dev/eventing-kafka-broker/test/e2e_new/features"
-	testingpkg "knative.dev/eventing-kafka-broker/test/pkg"
 )
 
 func TestKafkaSourceCreateSecretsAfterKafkaSource(t *testing.T) {
@@ -51,9 +51,27 @@ func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
 	// Always use the same namespace for multiple tests
 	namespace := "kafka-source-deleted-recreated"
 
-	testingpkg.RunMultipleN(t, 10, func(t *testing.T) {
-		// Note: don't call t.Parallel() here since each test run will conflict with each other
+	t.Parallel()
 
+	for i := 0; i < 10; i++ {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			// Note: don't call t.Parallel() here since each test run will conflict with each other
+
+			ctx, env := global.Environment(
+				knative.WithKnativeNamespace(system.Namespace()),
+				knative.WithLoggingConfig,
+				knative.WithTracingConfig,
+				k8s.WithEventListener,
+				environment.InNamespace(namespace),
+				environment.WithTestLogger(t),
+			)
+
+			env.Test(ctx, t, features.SetupNamespace(namespace))
+			env.Test(ctx, t, features.SetupAndCleanupKafkaSources(fmt.Sprintf("%d-kafka-source-", i), 50))
+		})
+	}
+
+	t.Cleanup(func() {
 		ctx, env := global.Environment(
 			knative.WithKnativeNamespace(system.Namespace()),
 			knative.WithLoggingConfig,
@@ -63,7 +81,6 @@ func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
 			environment.WithTestLogger(t),
 		)
 
-		env.Test(ctx, t, features.SetupNamespace(namespace))
-		env.Test(ctx, t, features.SetupAndCleanupKafkaSources(50))
+		env.Test(ctx, t, features.CleanupNamespace(namespace))
 	})
 }
