@@ -60,7 +60,7 @@ func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
 			knative.WithTracingConfig,
 			k8s.WithEventListener,
 			environment.InNamespace(namespace),
-			environment.Managed(t),
+			environment.WithTestLogger(t),
 		)
 
 		env.Test(ctx, t, features.SetupNamespace(namespace))
