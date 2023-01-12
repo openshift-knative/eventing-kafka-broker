@@ -29,9 +29,14 @@ import (
 )
 
 func SetupAndCleanupKafkaSources(prefix string, n int) *feature.Feature {
-	f := feature.NewFeatureNamed("setup and cleanup KafkaSources")
+	f := SetupKafkaSources(prefix, n)
+	f.Teardown("cleanup resources", f.DeleteResources)
+	return f
+}
 
+func SetupKafkaSources(prefix string, n int) *feature.Feature {
 	sink := "sink"
+	f := feature.NewFeatureNamed("KafkaSources")
 
 	f.Setup("install a sink", svc.Install(sink, "app", "rekt"))
 
@@ -49,8 +54,6 @@ func SetupAndCleanupKafkaSources(prefix string, n int) *feature.Feature {
 
 		f.Assert(fmt.Sprintf("kafkasource %s is ready", name), kafkasource.IsReady(name))
 	}
-
-	f.Teardown("cleanup resources", f.DeleteResources)
 
 	return f
 }

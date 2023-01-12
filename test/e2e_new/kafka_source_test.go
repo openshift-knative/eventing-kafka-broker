@@ -66,8 +66,9 @@ func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
 				environment.WithTestLogger(t),
 			)
 
+			env.Test(ctx, t, features.SetupKafkaSources("permanent-kafka-source-", 20))
 			env.Test(ctx, t, features.SetupNamespace(namespace))
-			env.Test(ctx, t, features.SetupAndCleanupKafkaSources(fmt.Sprintf("%d-kafka-source-", i), 50))
+			env.Test(ctx, t, features.SetupAndCleanupKafkaSources(fmt.Sprintf("%d-kafka-source-", i), 200))
 		})
 	}
 
