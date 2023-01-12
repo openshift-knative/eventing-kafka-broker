@@ -17,14 +17,26 @@
 package features
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
 
+	"go.uber.org/zap"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	sources "knative.dev/eventing-kafka/pkg/apis/sources/v1beta1"
+	kafkaclient "knative.dev/eventing-kafka/pkg/client/injection/client"
 	"knative.dev/eventing-kafka/test/rekt/resources/kafkasource"
 	"knative.dev/eventing-kafka/test/rekt/resources/kafkatopic"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
+	kubeclient "knative.dev/pkg/client/injection/kube/client"
+	"knative.dev/reconciler-test/pkg/environment"
 	"knative.dev/reconciler-test/pkg/feature"
+	"knative.dev/reconciler-test/pkg/knative"
 	"knative.dev/reconciler-test/resources/svc"
 
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/contract"
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/base"
 	testingpkg "knative.dev/eventing-kafka-broker/test/pkg"
 )
 
@@ -56,4 +68,79 @@ func SetupKafkaSources(prefix string, n int) *feature.Feature {
 	}
 
 	return f
+}
+
+func KafkaSourcesAreNotPresentInContractConfigMaps(prefix string) *feature.Feature {
+	f := feature.NewFeatureNamed("KafkaSources are not present in Contract configmaps")
+
+	f.Assert("deleted KafkaSources are not present in Contract CMs", deletedKafkaSourcesAreNotPresentInContractConfigMaps(prefix))
+
+	return f
+}
+
+func deletedKafkaSourcesAreNotPresentInContractConfigMaps(prefix string) feature.StepFn {
+	return func(ctx context.Context, t feature.T) {
+
+		namespace := environment.FromContext(ctx).Namespace()
+
+		kss, err := kafkaclient.Get(ctx).SourcesV1beta1().
+			KafkaSources(namespace).
+			List(ctx, metav1.ListOptions{
+				Limit: 2000,
+			})
+		if err != nil {
+			t.Fatal("Failed to list KafkaSources")
+		}
+
+		systemNamespaceCMs, err := kubeclient.Get(ctx).CoreV1().
+			ConfigMaps(knative.KnativeNamespaceFromContext(ctx)).
+			List(ctx, metav1.ListOptions{
+				Limit: 100,
+			})
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, cm := range systemNamespaceCMs.Items {
+			if !strings.HasPrefix(cm.Name, "kafka-source-dispatcher") {
+				continue
+			}
+
+			ct, err := base.GetDataPlaneConfigMapData(zap.NewNop(), &cm, base.Json)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			for _, r := range ct.Resources {
+				if r.Reference.Namespace != namespace {
+					continue
+				}
+				if !strings.HasPrefix(r.Reference.Name, prefix) {
+					continue
+				}
+
+				found := false
+				for _, s := range kss.Items {
+					if r.Reference.Namespace == s.Namespace && r.Reference.Name == s.Name {
+						found = true
+					}
+				}
+				if !found {
+					t.Errorf("%v", ResourceError{
+						Resource: r,
+						Sources:  kss,
+					}.Error())
+				}
+			}
+		}
+	}
+}
+
+type ResourceError struct {
+	Resource *contract.Resource       `json:"resource"`
+	Sources  *sources.KafkaSourceList `json:"sources"`
+}
+
+func (r ResourceError) Error() string {
+	bytes, _ := json.Marshal(r)
+	return string(bytes)
 }

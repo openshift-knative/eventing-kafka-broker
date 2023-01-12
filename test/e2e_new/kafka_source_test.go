@@ -20,7 +20,6 @@
 package e2e_new
 
 import (
-	"fmt"
 	"testing"
 
 	"knative.dev/pkg/system"
@@ -46,42 +45,20 @@ func TestKafkaSourceCreateSecretsAfterKafkaSource(t *testing.T) {
 	env.Test(ctx, t, features.CreateSecretsAfterKafkaSource())
 }
 
-func TestKafkaSourceRepeatedlyCreatedDeleted(t *testing.T) {
-
-	// Always use the same namespace for multiple tests
-	namespace := "kafka-source-deleted-recreated"
+func TestKafkaSourceDeletedFromContractConfigMaps(t *testing.T) {
 
 	t.Parallel()
 
-	for i := 0; i < 10; i++ {
-		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
-			// Note: don't call t.Parallel() here since each test run will conflict with each other
+	ctx, env := global.Environment(
+		knative.WithKnativeNamespace(system.Namespace()),
+		knative.WithLoggingConfig,
+		knative.WithTracingConfig,
+		k8s.WithEventListener,
+		environment.Managed(t),
+	)
+	t.Cleanup(env.Finish)
 
-			ctx, env := global.Environment(
-				knative.WithKnativeNamespace(system.Namespace()),
-				knative.WithLoggingConfig,
-				knative.WithTracingConfig,
-				k8s.WithEventListener,
-				environment.InNamespace(namespace),
-				environment.WithTestLogger(t),
-			)
-
-			env.Test(ctx, t, features.SetupKafkaSources("permanent-kafka-source-", 20))
-			env.Test(ctx, t, features.SetupNamespace(namespace))
-			env.Test(ctx, t, features.SetupAndCleanupKafkaSources(fmt.Sprintf("%d-kafka-source-", i), 200))
-		})
-	}
-
-	t.Cleanup(func() {
-		ctx, env := global.Environment(
-			knative.WithKnativeNamespace(system.Namespace()),
-			knative.WithLoggingConfig,
-			knative.WithTracingConfig,
-			k8s.WithEventListener,
-			environment.InNamespace(namespace),
-			environment.WithTestLogger(t),
-		)
-
-		env.Test(ctx, t, features.CleanupNamespace(namespace))
-	})
+	env.Test(ctx, t, features.SetupKafkaSources("permanent-kafka-source-", 21))
+	env.Test(ctx, t, features.SetupAndCleanupKafkaSources("x-kafka-source-", 42))
+	env.Test(ctx, t, features.KafkaSourcesAreNotPresentInContractConfigMaps("x-kafka-source-"))
 }
