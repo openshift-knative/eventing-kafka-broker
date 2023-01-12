@@ -114,9 +114,9 @@ function run_conformance_tests() {
 function run_e2e_new_tests() {
   export BROKER_CLASS="Kafka"
 
-#  if [[ ${FIRST_EVENT_DELAY_ENABLED:-true} == true ]]; then
-#    ./test/scripts/first-event-delay.sh || return $?
-#  fi
-  go_test_e2e -timeout=100m -run TestKafkaSourceRepeatedlyCreatedDeleted ./test/e2e_new/... || return $?
-#  go_test_e2e -timeout=100m ./test/e2e_new_channel/... || return $?
+  if [[ ${FIRST_EVENT_DELAY_ENABLED:-true} == true ]]; then
+    ./test/scripts/first-event-delay.sh || return $?
+  fi
+  go_test_e2e -timeout=100m ./test/e2e_new/... || return $?
+  go_test_e2e -timeout=100m ./test/e2e_new_channel/... || return $?
 }
