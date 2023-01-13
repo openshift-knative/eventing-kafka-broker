@@ -31,6 +31,20 @@ import (
 	testpkg "knative.dev/eventing-kafka-broker/test/pkg"
 )
 
+func SetupNamespacedBroker(name string) *feature.Feature {
+	f := feature.NewFeatureNamed("setup namespaced broker")
+
+	f.Setup(fmt.Sprintf("install broker %q", name), broker.Install(
+		name,
+		broker.WithBrokerClass(kafka.NamespacedBrokerClass),
+		broker.WithConfig("kafka-broker-config"),
+	))
+	f.Setup("Broker is ready", broker.IsReady(name))
+	f.Setup("Broker is addressable", broker.IsAddressable(name))
+
+	return f
+}
+
 func NamespacedBrokerResourcesPropagation() *feature.Feature {
 	f := feature.NewFeatureNamed("Namespaced Broker resource propagation")
 
