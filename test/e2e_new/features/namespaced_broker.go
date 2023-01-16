@@ -34,6 +34,12 @@ import (
 func SetupNamespacedBroker(name string) *feature.Feature {
 	f := feature.NewFeatureNamed("setup namespaced broker")
 
+	f.Setup("Create broker config", brokerconfigmap.Install(
+		"kafka-broker-config",
+		brokerconfigmap.WithBootstrapServer(testpkg.BootstrapServersPlaintext),
+		brokerconfigmap.WithNumPartitions(1),
+		brokerconfigmap.WithReplicationFactor(1),
+	))
 	f.Setup(fmt.Sprintf("install broker %q", name), broker.Install(
 		name,
 		broker.WithBrokerClass(kafka.NamespacedBrokerClass),
