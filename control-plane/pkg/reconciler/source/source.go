@@ -31,7 +31,10 @@ import (
 	"knative.dev/pkg/apis"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 	"knative.dev/pkg/kmeta"
+	"knative.dev/pkg/logging"
 	"knative.dev/pkg/reconciler"
+
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
 
 	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 	internalscg "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing/v1alpha1"
@@ -59,6 +62,7 @@ type Reconciler struct {
 	ConsumerGroupLister internalslst.ConsumerGroupLister
 	InternalsClient     internalsclient.Interface
 	KedaClient          kedaclientset.Interface
+	KafkaFeatureFlags   *config.KafkaFeatureFlags
 }
 
 func (r *Reconciler) ReconcileKind(ctx context.Context, ks *sources.KafkaSource) reconciler.Event {
@@ -224,7 +228,11 @@ func (r *Reconciler) isKEDAEnabled(ctx context.Context, namespace string) bool {
 		return true
 	}*/
 
-	if _, err := r.KedaClient.KedaV1alpha1().ScaledObjects(namespace).List(ctx, metav1.ListOptions{}); err == nil {
+	if r.KafkaFeatureFlags.IsControllerAutoscalerEnabled() {
+		if _, err := r.KedaClient.KedaV1alpha1().ScaledObjects(namespace).List(ctx, metav1.ListOptions{}); err != nil {
+			logging.FromContext(ctx).Debug("KEDA not installed, failed to list ScaledObjects")
+			return false
+		}
 		return true
 	}
 	return false

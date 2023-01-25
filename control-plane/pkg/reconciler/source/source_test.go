@@ -31,6 +31,8 @@ import (
 	eventingduck "knative.dev/eventing/pkg/apis/duck/v1"
 	"knative.dev/pkg/kmeta"
 
+	configapis "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
+
 	kafkainternals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing/v1alpha1"
 
 	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
@@ -968,6 +970,7 @@ func TestReconcileKind(t *testing.T) {
 			ConsumerGroupLister: listers.GetConsumerGroupLister(),
 			InternalsClient:     fakeconsumergroupinformer.Get(ctx),
 			KedaClient:          kedaclient.Get(ctx),
+			KafkaFeatureFlags:   configapis.DefaultFeaturesConfig(),
 		}
 
 		r := eventingkafkasourcereconciler.NewReconciler(

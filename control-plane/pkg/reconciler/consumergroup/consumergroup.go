@@ -665,7 +665,7 @@ func (r Reconciler) ensureContractConfigMapExists(ctx context.Context, p *corev1
 		DataPlaneConfigMapTransformer: base.PodOwnerReference(p),
 	}
 
-	if _, err := b.GetOrCreateDataPlaneConfigMap(ctx); err != nil && apierrors.IsAlreadyExists(err) {
+	if _, err := b.GetOrCreateDataPlaneConfigMap(ctx); err != nil && !apierrors.IsAlreadyExists(err) {
 		return fmt.Errorf("failed to create ConfigMap %s/%s: %w", r.SystemNamespace, name, err)
 	}
 	return nil
