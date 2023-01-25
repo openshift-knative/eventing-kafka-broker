@@ -686,3 +686,12 @@ func DataPlaneConfigInitialOffset(key string, offset sources.Offset) reconcilert
 		cm.Data[key] = props.String()
 	}
 }
+
+func ReactorKEDAEnabled() clientgotesting.ReactionFunc {
+	return func(action clientgotesting.Action) (handled bool, ret runtime.Object, err error) {
+		if action.Matches("list", "scaledobjects") {
+			return true, nil, nil
+		}
+		return false, nil, nil
+	}
+}

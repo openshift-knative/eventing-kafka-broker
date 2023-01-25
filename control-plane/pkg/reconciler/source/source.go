@@ -115,6 +115,7 @@ func (r Reconciler) reconcileConsumerGroup(ctx context.Context, ks *sources.Kafk
 			},
 		},
 		Spec: internalscg.ConsumerGroupSpec{
+			Replicas: ks.Spec.Consumers,
 			Template: internalscg.ConsumerTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
@@ -159,12 +160,16 @@ func (r Reconciler) reconcileConsumerGroup(ctx context.Context, ks *sources.Kafk
 	// TODO: make keda annotation values configurable and maybe unexposed
 	expectedCg.Annotations = kedafunc.SetAutoscalingAnnotations(ks.Annotations)
 
+	// If KEDA is enabled, then we ignore KafkaSource replicas setting
+	if r.isKEDAEnabled(ctx, ks.GetNamespace()) {
+		expectedCg.Spec.Replicas = nil
+	}
+
 	cg, err := r.ConsumerGroupLister.ConsumerGroups(ks.GetNamespace()).Get(string(ks.UID)) //Get by consumer group id
 	if err != nil && !apierrors.IsNotFound(err) {
 		return nil, err
 	}
 	if apierrors.IsNotFound(err) {
-		expectedCg.Spec.Replicas = ks.Spec.Consumers
 		cg, err := r.InternalsClient.InternalV1alpha1().ConsumerGroups(expectedCg.GetNamespace()).Create(ctx, expectedCg, metav1.CreateOptions{})
 		if err != nil && !apierrors.IsAlreadyExists(err) {
 			return nil, fmt.Errorf("failed to create consumer group %s/%s: %w", expectedCg.GetNamespace(), expectedCg.GetName(), err)
@@ -183,11 +188,6 @@ func (r Reconciler) reconcileConsumerGroup(ctx context.Context, ks *sources.Kafk
 		Status:     cg.Status,
 	}
 	newCg.Annotations = expectedCg.Annotations
-
-	// If KEDA is not enabled, then we must update the ConsumerGroup replicas to match KafkaSource consumers
-	if !r.isKEDAEnabled(ctx, cg.GetNamespace()) {
-		newCg.Spec.Replicas = ks.Spec.Consumers
-	}
 
 	if cg, err = r.InternalsClient.InternalV1alpha1().ConsumerGroups(cg.GetNamespace()).Update(ctx, newCg, metav1.UpdateOptions{}); err != nil {
 		return nil, fmt.Errorf("failed to update consumer group %s/%s: %w", newCg.GetNamespace(), newCg.GetName(), err)
