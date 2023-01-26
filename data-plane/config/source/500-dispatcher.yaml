@@ -151,7 +151,7 @@ spec:
             readOnlyRootFilesystem: true
             capabilities:
               drop:
-                - ALL
+              - ALL
       volumes:
         - name: config-kafka-source-data-plane
           configMap:
