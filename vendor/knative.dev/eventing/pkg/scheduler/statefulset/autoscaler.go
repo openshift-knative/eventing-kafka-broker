@@ -43,13 +43,18 @@ type Autoscaler interface {
 	Autoscale(ctx context.Context, attemptScaleDown bool, pending int32)
 }
 
+type AutoscaleTrigger struct {
+	AttempScaleDown bool
+	Pending         int32
+}
+
 type autoscaler struct {
 	statefulSetClient clientappsv1.StatefulSetInterface
 	statefulSetName   string
 	vpodLister        scheduler.VPodLister
 	logger            *zap.SugaredLogger
 	stateAccessor     st.StateAccessor
-	trigger           chan int32
+	trigger           chan AutoscaleTrigger
 	evictor           scheduler.Evictor
 
 	// capacity is the total number of virtual replicas available per pod.
@@ -75,7 +80,7 @@ func NewAutoscaler(ctx context.Context,
 		vpodLister:        lister,
 		stateAccessor:     stateAccessor,
 		evictor:           evictor,
-		trigger:           make(chan int32, 1),
+		trigger:           make(chan AutoscaleTrigger, 20),
 		capacity:          capacity,
 		refreshPeriod:     refreshPeriod,
 		lock:              new(sync.Mutex),
@@ -83,27 +88,21 @@ func NewAutoscaler(ctx context.Context,
 }
 
 func (a *autoscaler) Start(ctx context.Context) {
-	attemptScaleDown := false
-	pending := int32(0)
 	for {
 		select {
 		case <-ctx.Done():
 			return
-		case <-time.After(a.refreshPeriod):
-			attemptScaleDown = true
-		case pending = <-a.trigger:
-			attemptScaleDown = false
+		case t := <-a.trigger:
+			a.syncAutoscale(ctx, t.AttempScaleDown, t.Pending)
 		}
-
-		// Retry a few times, just so that we don't have to wait for the next beat when
-		// a transient error occurs
-		a.syncAutoscale(ctx, attemptScaleDown, pending)
-		pending = int32(0)
 	}
 }
 
 func (a *autoscaler) Autoscale(ctx context.Context, attemptScaleDown bool, pending int32) {
-	a.syncAutoscale(ctx, attemptScaleDown, pending)
+	a.trigger <- AutoscaleTrigger{
+		AttempScaleDown: attemptScaleDown,
+		Pending:         pending,
+	}
 }
 
 func (a *autoscaler) syncAutoscale(ctx context.Context, attemptScaleDown bool, pending int32) {

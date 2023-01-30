@@ -193,7 +193,7 @@ func (r *Reconciler) FinalizeKind(ctx context.Context, cg *kafkainternals.Consum
 		cg.Status.Placements = nil
 
 		// return an error to 1. update the status. 2. not clear the finalizer
-		return errors.New("placement list was not empty")
+		return fmt.Errorf("failed to unschedule consumer group: %w", err)
 	}
 
 	// Get consumers associated with the ConsumerGroup.
