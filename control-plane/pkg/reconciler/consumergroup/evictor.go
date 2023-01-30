@@ -124,6 +124,9 @@ func (e *evictor) disablePodScheduling(logger *zap.Logger, pod *corev1.Pod) erro
 	_, err := e.kubeClient.CoreV1().
 		Pods(pod.GetNamespace()).
 		Update(e.ctx, pod, metav1.UpdateOptions{})
+	if apierrors.IsNotFound(err) {
+		return nil
+	}
 	if err != nil {
 		return fmt.Errorf("failed to update pod %s/%s: %w", pod.GetNamespace(), pod.GetName(), err)
 	}
