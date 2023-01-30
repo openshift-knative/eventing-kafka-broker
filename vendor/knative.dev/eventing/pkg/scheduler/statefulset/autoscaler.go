@@ -90,6 +90,7 @@ func NewAutoscaler(ctx context.Context,
 }
 
 func (a *autoscaler) Start(ctx context.Context) {
+	a.maybeTriggerAutoscaleOnStart()
 	for {
 		select {
 		case <-ctx.Done():
@@ -97,6 +98,17 @@ func (a *autoscaler) Start(ctx context.Context) {
 		case t := <-a.trigger:
 			a.syncAutoscale(ctx, t.AttempScaleDown, t.Pending)
 		}
+	}
+}
+
+// maybeTriggerAutoscaleOnStart triggers the autoscaler when it is started when the vpodLister
+// returns no vpods.
+func (a *autoscaler) maybeTriggerAutoscaleOnStart() {
+	_, err := a.vpodLister()
+	if err != nil {
+		a.logger.Warnw("failed to list vpods", "err", err)
+	} else {
+		a.trigger <- AutoscaleTrigger{AttempScaleDown: true, Pending: 0}
 	}
 }
 
