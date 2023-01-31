@@ -37,6 +37,7 @@ require (
 
 require (
 	github.com/kedacore/keda/v2 v2.8.1
+	go.opencensus.io v0.23.0
 	knative.dev/eventing v0.35.1-0.20221110170317-23a7b568e00f
 	knative.dev/eventing-kafka v0.35.1
 	knative.dev/hack v0.0.0-20221010154335-3fdc50b9c24a
@@ -131,7 +132,6 @@ require (
 	github.com/wavesoftware/go-ensure v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
-	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/automaxprocs v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
