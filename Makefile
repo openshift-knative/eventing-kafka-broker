@@ -68,7 +68,6 @@ test-e2e-local:
 generate-dockerfiles:
 	./openshift/ci-operator/generate-dockerfiles.sh openshift/ci-operator/knative-images $(CONTROL_PLANE_IMAGES)
 	./openshift/ci-operator/generate-dockerfiles.sh openshift/ci-operator/knative-test-images $(TEST_IMAGES)
-	cp -r openshift/ci-operator/static-images/* openshift/ci-operator/knative-images/
 .PHONY: generate-dockerfiles
 
 # Generate an aggregated knative release yaml file, as well as a CI file with replaced image references
