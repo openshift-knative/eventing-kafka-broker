@@ -8,6 +8,7 @@ dockerfile_replace="s|registry.ci.openshift.org/openshift/release:golang-[a-zA-Z
 
 function generate_dockefiles() {
   local target_dir=$1; shift
+  rm -rf "${target_dir}"
   sed -i "${dockerfile_replace}" "openshift/ci-operator/build-image/Dockerfile"
   sed -i "${dockerfile_replace}" "openshift/ci-operator/Dockerfile.in"
   # Remove old images and re-generate, avoid stale images hanging around.
