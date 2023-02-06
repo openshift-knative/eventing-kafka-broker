@@ -1,0 +1,339 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+index e84f311fc..539bb94c8 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+@@ -18,6 +18,7 @@ package state
+ 
+ import (
+ 	"context"
++	"encoding/json"
+ 	"errors"
+ 	"fmt"
+ 	"strconv"
+@@ -97,6 +98,49 @@ type State struct {
+ 	ZoneSpread map[types.NamespacedName]map[string]int32
+ }
+ 
++func (s *State) MarshalJSON() ([]byte, error) {
++
++	type S struct {
++		FreeCap         []int32                     `json:"freeCap"`
++		SchedulablePods []int32                     `json:"schedulablePods"`
++		LastOrdinal     int32                       `json:"lastOrdinal"`
++		Capacity        int32                       `json:"capacity"`
++		Replicas        int32                       `json:"replicas"`
++		NumZones        int32                       `json:"numZones"`
++		NumNodes        int32                       `json:"numNodes"`
++		NodeToZoneMap   map[string]string           `json:"nodeToZoneMap"`
++		StatefulSetName string                      `json:"statefulSetName"`
++		PodSpread       map[string]map[string]int32 `json:"podSpread"`
++		NodeSpread      map[string]map[string]int32 `json:"nodeSpread"`
++		ZoneSpread      map[string]map[string]int32 `json:"zoneSpread"`
++	}
++
++	toJSONable := func(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
++		r := make(map[string]map[string]int32, len(ps))
++		for k, v := range ps {
++			r[k.String()] = v
++		}
++		return r
++	}
++
++	sj := S{
++		FreeCap:         s.FreeCap,
++		SchedulablePods: s.SchedulablePods,
++		LastOrdinal:     s.LastOrdinal,
++		Capacity:        s.Capacity,
++		Replicas:        s.Replicas,
++		NumZones:        s.NumZones,
++		NumNodes:        s.NumNodes,
++		NodeToZoneMap:   s.NodeToZoneMap,
++		StatefulSetName: s.StatefulSetName,
++		PodSpread:       toJSONable(s.PodSpread),
++		NodeSpread:      toJSONable(s.NodeSpread),
++		ZoneSpread:      toJSONable(s.ZoneSpread),
++	}
++
++	return json.Marshal(sj)
++}
++
+ // Free safely returns the free capacity at the given ordinal
+ func (s *State) Free(ordinal int32) int32 {
+ 	if int32(len(s.FreeCap)) <= ordinal {
+@@ -308,10 +352,13 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
+ 		}
+ 	}
+ 
+-	s.logger.Infow("cluster state info", zap.String("NumPods", fmt.Sprint(scale.Spec.Replicas)), zap.String("NumZones", fmt.Sprint(len(zoneMap))), zap.String("NumNodes", fmt.Sprint(len(nodeToZoneMap))), zap.String("Schedulable", fmt.Sprint(schedulablePods)))
+-	return &State{FreeCap: free, SchedulablePods: schedulablePods.List(), LastOrdinal: last, Capacity: s.capacity, Replicas: scale.Spec.Replicas, NumZones: int32(len(zoneMap)), NumNodes: int32(len(nodeToZoneMap)),
++	state := &State{FreeCap: free, SchedulablePods: schedulablePods.List(), LastOrdinal: last, Capacity: s.capacity, Replicas: scale.Spec.Replicas, NumZones: int32(len(zoneMap)), NumNodes: int32(len(nodeToZoneMap)),
+ 		SchedulerPolicy: s.schedulerPolicy, SchedPolicy: s.schedPolicy, DeschedPolicy: s.deschedPolicy, NodeToZoneMap: nodeToZoneMap, StatefulSetName: s.statefulSetName, PodLister: s.podLister,
+-		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}, nil
++		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}
++
++	s.logger.Debugw("cluster state info", zap.Any("state", state))
++
++	return state, nil
+ }
+ 
+ func (s *stateBuilder) updateFreeCapacity(free []int32, last int32, podName string, vreplicas int32) ([]int32, int32) {
+@@ -402,3 +449,12 @@ func contains(taints []v1.Taint, taint *v1.Taint) bool {
+ 	}
+ 	return false
+ }
++
++func (s *State) IsSchedulablePod(ordinal int32) bool {
++	for _, x := range s.SchedulablePods {
++		if x == ordinal {
++			return true
++		}
++	}
++	return false
++}
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+index d0a54f208..c740b00a0 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+@@ -42,10 +42,11 @@ type Autoscaler interface {
+ 
+ 	// Autoscale is used to immediately trigger the autoscaler with the hint
+ 	// that pending number of vreplicas couldn't be scheduled.
+-	Autoscale(ctx context.Context, attemptScaleDown bool, pending int32)
++	Autoscale(ctx context.Context, trigger AutoscaleTrigger)
+ }
+ 
+ type AutoscaleTrigger struct {
++	Reseved         Reseved
+ 	AttempScaleDown bool
+ 	Pending         int32
+ }
+@@ -63,8 +64,9 @@ type autoscaler struct {
+ 	capacity int32
+ 
+ 	// refreshPeriod is how often the autoscaler tries to scale down the statefulset
+-	refreshPeriod time.Duration
+-	lock          sync.Locker
++	refreshPeriod      time.Duration
++	lastCompactAttempt time.Time
++	lock               sync.Locker
+ }
+ 
+ func NewAutoscaler(ctx context.Context,
+@@ -86,6 +88,11 @@ func NewAutoscaler(ctx context.Context,
+ 		capacity:          capacity,
+ 		refreshPeriod:     refreshPeriod,
+ 		lock:              new(sync.Mutex),
++		// Anything that is less than now() - refreshPeriod, so that we will try to compact
++		// as soon as we start.
++		lastCompactAttempt: time.Now().
++			Add(-refreshPeriod).
++			Add(-time.Minute),
+ 	}
+ }
+ 
+@@ -96,7 +103,7 @@ func (a *autoscaler) Start(ctx context.Context) {
+ 		case <-ctx.Done():
+ 			return
+ 		case t := <-a.trigger:
+-			a.syncAutoscale(ctx, t.AttempScaleDown, t.Pending)
++			a.syncAutoscale(ctx, t)
+ 		}
+ 	}
+ }
+@@ -112,25 +119,25 @@ func (a *autoscaler) maybeTriggerAutoscaleOnStart() {
+ 	}
+ }
+ 
+-func (a *autoscaler) Autoscale(ctx context.Context, attemptScaleDown bool, pending int32) {
++func (a *autoscaler) Autoscale(ctx context.Context, trigger AutoscaleTrigger) {
+ 	select {
+-	case a.trigger <- AutoscaleTrigger{AttempScaleDown: attemptScaleDown, Pending: pending}:
++	case a.trigger <- trigger:
+ 	default:
+ 	}
+ }
+ 
+-func (a *autoscaler) syncAutoscale(ctx context.Context, attemptScaleDown bool, pending int32) {
++func (a *autoscaler) syncAutoscale(ctx context.Context, trigger AutoscaleTrigger) {
+ 	a.lock.Lock()
+ 	defer a.lock.Unlock()
+ 
+ 	wait.Poll(500*time.Millisecond, 5*time.Second, func() (bool, error) {
+-		err := a.doautoscale(ctx, attemptScaleDown, pending)
++		err := a.doautoscale(ctx, trigger)
+ 		return err == nil, nil
+ 	})
+ }
+ 
+-func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pending int32) error {
+-	state, err := a.stateAccessor.State(nil)
++func (a *autoscaler) doautoscale(ctx context.Context, trigger AutoscaleTrigger) error {
++	state, err := a.stateAccessor.State(trigger.Reseved)
+ 	if err != nil {
+ 		a.logger.Info("error while refreshing scheduler state (will retry)", zap.Error(err))
+ 		return err
+@@ -144,9 +151,9 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
+ 	}
+ 
+ 	a.logger.Infow("checking adapter capacity",
+-		zap.Int32("pending", pending),
++		zap.Int32("pending", trigger.Pending),
+ 		zap.Int32("replicas", scale.Spec.Replicas),
+-		zap.Int32("last ordinal", state.LastOrdinal))
++		zap.Any("state", state))
+ 
+ 	var scaleUpFactor, newreplicas, minNumPods int32
+ 	scaleUpFactor = 1                                                                                         // Non-HA scaling
+@@ -160,13 +167,13 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
+ 	newreplicas = state.LastOrdinal + 1 // Ideal number
+ 
+ 	// Take into account pending replicas and pods that are already filled (for even pod spread)
+-	if pending > 0 {
++	if trigger.Pending > 0 {
+ 		// Make sure to allocate enough pods for holding all pending replicas.
+ 		if state.SchedPolicy != nil && contains(state.SchedPolicy.Predicates, nil, st.EvenPodSpread) && len(state.FreeCap) > 0 { //HA scaling across pods
+ 			leastNonZeroCapacity := a.minNonZeroInt(state.FreeCap)
+-			minNumPods = int32(math.Ceil(float64(pending) / float64(leastNonZeroCapacity)))
++			minNumPods = int32(math.Ceil(float64(trigger.Pending) / float64(leastNonZeroCapacity)))
+ 		} else {
+-			minNumPods = int32(math.Ceil(float64(pending) / float64(a.capacity)))
++			minNumPods = int32(math.Ceil(float64(trigger.Pending) / float64(a.capacity)))
+ 		}
+ 		newreplicas += int32(math.Ceil(float64(minNumPods)/float64(scaleUpFactor)) * float64(scaleUpFactor))
+ 	}
+@@ -177,11 +184,15 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
+ 	}
+ 
+ 	// Only scale down if permitted
+-	if !attemptScaleDown && newreplicas < scale.Spec.Replicas {
++	if !trigger.AttempScaleDown && newreplicas < scale.Spec.Replicas {
+ 		newreplicas = scale.Spec.Replicas
+ 	}
+ 
+-	a.logger.Debugf("expected replicas %d, got %d", newreplicas, scale.Spec.Replicas)
++	a.logger.Debugw("Final scaling decision",
++		zap.Int32("expected", newreplicas),
++		zap.Int32("got", scale.Spec.Replicas),
++		zap.Bool("attempScaleDown", trigger.AttempScaleDown),
++	)
+ 
+ 	if newreplicas != scale.Spec.Replicas {
+ 		scale.Spec.Replicas = newreplicas
+@@ -192,7 +203,7 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
+ 			a.logger.Errorw("updating scale subresource failed", zap.Error(err))
+ 			return err
+ 		}
+-	} else if attemptScaleDown {
++	} else if trigger.AttempScaleDown {
+ 		// since the number of replicas hasn't changed and time has approached to scale down,
+ 		// take the opportunity to compact the vreplicas
+ 		a.mayCompact(state, scaleUpFactor)
+@@ -202,10 +213,21 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
+ 
+ func (a *autoscaler) mayCompact(s *st.State, scaleUpFactor int32) {
+ 
++	// This avoids a too aggressive scale down by adding a "grace period" based on the refresh
++	// period
++	nextAttempt := a.lastCompactAttempt.Add(a.refreshPeriod)
++	if time.Now().Before(nextAttempt) {
++		a.logger.Debugw("Compact was retried before refresh period",
++			zap.Time("lastCompactAttempt", a.lastCompactAttempt),
++			zap.Time("nextAttempt", nextAttempt),
++			zap.String("refreshPeriod", a.refreshPeriod.String()),
++		)
++		return
++	}
++
+ 	a.logger.Debugw("Trying to compact and scale down",
+ 		zap.Int32("scaleUpFactor", scaleUpFactor),
+-		zap.Any("schedulablePods", s.SchedulablePods),
+-		zap.Int32("lastOrdinal", s.LastOrdinal),
++		zap.Any("state", s),
+ 	)
+ 
+ 	// when there is only one pod there is nothing to move or number of pods is just enough!
+@@ -220,6 +242,9 @@ func (a *autoscaler) mayCompact(s *st.State, scaleUpFactor int32) {
+ 		usedInLastPod := s.Capacity - s.Free(s.LastOrdinal)
+ 
+ 		if freeCapacity >= usedInLastPod {
++
++			a.lastCompactAttempt = time.Now()
++
+ 			err := a.compact(s, scaleUpFactor)
+ 			if err != nil {
+ 				a.logger.Errorw("vreplicas compaction failed", zap.Error(err))
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+index 1d22452eb..bb40bd372 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+@@ -106,6 +106,8 @@ type StatefulSetScheduler struct {
+ 	reserved map[types.NamespacedName]map[string]int32
+ }
+ 
++type Reseved map[types.NamespacedName]map[string]int32
++
+ func NewStatefulSetScheduler(ctx context.Context,
+ 	namespace, name string,
+ 	lister scheduler.VPodLister,
+@@ -167,7 +169,11 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
+ 
+ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1.Placement, error) {
+ 	// Attempt to scale down (async)
+-	defer s.autoscaler.Autoscale(s.ctx, true, s.pendingVReplicas())
++	defer s.autoscaler.Autoscale(s.ctx, AutoscaleTrigger{
++		Reseved:         s.copyReserved(),
++		AttempScaleDown: true,
++		Pending:         s.pendingVReplicas(),
++	})
+ 
+ 	logger := s.logger.With("key", vpod.GetKey())
+ 	logger.Info("scheduling")
+@@ -180,10 +186,17 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
+ 		return nil, err
+ 	}
+ 
+-	placements := vpod.GetPlacements()
+-	existingPlacements := placements
++	existingPlacements := vpod.GetPlacements()
+ 	var left int32
+ 
++	placements := make([]duckv1alpha1.Placement, 0, len(existingPlacements))
++	// Remove unschedulable pods from placements
++	for _, p := range existingPlacements {
++		if state.IsSchedulablePod(st.OrdinalFromPodName(p.PodName)) {
++			placements = append(placements, *p.DeepCopy())
++		}
++	}
++
+ 	// The scheduler when policy type is
+ 	// Policy: MAXFILLUP (SchedulerPolicyType == MAXFILLUP)
+ 	// - allocates as many vreplicas as possible to the same pod(s)
+@@ -245,7 +258,11 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
+ 
+ 		// Trigger the autoscaler (async)
+ 		if s.autoscaler != nil {
+-			s.autoscaler.Autoscale(s.ctx, false, s.pendingVReplicas())
++			s.autoscaler.Autoscale(s.ctx, AutoscaleTrigger{
++				Reseved:         s.copyReserved(),
++				AttempScaleDown: false,
++				Pending:         s.pendingVReplicas(),
++			})
+ 		}
+ 
+ 		if state.SchedPolicy != nil {
+@@ -733,3 +750,15 @@ func (s *StatefulSetScheduler) notEnoughPodReplicas(left int32) error {
+ 		controller.NewRequeueAfter(5*time.Second),
+ 	)
+ }
++
++func (s *StatefulSetScheduler) copyReserved() Reseved {
++	reserved := make(Reseved, len(s.reserved))
++	for k, v := range s.reserved {
++		vv := make(map[string]int32, len(v))
++		for k1, v1 := range v {
++			vv[k1] = v1
++		}
++		reserved[k] = vv
++	}
++	return reserved
++}

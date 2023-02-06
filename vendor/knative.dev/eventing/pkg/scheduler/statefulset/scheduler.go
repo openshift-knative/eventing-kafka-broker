@@ -106,6 +106,8 @@ type StatefulSetScheduler struct {
 	reserved map[types.NamespacedName]map[string]int32
 }
 
+type Reseved map[types.NamespacedName]map[string]int32
+
 func NewStatefulSetScheduler(ctx context.Context,
 	namespace, name string,
 	lister scheduler.VPodLister,
@@ -167,7 +169,11 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
 
 func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1.Placement, error) {
 	// Attempt to scale down (async)
-	defer s.autoscaler.Autoscale(s.ctx, true, s.pendingVReplicas())
+	defer s.autoscaler.Autoscale(s.ctx, AutoscaleTrigger{
+		Reseved:         s.copyReserved(),
+		AttempScaleDown: true,
+		Pending:         s.pendingVReplicas(),
+	})
 
 	logger := s.logger.With("key", vpod.GetKey())
 	logger.Info("scheduling")
@@ -180,9 +186,16 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
 		return nil, err
 	}
 
-	placements := vpod.GetPlacements()
-	existingPlacements := placements
+	existingPlacements := vpod.GetPlacements()
 	var left int32
+
+	placements := make([]duckv1alpha1.Placement, 0, len(existingPlacements))
+	// Remove unschedulable pods from placements
+	for _, p := range existingPlacements {
+		if state.IsSchedulablePod(st.OrdinalFromPodName(p.PodName)) {
+			placements = append(placements, *p.DeepCopy())
+		}
+	}
 
 	// The scheduler when policy type is
 	// Policy: MAXFILLUP (SchedulerPolicyType == MAXFILLUP)
@@ -245,7 +258,11 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
 
 		// Trigger the autoscaler (async)
 		if s.autoscaler != nil {
-			s.autoscaler.Autoscale(s.ctx, false, s.pendingVReplicas())
+			s.autoscaler.Autoscale(s.ctx, AutoscaleTrigger{
+				Reseved:         s.copyReserved(),
+				AttempScaleDown: false,
+				Pending:         s.pendingVReplicas(),
+			})
 		}
 
 		if state.SchedPolicy != nil {
@@ -732,4 +749,16 @@ func (s *StatefulSetScheduler) notEnoughPodReplicas(left int32) error {
 		left,
 		controller.NewRequeueAfter(5*time.Second),
 	)
+}
+
+func (s *StatefulSetScheduler) copyReserved() Reseved {
+	reserved := make(Reseved, len(s.reserved))
+	for k, v := range s.reserved {
+		vv := make(map[string]int32, len(v))
+		for k1, v1 := range v {
+			vv[k1] = v1
+		}
+		reserved[k] = vv
+	}
+	return reserved
 }

@@ -18,6 +18,7 @@ package state
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -95,6 +96,49 @@ type State struct {
 
 	// Stores for each vpod, a map of zonename to total number of vreplicas placed on all pods located in that zone currently
 	ZoneSpread map[types.NamespacedName]map[string]int32
+}
+
+func (s *State) MarshalJSON() ([]byte, error) {
+
+	type S struct {
+		FreeCap         []int32                     `json:"freeCap"`
+		SchedulablePods []int32                     `json:"schedulablePods"`
+		LastOrdinal     int32                       `json:"lastOrdinal"`
+		Capacity        int32                       `json:"capacity"`
+		Replicas        int32                       `json:"replicas"`
+		NumZones        int32                       `json:"numZones"`
+		NumNodes        int32                       `json:"numNodes"`
+		NodeToZoneMap   map[string]string           `json:"nodeToZoneMap"`
+		StatefulSetName string                      `json:"statefulSetName"`
+		PodSpread       map[string]map[string]int32 `json:"podSpread"`
+		NodeSpread      map[string]map[string]int32 `json:"nodeSpread"`
+		ZoneSpread      map[string]map[string]int32 `json:"zoneSpread"`
+	}
+
+	toJSONable := func(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
+		r := make(map[string]map[string]int32, len(ps))
+		for k, v := range ps {
+			r[k.String()] = v
+		}
+		return r
+	}
+
+	sj := S{
+		FreeCap:         s.FreeCap,
+		SchedulablePods: s.SchedulablePods,
+		LastOrdinal:     s.LastOrdinal,
+		Capacity:        s.Capacity,
+		Replicas:        s.Replicas,
+		NumZones:        s.NumZones,
+		NumNodes:        s.NumNodes,
+		NodeToZoneMap:   s.NodeToZoneMap,
+		StatefulSetName: s.StatefulSetName,
+		PodSpread:       toJSONable(s.PodSpread),
+		NodeSpread:      toJSONable(s.NodeSpread),
+		ZoneSpread:      toJSONable(s.ZoneSpread),
+	}
+
+	return json.Marshal(sj)
 }
 
 // Free safely returns the free capacity at the given ordinal
@@ -308,10 +352,13 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
 		}
 	}
 
-	s.logger.Infow("cluster state info", zap.String("NumPods", fmt.Sprint(scale.Spec.Replicas)), zap.String("NumZones", fmt.Sprint(len(zoneMap))), zap.String("NumNodes", fmt.Sprint(len(nodeToZoneMap))), zap.String("Schedulable", fmt.Sprint(schedulablePods)))
-	return &State{FreeCap: free, SchedulablePods: schedulablePods.List(), LastOrdinal: last, Capacity: s.capacity, Replicas: scale.Spec.Replicas, NumZones: int32(len(zoneMap)), NumNodes: int32(len(nodeToZoneMap)),
+	state := &State{FreeCap: free, SchedulablePods: schedulablePods.List(), LastOrdinal: last, Capacity: s.capacity, Replicas: scale.Spec.Replicas, NumZones: int32(len(zoneMap)), NumNodes: int32(len(nodeToZoneMap)),
 		SchedulerPolicy: s.schedulerPolicy, SchedPolicy: s.schedPolicy, DeschedPolicy: s.deschedPolicy, NodeToZoneMap: nodeToZoneMap, StatefulSetName: s.statefulSetName, PodLister: s.podLister,
-		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}, nil
+		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}
+
+	s.logger.Debugw("cluster state info", zap.Any("state", state))
+
+	return state, nil
 }
 
 func (s *stateBuilder) updateFreeCapacity(free []int32, last int32, podName string, vreplicas int32) ([]int32, int32) {
@@ -397,6 +444,15 @@ func isNodeUnschedulable(node *v1.Node) bool {
 func contains(taints []v1.Taint, taint *v1.Taint) bool {
 	for _, v := range taints {
 		if v.MatchTaint(taint) {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *State) IsSchedulablePod(ordinal int32) bool {
+	for _, x := range s.SchedulablePods {
+		if x == ordinal {
 			return true
 		}
 	}

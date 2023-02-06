@@ -10,6 +10,7 @@ git apply openshift/patches/override-min-version.patch
 git apply openshift/patches/use_kafkacat_from_ocp.patch
 git apply openshift/patches/security-context-for-test-pods.patch
 git apply openshift/patches/fix_scheduler_and_autoscaler.patch
+git apply openshift/patches/fix_scheduler_and_autoscaler_scale_down_delay.patch
 
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml

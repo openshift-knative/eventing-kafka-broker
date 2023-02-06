@@ -42,10 +42,11 @@ type Autoscaler interface {
 
 	// Autoscale is used to immediately trigger the autoscaler with the hint
 	// that pending number of vreplicas couldn't be scheduled.
-	Autoscale(ctx context.Context, attemptScaleDown bool, pending int32)
+	Autoscale(ctx context.Context, trigger AutoscaleTrigger)
 }
 
 type AutoscaleTrigger struct {
+	Reseved         Reseved
 	AttempScaleDown bool
 	Pending         int32
 }
@@ -63,8 +64,9 @@ type autoscaler struct {
 	capacity int32
 
 	// refreshPeriod is how often the autoscaler tries to scale down the statefulset
-	refreshPeriod time.Duration
-	lock          sync.Locker
+	refreshPeriod      time.Duration
+	lastCompactAttempt time.Time
+	lock               sync.Locker
 }
 
 func NewAutoscaler(ctx context.Context,
@@ -86,6 +88,11 @@ func NewAutoscaler(ctx context.Context,
 		capacity:          capacity,
 		refreshPeriod:     refreshPeriod,
 		lock:              new(sync.Mutex),
+		// Anything that is less than now() - refreshPeriod, so that we will try to compact
+		// as soon as we start.
+		lastCompactAttempt: time.Now().
+			Add(-refreshPeriod).
+			Add(-time.Minute),
 	}
 }
 
@@ -96,7 +103,7 @@ func (a *autoscaler) Start(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case t := <-a.trigger:
-			a.syncAutoscale(ctx, t.AttempScaleDown, t.Pending)
+			a.syncAutoscale(ctx, t)
 		}
 	}
 }
@@ -112,25 +119,25 @@ func (a *autoscaler) maybeTriggerAutoscaleOnStart() {
 	}
 }
 
-func (a *autoscaler) Autoscale(ctx context.Context, attemptScaleDown bool, pending int32) {
+func (a *autoscaler) Autoscale(ctx context.Context, trigger AutoscaleTrigger) {
 	select {
-	case a.trigger <- AutoscaleTrigger{AttempScaleDown: attemptScaleDown, Pending: pending}:
+	case a.trigger <- trigger:
 	default:
 	}
 }
 
-func (a *autoscaler) syncAutoscale(ctx context.Context, attemptScaleDown bool, pending int32) {
+func (a *autoscaler) syncAutoscale(ctx context.Context, trigger AutoscaleTrigger) {
 	a.lock.Lock()
 	defer a.lock.Unlock()
 
 	wait.Poll(500*time.Millisecond, 5*time.Second, func() (bool, error) {
-		err := a.doautoscale(ctx, attemptScaleDown, pending)
+		err := a.doautoscale(ctx, trigger)
 		return err == nil, nil
 	})
 }
 
-func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pending int32) error {
-	state, err := a.stateAccessor.State(nil)
+func (a *autoscaler) doautoscale(ctx context.Context, trigger AutoscaleTrigger) error {
+	state, err := a.stateAccessor.State(trigger.Reseved)
 	if err != nil {
 		a.logger.Info("error while refreshing scheduler state (will retry)", zap.Error(err))
 		return err
@@ -144,9 +151,9 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
 	}
 
 	a.logger.Infow("checking adapter capacity",
-		zap.Int32("pending", pending),
+		zap.Int32("pending", trigger.Pending),
 		zap.Int32("replicas", scale.Spec.Replicas),
-		zap.Int32("last ordinal", state.LastOrdinal))
+		zap.Any("state", state))
 
 	var scaleUpFactor, newreplicas, minNumPods int32
 	scaleUpFactor = 1                                                                                         // Non-HA scaling
@@ -160,13 +167,13 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
 	newreplicas = state.LastOrdinal + 1 // Ideal number
 
 	// Take into account pending replicas and pods that are already filled (for even pod spread)
-	if pending > 0 {
+	if trigger.Pending > 0 {
 		// Make sure to allocate enough pods for holding all pending replicas.
 		if state.SchedPolicy != nil && contains(state.SchedPolicy.Predicates, nil, st.EvenPodSpread) && len(state.FreeCap) > 0 { //HA scaling across pods
 			leastNonZeroCapacity := a.minNonZeroInt(state.FreeCap)
-			minNumPods = int32(math.Ceil(float64(pending) / float64(leastNonZeroCapacity)))
+			minNumPods = int32(math.Ceil(float64(trigger.Pending) / float64(leastNonZeroCapacity)))
 		} else {
-			minNumPods = int32(math.Ceil(float64(pending) / float64(a.capacity)))
+			minNumPods = int32(math.Ceil(float64(trigger.Pending) / float64(a.capacity)))
 		}
 		newreplicas += int32(math.Ceil(float64(minNumPods)/float64(scaleUpFactor)) * float64(scaleUpFactor))
 	}
@@ -177,11 +184,15 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
 	}
 
 	// Only scale down if permitted
-	if !attemptScaleDown && newreplicas < scale.Spec.Replicas {
+	if !trigger.AttempScaleDown && newreplicas < scale.Spec.Replicas {
 		newreplicas = scale.Spec.Replicas
 	}
 
-	a.logger.Debugf("expected replicas %d, got %d", newreplicas, scale.Spec.Replicas)
+	a.logger.Debugw("Final scaling decision",
+		zap.Int32("expected", newreplicas),
+		zap.Int32("got", scale.Spec.Replicas),
+		zap.Bool("attempScaleDown", trigger.AttempScaleDown),
+	)
 
 	if newreplicas != scale.Spec.Replicas {
 		scale.Spec.Replicas = newreplicas
@@ -192,7 +203,7 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
 			a.logger.Errorw("updating scale subresource failed", zap.Error(err))
 			return err
 		}
-	} else if attemptScaleDown {
+	} else if trigger.AttempScaleDown {
 		// since the number of replicas hasn't changed and time has approached to scale down,
 		// take the opportunity to compact the vreplicas
 		a.mayCompact(state, scaleUpFactor)
@@ -202,10 +213,21 @@ func (a *autoscaler) doautoscale(ctx context.Context, attemptScaleDown bool, pen
 
 func (a *autoscaler) mayCompact(s *st.State, scaleUpFactor int32) {
 
+	// This avoids a too aggressive scale down by adding a "grace period" based on the refresh
+	// period
+	nextAttempt := a.lastCompactAttempt.Add(a.refreshPeriod)
+	if time.Now().Before(nextAttempt) {
+		a.logger.Debugw("Compact was retried before refresh period",
+			zap.Time("lastCompactAttempt", a.lastCompactAttempt),
+			zap.Time("nextAttempt", nextAttempt),
+			zap.String("refreshPeriod", a.refreshPeriod.String()),
+		)
+		return
+	}
+
 	a.logger.Debugw("Trying to compact and scale down",
 		zap.Int32("scaleUpFactor", scaleUpFactor),
-		zap.Any("schedulablePods", s.SchedulablePods),
-		zap.Int32("lastOrdinal", s.LastOrdinal),
+		zap.Any("state", s),
 	)
 
 	// when there is only one pod there is nothing to move or number of pods is just enough!
@@ -220,6 +242,9 @@ func (a *autoscaler) mayCompact(s *st.State, scaleUpFactor int32) {
 		usedInLastPod := s.Capacity - s.Free(s.LastOrdinal)
 
 		if freeCapacity >= usedInLastPod {
+
+			a.lastCompactAttempt = time.Now()
+
 			err := a.compact(s, scaleUpFactor)
 			if err != nil {
 				a.logger.Errorw("vreplicas compaction failed", zap.Error(err))
