@@ -146,6 +146,20 @@ func NewController(ctx context.Context, watcher configmap.Watcher) *controller.I
 
 	ResyncOnStatefulSetChange(ctx, globalResync)
 
+	go func() {
+		for {
+			select {
+			case <-time.After(c.RefreshPeriod):
+				logger.Debugw("Global resync after refresh period",
+					zap.Duration("refreshPeriod", c.RefreshPeriod),
+				)
+				globalResync(nil)
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
 	//Todo: ScaledObject informer when KEDA is installed
 
 	return impl
