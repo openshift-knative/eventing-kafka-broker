@@ -54,9 +54,8 @@ func TestKafkaSourceDeletedFromContractConfigMaps(t *testing.T) {
 		knative.WithLoggingConfig,
 		knative.WithTracingConfig,
 		k8s.WithEventListener,
-		environment.Managed(t),
+		environment.WithTestLogger(t),
 	)
-	t.Cleanup(env.Finish)
 
 	env.Test(ctx, t, features.SetupKafkaSources("permanent-kafka-source-", 21))
 	env.Test(ctx, t, features.SetupAndCleanupKafkaSources("x-kafka-source-", 42))
