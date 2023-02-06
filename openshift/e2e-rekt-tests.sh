@@ -7,6 +7,8 @@ set -Eeuox pipefail
 
 failed=0
 
+(( !failed )) && scale_up_workers "4" || failed=1
+
 (( !failed )) && install_serverless || failed=1
 
 (( !failed )) && run_e2e_new_tests || failed=1
