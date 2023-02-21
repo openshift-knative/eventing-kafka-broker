@@ -113,7 +113,9 @@ func ConsumerUID(uid string) ConsumerOption {
 type DeliverySpecOption func(spec *kafkainternals.DeliverySpec)
 
 func NewConsumerSpecDelivery(order internals.DeliveryOrdering, options ...DeliverySpecOption) *kafkainternals.DeliverySpec {
-	d := &kafkainternals.DeliverySpec{Ordering: order}
+	d := &kafkainternals.DeliverySpec{
+		Ordering: order,
+	}
 
 	for _, opt := range options {
 		opt(d)
