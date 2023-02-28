@@ -80,13 +80,13 @@ index 4ba55f5a9..8dafdc1b8 100644
          - name: kafka-broker-brokers-triggers
            configMap:
 diff --git a/data-plane/config/brokerv2/500-dispatcher.yaml b/data-plane/config/brokerv2/500-dispatcher.yaml
-index 5f850fe8c..ed40dc782 100644
+index 27d9ecc44..12b78c93b 100644
 --- a/data-plane/config/brokerv2/500-dispatcher.yaml
 +++ b/data-plane/config/brokerv2/500-dispatcher.yaml
-@@ -153,8 +153,6 @@ spec:
+@@ -158,8 +158,6 @@ spec:
              capabilities:
                drop:
-               - ALL
+                 - ALL
 -            seccompProfile:
 -              type: RuntimeDefault
        volumes:
