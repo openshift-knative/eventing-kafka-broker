@@ -18,6 +18,8 @@ package features
 
 import (
 	"k8s.io/apimachinery/pkg/types"
+	"knative.dev/eventing/pkg/apis/eventing"
+	"knative.dev/reconciler-test/pkg/manifest"
 
 	"knative.dev/pkg/system"
 
@@ -37,12 +39,15 @@ import (
 func BrokerConfigmapCreated(configName string) *feature.Feature {
 	f := feature.NewFeatureNamed("broker configmap created")
 
-	f.Setup("create broker config", brokerconfigmap.Install(
-		configName,
+	opts := []manifest.CfgFn{
 		brokerconfigmap.WithBootstrapServer(testpkg.BootstrapServersPlaintext),
 		brokerconfigmap.WithNumPartitions(1),
 		brokerconfigmap.WithReplicationFactor(1),
-	))
+	}
+	if broker.EnvCfg.BrokerClass == eventing.MTChannelBrokerClassValue {
+		opts = []manifest.CfgFn{brokerconfigmap.WithKafkaChannelMTBroker()}
+	}
+	f.Setup("create broker config", brokerconfigmap.Install(configName, opts...))
 
 	return f
 }
