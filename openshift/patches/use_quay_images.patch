@@ -15,7 +15,7 @@ index f43cf83f7..5e77c37cc 100755
      spec:
        containers:
        - name: single-heartbeat
--        image: ko://knative.dev/eventing/test/test_images/heartbeats
+-        image: ko://knative.dev/eventing/cmd/heartbeats
 +        image: quay.io/openshift-knative/knative-eventing-sources-heartbeats:v0.13.2
          args:
          - --period=1
