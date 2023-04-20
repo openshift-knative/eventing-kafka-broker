@@ -34,7 +34,6 @@ resolve_resources vendor/knative.dev/eventing/test/test_images/request-sender ve
 resolve_resources vendor/knative.dev/eventing/test/test_images/recordevents vendor/knative.dev/eventing/test/test_images/recordevents/pod.yaml "${image_prefix}" "${tag}" true
 resolve_resources vendor/knative.dev/eventing/test/test_images/print vendor/knative.dev/eventing/test/test_images/print/pod.yaml "${image_prefix}" "${tag}" true
 resolve_resources vendor/knative.dev/eventing/test/test_images/performance vendor/knative.dev/eventing/test/test_images/performance/pod.yaml "${image_prefix}" "${tag}" true
-resolve_resources vendor/knative.dev/eventing/test/test_images/heartbeats vendor/knative.dev/eventing/test/test_images/heartbeats/pod.yaml "${image_prefix}" "${tag}" true
 resolve_resources vendor/knative.dev/eventing/test/test_images/event-sender vendor/knative.dev/eventing/test/test_images/event-sender/pod.yaml "${image_prefix}" "${tag}" true
 resolve_resources vendor/knative.dev/eventing/test/rekt/resources/containersource vendor/knative.dev/eventing/test/rekt/resources/containersource/containersource.yaml "${image_prefix}" "${tag}" true
 resolve_resources vendor/knative.dev/reconciler-test/pkg/eventshub vendor/knative.dev/reconciler-test/pkg/eventshub/103-pod.yaml "${image_prefix}" "${tag}" true "eventshub"
