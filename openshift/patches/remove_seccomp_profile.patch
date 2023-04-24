@@ -1,0 +1,159 @@
+diff --git a/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml b/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
+index 6a495b35a..ee04dcb6a 100644
+--- a/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
++++ b/control-plane/config/eventing-kafka-broker/200-controller/500-controller.yaml
+@@ -189,6 +189,4 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       restartPolicy: Always
+diff --git a/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml b/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
+index 2c1347799..c223de922 100644
+--- a/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
++++ b/control-plane/config/eventing-kafka-broker/200-webhook/500-webhook.yaml
+@@ -85,8 +85,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+ 
+           ports:
+             - name: https-webhook
+diff --git a/control-plane/config/eventing-kafka-source/200-controller/500-controller.yaml b/control-plane/config/eventing-kafka-source/200-controller/500-controller.yaml
+index 2a2977f65..cda7d4dba 100644
+--- a/control-plane/config/eventing-kafka-source/200-controller/500-controller.yaml
++++ b/control-plane/config/eventing-kafka-source/200-controller/500-controller.yaml
+@@ -117,6 +117,4 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       restartPolicy: Always
+diff --git a/control-plane/config/post-install/500-post-install-job.yaml b/control-plane/config/post-install/500-post-install-job.yaml
+index a368c9efa..b43c8ab46 100644
+--- a/control-plane/config/post-install/500-post-install-job.yaml
++++ b/control-plane/config/post-install/500-post-install-job.yaml
+@@ -50,5 +50,3 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+diff --git a/control-plane/config/post-install/500-storage-version-migrator.yaml b/control-plane/config/post-install/500-storage-version-migrator.yaml
+index 41e712546..5933434b8 100644
+--- a/control-plane/config/post-install/500-storage-version-migrator.yaml
++++ b/control-plane/config/post-install/500-storage-version-migrator.yaml
+@@ -50,5 +50,3 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+diff --git a/data-plane/config/broker/500-dispatcher.yaml b/data-plane/config/broker/500-dispatcher.yaml
+index 173d1141f..4ea36f830 100644
+--- a/data-plane/config/broker/500-dispatcher.yaml
++++ b/data-plane/config/broker/500-dispatcher.yaml
+@@ -145,8 +145,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: config-kafka-broker-data-plane
+           configMap:
+diff --git a/data-plane/config/broker/500-receiver.yaml b/data-plane/config/broker/500-receiver.yaml
+index 4ba55f5a9..8dafdc1b8 100644
+--- a/data-plane/config/broker/500-receiver.yaml
++++ b/data-plane/config/broker/500-receiver.yaml
+@@ -148,8 +148,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: kafka-broker-brokers-triggers
+           configMap:
+diff --git a/data-plane/config/brokerv2/500-dispatcher.yaml b/data-plane/config/brokerv2/500-dispatcher.yaml
+index 27d9ecc44..12b78c93b 100644
+--- a/data-plane/config/brokerv2/500-dispatcher.yaml
++++ b/data-plane/config/brokerv2/500-dispatcher.yaml
+@@ -158,8 +158,6 @@ spec:
+             capabilities:
+               drop:
+                 - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: config-kafka-broker-data-plane
+           configMap:
+diff --git a/data-plane/config/channel/500-dispatcher.yaml b/data-plane/config/channel/500-dispatcher.yaml
+index e5825d297..1ee4ca93a 100644
+--- a/data-plane/config/channel/500-dispatcher.yaml
++++ b/data-plane/config/channel/500-dispatcher.yaml
+@@ -145,8 +145,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: config-kafka-channel-data-plane
+           configMap:
+diff --git a/data-plane/config/channel/500-receiver.yaml b/data-plane/config/channel/500-receiver.yaml
+index 92699ad98..32336850b 100644
+--- a/data-plane/config/channel/500-receiver.yaml
++++ b/data-plane/config/channel/500-receiver.yaml
+@@ -148,8 +148,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: kafka-channel-channels-subscriptions
+           configMap:
+diff --git a/data-plane/config/channelv2/500-dispatcher.yaml b/data-plane/config/channelv2/500-dispatcher.yaml
+index 318d83159..42faa398f 100644
+--- a/data-plane/config/channelv2/500-dispatcher.yaml
++++ b/data-plane/config/channelv2/500-dispatcher.yaml
+@@ -154,8 +154,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: config-kafka-channel-data-plane
+           configMap:
+diff --git a/data-plane/config/sink/500-receiver.yaml b/data-plane/config/sink/500-receiver.yaml
+index 10c1cd783..cede39615 100644
+--- a/data-plane/config/sink/500-receiver.yaml
++++ b/data-plane/config/sink/500-receiver.yaml
+@@ -148,8 +148,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: kafka-sink-sinks
+           configMap:
+diff --git a/data-plane/config/source/500-dispatcher.yaml b/data-plane/config/source/500-dispatcher.yaml
+index 215ab722c..4c6d59bd7 100644
+--- a/data-plane/config/source/500-dispatcher.yaml
++++ b/data-plane/config/source/500-dispatcher.yaml
+@@ -154,8 +154,6 @@ spec:
+             capabilities:
+               drop:
+               - ALL
+-            seccompProfile:
+-              type: RuntimeDefault
+       volumes:
+         - name: config-kafka-source-data-plane
+           configMap:
