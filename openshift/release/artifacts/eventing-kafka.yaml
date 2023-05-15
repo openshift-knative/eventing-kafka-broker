@@ -21,7 +21,7 @@ metadata:
   name: kafka-broker-config
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
   default.topic.partitions: "10"
   default.topic.replication.factor: "3"
@@ -48,7 +48,7 @@ metadata:
   labels:
     duck.knative.dev/addressable: "true"
     knative.dev/crd-install: "true"
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 spec:
   group: eventing.knative.dev
   names:
@@ -229,7 +229,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     eventing.knative.dev/source: "true"
     duck.knative.dev/source: "true"
     knative.dev/crd-install: "true"
@@ -318,7 +318,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: eventing-kafka-source-observer
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     duck.knative.dev/source: "true"
 rules:
   - apiGroups:
@@ -350,7 +350,7 @@ metadata:
   name: config-kafka-source-defaults
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   annotations:
     knative.dev/example-checksum: "b6ed351d"
 data:
@@ -411,7 +411,7 @@ metadata:
   name: kafka-channel-config
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
   bootstrap.servers: "my-cluster-kafka-bootstrap.kafka:9092"
 ---
@@ -434,7 +434,7 @@ kind: CustomResourceDefinition
 metadata:
   name: kafkachannels.messaging.knative.dev
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     knative.dev/crd-install: "true"
     messaging.knative.dev/subscribable: "true"
     duck.knative.dev/addressable: "true"
@@ -702,7 +702,7 @@ kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     knative.dev/crd-install: "true"
   name: consumergroups.internal.kafka.eventing.knative.dev
 spec:
@@ -770,7 +770,7 @@ kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     knative.dev/crd-install: "true"
   name: consumers.internal.kafka.eventing.knative.dev
 spec:
@@ -826,7 +826,7 @@ metadata:
   name: config-kafka-autoscaler
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
     class: "keda.autoscaling.knative.dev"
     min-scale: "0"
@@ -856,7 +856,7 @@ metadata:
   name: config-kafka-descheduler
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
     predicates: |+
                     []
@@ -919,7 +919,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   name: config-kafka-leader-election
   namespace: knative-eventing
   annotations:
@@ -985,7 +985,7 @@ metadata:
   name: config-kafka-scheduler
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
     predicates: |+
                   [
@@ -1027,7 +1027,7 @@ metadata:
   name: kafka-config-logging
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 data:
   config.xml: |
     <configuration>
@@ -1084,7 +1084,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: knative-kafka-addressable-resolver
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     duck.knative.dev/addressable: "true"
 # Do not use this role directly. These rules will be added to the "addressable-resolver" role.
 rules:
@@ -1127,7 +1127,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-channelable-manipulator
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     duck.knative.dev/channelable: "true"
 # Do not use this role directly. These rules will be added to the "channelable-manipulator" role.
 rules:
@@ -1167,7 +1167,7 @@ kind: ClusterRole
 metadata:
   name: kafka-controller
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   - apiGroups:
       - ""
@@ -1446,7 +1446,7 @@ metadata:
   name: kafka-controller
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -1469,7 +1469,7 @@ kind: ClusterRoleBinding
 metadata:
   name: kafka-controller
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: kafka-controller
@@ -1485,7 +1485,7 @@ kind: ClusterRoleBinding
 metadata:
   name: kafka-controller-addressable-resolver
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: kafka-controller
@@ -1518,7 +1518,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-controller
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-controller
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -1530,7 +1530,7 @@ spec:
       name: kafka-controller
       labels:
         app: kafka-controller
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-controller
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -1702,7 +1702,7 @@ kind: ClusterRole
 metadata:
   name: kafka-webhook-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   # For watching logging configuration and getting certs.
   - apiGroups:
@@ -1814,7 +1814,7 @@ metadata:
   name: kafka-webhook-eventing
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -1837,7 +1837,7 @@ kind: ClusterRoleBinding
 metadata:
   name: kafka-webhook-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: kafka-webhook-eventing
@@ -1867,7 +1867,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: defaulting.webhook.kafka.eventing.knative.dev
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 webhooks:
   - admissionReviewVersions: [ "v1", "v1beta1" ]
     clientConfig:
@@ -1898,7 +1898,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: pods.defaulting.webhook.kafka.eventing.knative.dev
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 webhooks:
   # Dispatcher pods webhook config.
   - admissionReviewVersions: [ "v1", "v1beta1" ]
@@ -1939,7 +1939,7 @@ metadata:
   name: kafka-webhook-eventing-certs
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 # The data is populated at install time.
 ---
 # Copyright 2020 The Knative Authors
@@ -1961,7 +1961,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: validation.webhook.kafka.eventing.knative.dev
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 webhooks:
   - admissionReviewVersions: ["v1", "v1beta1"]
     clientConfig:
@@ -1994,7 +1994,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-webhook-eventing
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-webhook-eventing
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -2005,7 +2005,7 @@ spec:
     metadata:
       labels:
         app: kafka-webhook-eventing
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-webhook-eventing
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -2097,7 +2097,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-webhook-eventing
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-webhook-eventing
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -2132,7 +2132,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-controller-post-install
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules: []
 ---
 ---
@@ -2157,7 +2157,7 @@ metadata:
   name: knative-kafka-controller-post-install
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 # Copyright 2020 The Knative Authors
 #
@@ -2178,7 +2178,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-storage-version-migrator
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   # Storage version upgrader needs to be able to patch CRDs.
   - apiGroups:
@@ -2260,7 +2260,7 @@ metadata:
   name: knative-kafka-storage-version-migrator
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 
 ---
 
@@ -2269,7 +2269,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-storage-version-migrator
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-storage-version-migrator
@@ -2300,7 +2300,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-controller-post-install
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-controller-post-install
@@ -2331,7 +2331,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-controller-post-install
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 spec:
   ttlSecondsAfterFinished: 600
   backoffLimit: 10
@@ -2339,7 +2339,7 @@ spec:
     metadata:
       labels:
         app: kafka-controller-post-install
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
@@ -2384,7 +2384,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: "knative-kafka-storage-version-migrator"
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 spec:
   ttlSecondsAfterFinished: 600
   backoffLimit: 10
@@ -2392,7 +2392,7 @@ spec:
     metadata:
       labels:
         app: "knative-kafka-storage-version-migrator"
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
@@ -2435,7 +2435,7 @@ metadata:
   name: config-kafka-source-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   annotations:
     knative.dev/example-checksum: "8157ecb1"
 data:
@@ -2598,7 +2598,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-source-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   - apiGroups:
       - ""
@@ -2631,7 +2631,7 @@ metadata:
   name: knative-kafka-source-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -2654,7 +2654,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-source-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-source-data-plane
@@ -2687,7 +2687,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-source-dispatcher
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-source-dispatcher
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -2701,7 +2701,7 @@ spec:
       name: kafka-source-dispatcher
       labels:
         app: kafka-source-dispatcher
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-channel-dispatcher
         app.kubernetes.io/name: knative-eventing
         app.kubernetes.io/kind: kafka-dispatcher
@@ -2857,7 +2857,7 @@ metadata:
   name: config-kafka-broker-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   annotations:
     knative.dev/example-checksum: "57a32008"
 data:
@@ -3040,7 +3040,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-broker-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   - apiGroups:
       - ""
@@ -3073,7 +3073,7 @@ metadata:
   name: knative-kafka-broker-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -3096,7 +3096,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-broker-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-broker-data-plane
@@ -3129,7 +3129,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-broker-dispatcher
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-broker-dispatcher
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -3141,7 +3141,7 @@ spec:
       name: kafka-broker-dispatcher
       labels:
         app: kafka-broker-dispatcher
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-broker-dispatcher
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -3300,7 +3300,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-broker-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-broker-receiver
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -3312,7 +3312,7 @@ spec:
       name: kafka-broker-receiver
       labels:
         app: kafka-broker-receiver
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-broker-receiver
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -3456,7 +3456,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-broker-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-broker-receiver
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -3496,7 +3496,7 @@ metadata:
   name: config-kafka-channel-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   annotations:
     knative.dev/example-checksum: "6ce544b6"
 data:
@@ -3678,7 +3678,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-channel-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   - apiGroups:
       - ""
@@ -3711,7 +3711,7 @@ metadata:
   name: knative-kafka-channel-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -3734,7 +3734,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-channel-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-channel-data-plane
@@ -3767,7 +3767,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-channel-dispatcher
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-channel-dispatcher
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -3779,7 +3779,7 @@ spec:
       name: kafka-channel-dispatcher
       labels:
         app: kafka-channel-dispatcher
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-channel-dispatcher
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -3938,7 +3938,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-channel-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-channel-receiver
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -3950,7 +3950,7 @@ spec:
       name: kafka-channel-receiver
       labels:
         app: kafka-channel-receiver
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-channel-receiver
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -4094,7 +4094,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-channel-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-channel-receiver
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -4134,7 +4134,7 @@ metadata:
   name: config-kafka-sink-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
   annotations:
     knative.dev/example-checksum: "a8ce4acb"
 data:
@@ -4230,7 +4230,7 @@ kind: ClusterRole
 metadata:
   name: knative-kafka-sink-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 rules:
   - apiGroups:
       - ""
@@ -4263,7 +4263,7 @@ metadata:
   name: knative-kafka-sink-data-plane
   namespace: knative-eventing
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 ---
 ---
 
@@ -4286,7 +4286,7 @@ kind: ClusterRoleBinding
 metadata:
   name: knative-kafka-sink-data-plane
   labels:
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
 subjects:
   - kind: ServiceAccount
     name: knative-kafka-sink-data-plane
@@ -4319,7 +4319,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-sink-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-sink-receiver
     app.kubernetes.io/name: knative-eventing
 spec:
@@ -4331,7 +4331,7 @@ spec:
       name: kafka-sink-receiver
       labels:
         app: kafka-sink-receiver
-        app.kubernetes.io/version: devel
+        app.kubernetes.io/version: v1.9
         app.kubernetes.io/component: kafka-sink-receiver
         app.kubernetes.io/name: knative-eventing
     spec:
@@ -4475,7 +4475,7 @@ metadata:
   namespace: knative-eventing
   labels:
     app: kafka-sink-receiver
-    app.kubernetes.io/version: devel
+    app.kubernetes.io/version: v1.9
     app.kubernetes.io/component: kafka-sink-receiver
     app.kubernetes.io/name: knative-eventing
 spec:

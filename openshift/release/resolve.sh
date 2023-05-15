@@ -30,7 +30,7 @@ function resolve_resources() {
       echo "---" >>"$resolved_file_name"
       sed -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(test/\)\(.*\)+\1\2 \3\4test-\5+g" \
         -e "s+ko://++" \
-        -e "s+kafka.eventing.knative.dev/release: devel+kafka.eventing.knative.dev/release: ${release}+" \
+        -e "s+app.kubernetes.io/version: devel+app.kubernetes.io/version: ${release}+" \
         -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}-dispatcher:${image_tag}+" \
         -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}-receiver:${image_tag}+" \
         -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-\4:${image_tag}+g" \
