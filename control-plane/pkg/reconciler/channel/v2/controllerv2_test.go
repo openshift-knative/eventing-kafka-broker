@@ -24,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	fakekubeclientset "k8s.io/client-go/kubernetes/fake"
 
+	apisconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
 	_ "knative.dev/eventing-kafka-broker/control-plane/pkg/client/injection/informers/messaging/v1beta1/kafkachannel/fake"
 	_ "knative.dev/eventing/pkg/client/injection/informers/messaging/v1/subscription/fake"
 	_ "knative.dev/pkg/client/injection/ducks/duck/v1/addressable/fake"
@@ -32,6 +33,7 @@ import (
 	_ "knative.dev/pkg/client/injection/kube/informers/core/v1/pod/fake"
 	_ "knative.dev/pkg/client/injection/kube/informers/core/v1/secret/fake"
 	_ "knative.dev/pkg/client/injection/kube/informers/core/v1/service/fake"
+	"knative.dev/pkg/configmap"
 	dynamicclient "knative.dev/pkg/injection/clients/dynamicclient/fake"
 	reconcilertesting "knative.dev/pkg/reconciler/testing"
 
@@ -65,6 +67,11 @@ func TestNewController(t *testing.T) {
 
 	controller := NewController(
 		ctx,
+		configmap.NewStaticWatcher(&corev1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: apisconfig.FlagsConfigName,
+			},
+		}),
 		configs,
 	)
 	if controller == nil {
