@@ -16,7 +16,7 @@ git apply openshift/patches/fix_scheduler_and_autoscaler_scale_down_delay.patch
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
 
 image_prefix="registry.ci.openshift.org/openshift/knative-eventing-kafka-broker"
-tag=$(yq r openshift/project.yaml project.tag)
+tag=$(yq -r .project.tag openshift/project.yaml)
 release=${tag/knative-/} # This is used by resolve_resources function so it's not unused as the IDE suggests
 
 echo "Release: $release"
