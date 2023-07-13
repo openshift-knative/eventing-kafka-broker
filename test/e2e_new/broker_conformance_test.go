@@ -42,6 +42,7 @@ func TestBrokerConformance(t *testing.T) {
 		knative.WithLoggingConfig,
 		knative.WithTracingConfig,
 		k8s.WithEventListener,
+		environment.WithPollTimings(PollInterval, PollTimeout),
 		environment.Managed(t),
 	)
 
