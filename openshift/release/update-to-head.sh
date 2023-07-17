@@ -22,8 +22,8 @@ rm -rf .github/workflows
 git commit -sm ":fire: remove unneeded workflows" .github/
 
 # Generate our OCP artifacts
+git apply -v openshift/patches/*
 make generate-release
-git apply openshift/patches/*
 git add .
 git commit -m ":open_file_folder: Update openshift specific files."
 git push -f openshift ${REPO_BRANCH}
