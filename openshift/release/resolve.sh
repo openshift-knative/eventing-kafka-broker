@@ -6,11 +6,12 @@ function resolve_resources() {
   local dir=$1
   local resolved_file_name=$2
   local image_prefix=$3
-  local image_tag=${4-""}
-  local override=${5:-false}
-  local image_name=${6:-""}
+  local override=${4:-false}
+  local image_name=${5:-""}
 
-  echo "Writing resolved yaml to $resolved_file_name ${image_tag}"
+  local version=${release/release-/}
+
+  echo "Writing resolved yaml to $resolved_file_name ${version}"
 
   for yaml in "$dir"/*.yaml; do
     echo "Resolving ${yaml}"
@@ -23,17 +24,17 @@ function resolve_resources() {
     if $override; then
       sed -i -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(test/\)\(.*\)+\1\2 \3\4test-\5+g" \
         -e "s+ko://++" \
-        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-test-\4:${image_tag}+g" \
-        -e "s+\(.* image: \)\({{ \.image }}\)\(.*\)+\1${image_prefix}-test-${image_name}:${image_tag}+g" \
+        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-test-\4:${version}+g" \
+        -e "s+\(.* image: \)\({{ \.image }}\)\(.*\)+\1${image_prefix}-test-${image_name}:${version}+g" \
         "$yaml"
     else
       echo "---" >>"$resolved_file_name"
       sed -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(test/\)\(.*\)+\1\2 \3\4test-\5+g" \
         -e "s+ko://++" \
         -e "s+kafka.eventing.knative.dev/release: devel+kafka.eventing.knative.dev/release: ${release}+" \
-        -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}-dispatcher:${image_tag}+" \
-        -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}-receiver:${image_tag}+" \
-        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-\4:${image_tag}+g" \
+        -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}-dispatcher:${version}+" \
+        -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}-receiver:${version}+" \
+        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-\4:${version}+g" \
         "$yaml" >>"$resolved_file_name"
     fi
   done
