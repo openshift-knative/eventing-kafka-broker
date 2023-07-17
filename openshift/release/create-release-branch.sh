@@ -22,7 +22,8 @@ git checkout openshift/main -- .github/workflows openshift OWNERS Makefile
 git apply openshift/patches/*
 
 # Generate our OCP artifacts
-make generate-dockerfiles
-make RELEASE="${target}" generate-release
+tag=${release/release-/}
+yq write --inplace openshift/project.yaml project.tag "knative-$tag"
+make generate-release
 git add .github/workflows openshift OWNERS Makefile
 git commit -m "Add openshift specific files."

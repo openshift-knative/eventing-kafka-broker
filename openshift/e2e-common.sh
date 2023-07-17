@@ -108,9 +108,13 @@ function run_conformance_tests() {
 function run_e2e_new_tests() {
   export BROKER_CLASS="Kafka"
 
+  make generate-release
+  images_file=$(dirname $(realpath "$0"))/images.yaml
+  cat "${images_file}"
+
   if [[ ${FIRST_EVENT_DELAY_ENABLED:-true} == true ]]; then
     ./test/scripts/first-event-delay.sh || return $?
   fi
-  go_test_e2e -timeout=100m ./test/e2e_new/... || return $?
-  go_test_e2e -timeout=100m ./test/e2e_new_channel/... || return $?
+  go_test_e2e -timeout=100m ./test/e2e_new/... --images.producer.file="${images_file}" || return $?
+  go_test_e2e -timeout=100m ./test/e2e_new_channel/... --images.producer.file="${images_file}" || return $?
 }

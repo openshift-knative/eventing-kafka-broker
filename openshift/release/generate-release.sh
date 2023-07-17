@@ -10,19 +10,19 @@ git apply openshift/patches/disable-ko-publish-rekt.patch
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
 
-release=$1
+release=$(yq r openshift/project.yaml project.tag)
+release=${release/knative-/}
+
+echo "Release: $release"
+
+./openshift/generate.sh
 
 artifacts_dir="openshift/release/artifacts/"
 rm -rf $artifacts_dir
 mkdir -p $artifacts_dir
 
-if [ "$release" == "ci" ]; then
-  image_prefix="registry.ci.openshift.org/openshift/knative-eventing-kafka-broker"
-  tag="knative-nightly"
-else
-  image_prefix="registry.ci.openshift.org/openshift/knative-eventing-kafka-broker"
-  tag="knative-${release}"
-fi
+image_prefix="registry.ci.openshift.org/openshift/knative-eventing-kafka-broker"
+tag=""
 
 # Replace rekt images
 resolve_resources vendor/knative.dev/eventing/test/test_images/wathola-receiver vendor/knative.dev/eventing/test/test_images/wathola-receiver/pod.yaml "${image_prefix}" "${tag}" true
