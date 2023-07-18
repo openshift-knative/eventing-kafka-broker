@@ -23,8 +23,10 @@ COPY /data-plane/.editorconfig .
 COPY /data-plane/core/pom.xml core/pom.xml
 COPY /data-plane/receiver/pom.xml receiver/pom.xml
 COPY /data-plane/receiver-vertx/pom.xml receiver-vertx/pom.xml
+COPY /data-plane/receiver-loom/pom.xml receiver-loom/pom.xml
 COPY /data-plane/dispatcher/pom.xml dispatcher/pom.xml
 COPY /data-plane/dispatcher-vertx/pom.xml dispatcher-vertx/pom.xml
+COPY /data-plane/dispatcher-loom/pom.xml dispatcher-loom/pom.xml
 COPY /data-plane/contract/pom.xml contract/pom.xml
 COPY /data-plane/mvnw .
 COPY /data-plane/.mvn/wrapper .mvn/wrapper
