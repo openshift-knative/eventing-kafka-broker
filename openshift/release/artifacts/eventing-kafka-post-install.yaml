@@ -235,7 +235,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: post-install
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-post-install:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-post-install:nightly
           env:
             - name: SYSTEM_NAMESPACE
               valueFrom:
@@ -288,7 +288,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: migrate
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-migrate:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-migrate:nightly
           env:
             - name: IGNORE_NOT_FOUND
               value: "true"

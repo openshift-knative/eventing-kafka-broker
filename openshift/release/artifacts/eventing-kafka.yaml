@@ -1054,61 +1054,6 @@ metadata:
   labels:
     app.kubernetes.io/version: devel
     knative.dev/crd-install: "true"
-  name: consumers.internal.kafka.eventing.knative.dev
-spec:
-  group: internal.kafka.eventing.knative.dev
-  versions:
-    - name: v1alpha1
-      served: true
-      storage: true
-      subresources:
-        status: { }
-      schema:
-        openAPIV3Schema:
-          type: object
-          # this is a work around so we don't need to flesh out the
-          # schema for each version at this time
-          x-kubernetes-preserve-unknown-fields: true
-      additionalPrinterColumns:
-        - name: Ready
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
-        - name: Reason
-          type: string
-          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
-        - name: Subscriber
-          type: string
-          jsonPath: .status.subscriberUri
-        - name: Age
-          type: date
-          jsonPath: .metadata.creationTimestamp
-  names:
-    kind: Consumer
-    plural: consumers
-    singular: consumer
-  scope: Namespaced
----
-# Copyright 2021 The Knative Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-apiVersion: apiextensions.k8s.io/v1
-kind: CustomResourceDefinition
-metadata:
-  creationTimestamp: null
-  labels:
-    app.kubernetes.io/version: devel
-    knative.dev/crd-install: "true"
   name: consumergroups.internal.kafka.eventing.knative.dev
 spec:
   group: internal.kafka.eventing.knative.dev
@@ -1154,6 +1099,61 @@ spec:
     kind: ConsumerGroup
     plural: consumergroups
     singular: consumergroup
+  scope: Namespaced
+---
+# Copyright 2021 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/version: devel
+    knative.dev/crd-install: "true"
+  name: consumers.internal.kafka.eventing.knative.dev
+spec:
+  group: internal.kafka.eventing.knative.dev
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: { }
+      schema:
+        openAPIV3Schema:
+          type: object
+          # this is a work around so we don't need to flesh out the
+          # schema for each version at this time
+          x-kubernetes-preserve-unknown-fields: true
+      additionalPrinterColumns:
+        - name: Ready
+          type: string
+          jsonPath: ".status.conditions[?(@.type=='Ready')].status"
+        - name: Reason
+          type: string
+          jsonPath: ".status.conditions[?(@.type=='Ready')].reason"
+        - name: Subscriber
+          type: string
+          jsonPath: .status.subscriberUri
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+  names:
+    kind: Consumer
+    plural: consumers
+    singular: consumer
   scope: Namespaced
 ---
 # Copyright 2022 The Knative Authors
@@ -1916,7 +1916,7 @@ spec:
 
       containers:
         - name: controller
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-kafka-controller:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-kafka-controller:nightly
           imagePullPolicy: IfNotPresent
           env:
             - name: BROKER_DATA_PLANE_CONFIG_MAP_NAMESPACE
@@ -2386,7 +2386,7 @@ spec:
         - name: kafka-webhook-eventing
           terminationMessagePolicy: FallbackToLogsOnError
 
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-webhook-kafka:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-webhook-kafka:nightly
 
           resources:
             requests:
@@ -2705,7 +2705,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: post-install
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-post-install:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-post-install:nightly
           env:
             - name: SYSTEM_NAMESPACE
               valueFrom:
@@ -2758,7 +2758,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: migrate
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-migrate:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-migrate:nightly
           env:
             - name: IGNORE_NOT_FOUND
               value: "true"
@@ -3086,7 +3086,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-source-dispatcher
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -3525,7 +3525,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-broker-dispatcher
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -3696,7 +3696,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-broker-receiver
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -4181,7 +4181,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-channel-dispatcher
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -4352,7 +4352,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-channel-receiver
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -4749,7 +4749,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-sink-receiver
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config

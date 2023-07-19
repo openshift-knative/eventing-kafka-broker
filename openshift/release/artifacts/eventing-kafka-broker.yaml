@@ -328,7 +328,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-broker-dispatcher
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config
@@ -499,7 +499,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-broker-receiver
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config

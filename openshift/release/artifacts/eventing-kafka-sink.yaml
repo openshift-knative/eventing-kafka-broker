@@ -241,7 +241,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-sink-receiver
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-receiver:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config

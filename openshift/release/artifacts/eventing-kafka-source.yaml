@@ -311,7 +311,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: kafka-source-dispatcher
-          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:knative-nightly
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-dispatcher:nightly
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: /etc/config

@@ -1,12 +1,12 @@
-# DO NOT EDIT! Generated Dockerfile for test/test_images/kafka-consumer.
+# DO NOT EDIT! Generated Dockerfile for vendor/knative.dev/eventing/cmd/event_display.
 FROM registry.ci.openshift.org/openshift/release:golang-1.19 as builder
 
 COPY . .
 
 RUN mkdir -p /var/run/ko && \
-    mkdir -p test/test_images/kafka-consumer/kodata && \
-    go build -o /usr/bin/main ./test/test_images/kafka-consumer && \
-    cp -r test/test_images/kafka-consumer/kodata /var/run/ko
+    mkdir -p vendor/knative.dev/eventing/cmd/event_display/kodata && \
+    go build -o /usr/bin/main ./vendor/knative.dev/eventing/cmd/event_display && \
+    cp -r vendor/knative.dev/eventing/cmd/event_display/kodata /var/run/ko
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 
