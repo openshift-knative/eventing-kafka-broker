@@ -7,7 +7,6 @@ source $(dirname $0)/resolve.sh
 GITHUB_ACTIONS=true $(dirname $0)/../../hack/update-codegen.sh
 git apply openshift/patches/disable-ko-publish-rekt.patch
 git apply openshift/patches/override-min-version.patch
-git apply openshift/patches/add-eventshub-port-name.patch
 git apply openshift/patches/unique-secret-names.patch
 
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
