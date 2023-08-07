@@ -1,0 +1,13 @@
+diff --git a/control-plane/pkg/reconciler/consumergroup/controller.go b/control-plane/pkg/reconciler/consumergroup/controller.go
+index d4df70feb..7d03a66a2 100644
+--- a/control-plane/pkg/reconciler/consumergroup/controller.go
++++ b/control-plane/pkg/reconciler/consumergroup/controller.go
+@@ -248,7 +248,7 @@ func createStatefulSetScheduler(ctx context.Context, c SchedulerConfig, lister s
+ 		lister,
+ 		c.RefreshPeriod,
+ 		c.Capacity,
+-		"", //  scheduler.SchedulerPolicyType field only applicable for old scheduler policy
++		scheduler.MAXFILLUP, //  scheduler.SchedulerPolicyType field only applicable for old scheduler policy
+ 		nodeinformer.Get(ctx).Lister(),
+ 		newEvictor(ctx, zap.String("kafka.eventing.knative.dev/component", "evictor")).evict,
+ 		c.SchedulerPolicy,
