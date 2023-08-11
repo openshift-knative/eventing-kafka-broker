@@ -152,6 +152,13 @@
         <version>${kafka.version}</version>
       </dependency>
 
+
+      <dependency>
+        <groupId>org.xerial.snappy</groupId>
+        <artifactId>snappy-java</artifactId>
+        <version>1.1.10.1</version>
+      </dependency>
+
       <!-- Micrometer -->
       <dependency>
         <groupId>io.micrometer</groupId>
