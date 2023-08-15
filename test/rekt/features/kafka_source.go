@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	. "github.com/cloudevents/sdk-go/v2/test"
@@ -88,7 +89,7 @@ func SetupKafkaSources(prefix string, n int) *feature.Feature {
 			kafkasource.WithSink(&duckv1.KReference{Kind: "Service", Name: sink, APIVersion: "v1"}, ""),
 		))
 
-		f.Assert(fmt.Sprintf("kafkasource %s is ready", name), kafkasource.IsReady(name))
+		f.Assert(fmt.Sprintf("kafkasource %s is ready", name), kafkasource.IsReady(name, 3*time.Second, 5*time.Minute))
 	}
 
 	return f
