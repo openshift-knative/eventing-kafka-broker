@@ -56,7 +56,7 @@ func TestKafkaSourceDeletedFromContractConfigMaps(t *testing.T) {
 		knative.WithTracingConfig,
 		k8s.WithEventListener,
 		environment.WithPollTimings(PollInterval, PollTimeout),
-		environment.Managed(t),
+		environment.WithTestLogger(t),
 	)
 	t.Cleanup(env.Finish)
 

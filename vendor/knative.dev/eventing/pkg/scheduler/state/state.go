@@ -20,8 +20,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
-	"time"
 
 	"go.uber.org/zap"
 	v1 "k8s.io/api/core/v1"
@@ -29,12 +29,13 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/wait"
 	clientappsv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	corev1 "k8s.io/client-go/listers/core/v1"
 
 	kubeclient "knative.dev/pkg/client/injection/kube/client"
 	"knative.dev/pkg/logging"
+
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 
 	"knative.dev/eventing/pkg/scheduler"
 )
@@ -97,6 +98,49 @@ type State struct {
 	ZoneSpread map[types.NamespacedName]map[string]int32
 }
 
+func (s *State) MarshalJSON() ([]byte, error) {
+
+	type S struct {
+		FreeCap         []int32                     `json:"freeCap"`
+		SchedulablePods []int32                     `json:"schedulablePods"`
+		LastOrdinal     int32                       `json:"lastOrdinal"`
+		Capacity        int32                       `json:"capacity"`
+		Replicas        int32                       `json:"replicas"`
+		NumZones        int32                       `json:"numZones"`
+		NumNodes        int32                       `json:"numNodes"`
+		NodeToZoneMap   map[string]string           `json:"nodeToZoneMap"`
+		StatefulSetName string                      `json:"statefulSetName"`
+		PodSpread       map[string]map[string]int32 `json:"podSpread"`
+		NodeSpread      map[string]map[string]int32 `json:"nodeSpread"`
+		ZoneSpread      map[string]map[string]int32 `json:"zoneSpread"`
+	}
+
+	toJSONable := func(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
+		r := make(map[string]map[string]int32, len(ps))
+		for k, v := range ps {
+			r[k.String()] = v
+		}
+		return r
+	}
+
+	sj := S{
+		FreeCap:         s.FreeCap,
+		SchedulablePods: s.SchedulablePods,
+		LastOrdinal:     s.LastOrdinal,
+		Capacity:        s.Capacity,
+		Replicas:        s.Replicas,
+		NumZones:        s.NumZones,
+		NumNodes:        s.NumNodes,
+		NodeToZoneMap:   s.NodeToZoneMap,
+		StatefulSetName: s.StatefulSetName,
+		PodSpread:       toJSONable(s.PodSpread),
+		NodeSpread:      toJSONable(s.NodeSpread),
+		ZoneSpread:      toJSONable(s.ZoneSpread),
+	}
+
+	return json.Marshal(sj)
+}
+
 // Free safely returns the free capacity at the given ordinal
 func (s *State) Free(ordinal int32) int32 {
 	if int32(len(s.FreeCap)) <= ordinal {
@@ -133,15 +177,6 @@ func (s *State) GetPodInfo(podName string) (zoneName string, nodeName string, er
 		return zoneName, nodeName, errors.New("could not find zone")
 	}
 	return zoneName, nodeName, nil
-}
-
-func (s *State) IsSchedulablePod(ordinal int32) bool {
-	for _, x := range s.SchedulablePods {
-		if x == ordinal {
-			return true
-		}
-	}
-	return false
 }
 
 // stateBuilder reconstruct the state from scratch, by listing vpods
@@ -227,11 +262,11 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
 	}
 
 	for podId := int32(0); podId < scale.Spec.Replicas && s.podLister != nil; podId++ {
-		var pod *v1.Pod
-		wait.PollImmediate(50*time.Millisecond, 5*time.Second, func() (bool, error) {
-			pod, err = s.podLister.Get(PodNameFromOrdinal(s.statefulSetName, podId))
-			return err == nil, nil
-		})
+		podName := PodNameFromOrdinal(s.statefulSetName, podId)
+		pod, err := s.podLister.Get(podName)
+		if err != nil && !apierrors.IsNotFound(err) {
+			return nil, fmt.Errorf("failed to get pod %s from lister: %w", podName, err)
+		}
 
 		if pod != nil {
 			if isPodUnschedulable(pod) {
@@ -275,11 +310,10 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
 
 			withPlacement[vpod.GetKey()][podName] = true
 
-			var pod *v1.Pod
-			wait.PollImmediate(50*time.Millisecond, 5*time.Second, func() (bool, error) {
-				pod, err = s.podLister.Get(podName)
-				return err == nil, nil
-			})
+			pod, err := s.podLister.Get(podName)
+			if err != nil && !apierrors.IsNotFound(err) {
+				return nil, fmt.Errorf("failed to get pod %s from lister: %w", podName, err)
+			}
 
 			if pod != nil && schedulablePods.Has(OrdinalFromPodName(pod.GetName())) {
 				nodeName := pod.Spec.NodeName       //node name for this pod
@@ -300,11 +334,10 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
 					continue
 				}
 
-				var pod *v1.Pod
-				wait.PollImmediate(50*time.Millisecond, 5*time.Second, func() (bool, error) {
-					pod, err = s.podLister.Get(podName)
-					return err == nil, nil
-				})
+				pod, err := s.podLister.Get(podName)
+				if err != nil && !apierrors.IsNotFound(err) {
+					return nil, fmt.Errorf("failed to get pod %s from pod lister: %w", podName, err)
+				}
 
 				if pod != nil && schedulablePods.Has(OrdinalFromPodName(pod.GetName())) {
 					nodeName := pod.Spec.NodeName       //node name for this pod
@@ -323,7 +356,7 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
 		SchedulerPolicy: s.schedulerPolicy, SchedPolicy: s.schedPolicy, DeschedPolicy: s.deschedPolicy, NodeToZoneMap: nodeToZoneMap, StatefulSetName: s.statefulSetName, PodLister: s.podLister,
 		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}
 
-	s.logger.Infow("cluster state info", zap.Any("state", state), zap.Any("reserved", toJSONable(reserved)))
+	s.logger.Debugw("cluster state info", zap.Any("state", state))
 
 	return state, nil
 }
@@ -417,51 +450,11 @@ func contains(taints []v1.Taint, taint *v1.Taint) bool {
 	return false
 }
 
-func (s *State) MarshalJSON() ([]byte, error) {
-
-	type S struct {
-		FreeCap         []int32                       `json:"freeCap"`
-		SchedulablePods []int32                       `json:"schedulablePods"`
-		LastOrdinal     int32                         `json:"lastOrdinal"`
-		Capacity        int32                         `json:"capacity"`
-		Replicas        int32                         `json:"replicas"`
-		NumZones        int32                         `json:"numZones"`
-		NumNodes        int32                         `json:"numNodes"`
-		NodeToZoneMap   map[string]string             `json:"nodeToZoneMap"`
-		StatefulSetName string                        `json:"statefulSetName"`
-		PodSpread       map[string]map[string]int32   `json:"podSpread"`
-		NodeSpread      map[string]map[string]int32   `json:"nodeSpread"`
-		ZoneSpread      map[string]map[string]int32   `json:"zoneSpread"`
-		SchedulerPolicy scheduler.SchedulerPolicyType `json:"schedulerPolicy"`
-		SchedPolicy     *scheduler.SchedulerPolicy    `json:"schedPolicy"`
-		DeschedPolicy   *scheduler.SchedulerPolicy    `json:"deschedPolicy"`
+func (s *State) IsSchedulablePod(ordinal int32) bool {
+	for _, x := range s.SchedulablePods {
+		if x == ordinal {
+			return true
+		}
 	}
-
-	sj := S{
-		FreeCap:         s.FreeCap,
-		SchedulablePods: s.SchedulablePods,
-		LastOrdinal:     s.LastOrdinal,
-		Capacity:        s.Capacity,
-		Replicas:        s.Replicas,
-		NumZones:        s.NumZones,
-		NumNodes:        s.NumNodes,
-		NodeToZoneMap:   s.NodeToZoneMap,
-		StatefulSetName: s.StatefulSetName,
-		PodSpread:       toJSONable(s.PodSpread),
-		NodeSpread:      toJSONable(s.NodeSpread),
-		ZoneSpread:      toJSONable(s.ZoneSpread),
-		SchedulerPolicy: s.SchedulerPolicy,
-		SchedPolicy:     s.SchedPolicy,
-		DeschedPolicy:   s.DeschedPolicy,
-	}
-
-	return json.Marshal(sj)
-}
-
-func toJSONable(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
-	r := make(map[string]map[string]int32, len(ps))
-	for k, v := range ps {
-		r[k.String()] = v
-	}
-	return r
+	return false
 }
