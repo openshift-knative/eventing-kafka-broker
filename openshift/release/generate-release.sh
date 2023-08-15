@@ -9,6 +9,11 @@ git apply openshift/patches/disable-ko-publish-rekt.patch
 git apply openshift/patches/override-min-version.patch
 git apply openshift/patches/add-eventshub-port-name.patch
 
+git apply openshift/patches/go_code_patch_improvements.patch
+git apply openshift/patches/vendor_ekb_control_plane_regression.patch
+git apply openshift/patches/vendor_eventing_regression.patch
+
+
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
 
