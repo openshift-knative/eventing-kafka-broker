@@ -1,0 +1,196 @@
+diff --git a/control-plane/pkg/reconciler/consumergroup/controller.go b/control-plane/pkg/reconciler/consumergroup/controller.go
+index 7d03a66a2..d8ac5a974 100644
+--- a/control-plane/pkg/reconciler/consumergroup/controller.go
++++ b/control-plane/pkg/reconciler/consumergroup/controller.go
+@@ -166,6 +166,20 @@ func NewController(ctx context.Context, watcher configmap.Watcher) *controller.I
+ 
+ 	ResyncOnStatefulSetChange(ctx, globalResync)
+ 
++	go func() {
++		for {
++			select {
++			case <-time.After(c.RefreshPeriod):
++				logger.Debugw("Global resync after refresh period",
++					zap.Duration("refreshPeriod", c.RefreshPeriod),
++				)
++				globalResync(nil)
++			case <-ctx.Done():
++				return
++			}
++		}
++	}()
++
+ 	//Todo: ScaledObject informer when KEDA is installed
+ 
+ 	return impl
+diff --git a/test/e2e_new/kafka_source_test.go b/test/e2e_new/kafka_source_test.go
+index 2a0e70342..d112a2e81 100644
+--- a/test/e2e_new/kafka_source_test.go
++++ b/test/e2e_new/kafka_source_test.go
+@@ -56,7 +56,7 @@ func TestKafkaSourceDeletedFromContractConfigMaps(t *testing.T) {
+ 		knative.WithTracingConfig,
+ 		k8s.WithEventListener,
+ 		environment.WithPollTimings(PollInterval, PollTimeout),
+-		environment.Managed(t),
++		environment.WithTestLogger(t),
+ 	)
+ 	t.Cleanup(env.Finish)
+ 
+diff --git a/test/rekt/features/kafka_source.go b/test/rekt/features/kafka_source.go
+index 071847a45..3980e0715 100644
+--- a/test/rekt/features/kafka_source.go
++++ b/test/rekt/features/kafka_source.go
+@@ -21,6 +21,7 @@ import (
+ 	"encoding/json"
+ 	"fmt"
+ 	"strings"
++	"time"
+ 
+ 	cloudevents "github.com/cloudevents/sdk-go/v2"
+ 	. "github.com/cloudevents/sdk-go/v2/test"
+@@ -88,7 +89,7 @@ func SetupKafkaSources(prefix string, n int) *feature.Feature {
+ 			kafkasource.WithSink(&duckv1.KReference{Kind: "Service", Name: sink, APIVersion: "v1"}, ""),
+ 		))
+ 
+-		f.Assert(fmt.Sprintf("kafkasource %s is ready", name), kafkasource.IsReady(name))
++		f.Assert(fmt.Sprintf("kafkasource %s is ready", name), kafkasource.IsReady(name, 3*time.Second, 5*time.Minute))
+ 	}
+ 
+ 	return f
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+index bab000958..539bb94c8 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+@@ -98,6 +98,49 @@ type State struct {
+ 	ZoneSpread map[types.NamespacedName]map[string]int32
+ }
+ 
++func (s *State) MarshalJSON() ([]byte, error) {
++
++	type S struct {
++		FreeCap         []int32                     `json:"freeCap"`
++		SchedulablePods []int32                     `json:"schedulablePods"`
++		LastOrdinal     int32                       `json:"lastOrdinal"`
++		Capacity        int32                       `json:"capacity"`
++		Replicas        int32                       `json:"replicas"`
++		NumZones        int32                       `json:"numZones"`
++		NumNodes        int32                       `json:"numNodes"`
++		NodeToZoneMap   map[string]string           `json:"nodeToZoneMap"`
++		StatefulSetName string                      `json:"statefulSetName"`
++		PodSpread       map[string]map[string]int32 `json:"podSpread"`
++		NodeSpread      map[string]map[string]int32 `json:"nodeSpread"`
++		ZoneSpread      map[string]map[string]int32 `json:"zoneSpread"`
++	}
++
++	toJSONable := func(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
++		r := make(map[string]map[string]int32, len(ps))
++		for k, v := range ps {
++			r[k.String()] = v
++		}
++		return r
++	}
++
++	sj := S{
++		FreeCap:         s.FreeCap,
++		SchedulablePods: s.SchedulablePods,
++		LastOrdinal:     s.LastOrdinal,
++		Capacity:        s.Capacity,
++		Replicas:        s.Replicas,
++		NumZones:        s.NumZones,
++		NumNodes:        s.NumNodes,
++		NodeToZoneMap:   s.NodeToZoneMap,
++		StatefulSetName: s.StatefulSetName,
++		PodSpread:       toJSONable(s.PodSpread),
++		NodeSpread:      toJSONable(s.NodeSpread),
++		ZoneSpread:      toJSONable(s.ZoneSpread),
++	}
++
++	return json.Marshal(sj)
++}
++
+ // Free safely returns the free capacity at the given ordinal
+ func (s *State) Free(ordinal int32) int32 {
+ 	if int32(len(s.FreeCap)) <= ordinal {
+@@ -136,15 +179,6 @@ func (s *State) GetPodInfo(podName string) (zoneName string, nodeName string, er
+ 	return zoneName, nodeName, nil
+ }
+ 
+-func (s *State) IsSchedulablePod(ordinal int32) bool {
+-	for _, x := range s.SchedulablePods {
+-		if x == ordinal {
+-			return true
+-		}
+-	}
+-	return false
+-}
+-
+ // stateBuilder reconstruct the state from scratch, by listing vpods
+ type stateBuilder struct {
+ 	ctx               context.Context
+@@ -322,7 +356,7 @@ func (s *stateBuilder) State(reserved map[types.NamespacedName]map[string]int32)
+ 		SchedulerPolicy: s.schedulerPolicy, SchedPolicy: s.schedPolicy, DeschedPolicy: s.deschedPolicy, NodeToZoneMap: nodeToZoneMap, StatefulSetName: s.statefulSetName, PodLister: s.podLister,
+ 		PodSpread: podSpread, NodeSpread: nodeSpread, ZoneSpread: zoneSpread}
+ 
+-	s.logger.Infow("cluster state info", zap.Any("state", state), zap.Any("reserved", toJSONable(reserved)))
++	s.logger.Debugw("cluster state info", zap.Any("state", state))
+ 
+ 	return state, nil
+ }
+@@ -416,51 +450,11 @@ func contains(taints []v1.Taint, taint *v1.Taint) bool {
+ 	return false
+ }
+ 
+-func (s *State) MarshalJSON() ([]byte, error) {
+-
+-	type S struct {
+-		FreeCap         []int32                       `json:"freeCap"`
+-		SchedulablePods []int32                       `json:"schedulablePods"`
+-		LastOrdinal     int32                         `json:"lastOrdinal"`
+-		Capacity        int32                         `json:"capacity"`
+-		Replicas        int32                         `json:"replicas"`
+-		NumZones        int32                         `json:"numZones"`
+-		NumNodes        int32                         `json:"numNodes"`
+-		NodeToZoneMap   map[string]string             `json:"nodeToZoneMap"`
+-		StatefulSetName string                        `json:"statefulSetName"`
+-		PodSpread       map[string]map[string]int32   `json:"podSpread"`
+-		NodeSpread      map[string]map[string]int32   `json:"nodeSpread"`
+-		ZoneSpread      map[string]map[string]int32   `json:"zoneSpread"`
+-		SchedulerPolicy scheduler.SchedulerPolicyType `json:"schedulerPolicy"`
+-		SchedPolicy     *scheduler.SchedulerPolicy    `json:"schedPolicy"`
+-		DeschedPolicy   *scheduler.SchedulerPolicy    `json:"deschedPolicy"`
+-	}
+-
+-	sj := S{
+-		FreeCap:         s.FreeCap,
+-		SchedulablePods: s.SchedulablePods,
+-		LastOrdinal:     s.LastOrdinal,
+-		Capacity:        s.Capacity,
+-		Replicas:        s.Replicas,
+-		NumZones:        s.NumZones,
+-		NumNodes:        s.NumNodes,
+-		NodeToZoneMap:   s.NodeToZoneMap,
+-		StatefulSetName: s.StatefulSetName,
+-		PodSpread:       toJSONable(s.PodSpread),
+-		NodeSpread:      toJSONable(s.NodeSpread),
+-		ZoneSpread:      toJSONable(s.ZoneSpread),
+-		SchedulerPolicy: s.SchedulerPolicy,
+-		SchedPolicy:     s.SchedPolicy,
+-		DeschedPolicy:   s.DeschedPolicy,
+-	}
+-
+-	return json.Marshal(sj)
+-}
+-
+-func toJSONable(ps map[types.NamespacedName]map[string]int32) map[string]map[string]int32 {
+-	r := make(map[string]map[string]int32, len(ps))
+-	for k, v := range ps {
+-		r[k.String()] = v
++func (s *State) IsSchedulablePod(ordinal int32) bool {
++	for _, x := range s.SchedulablePods {
++		if x == ordinal {
++			return true
++		}
+ 	}
+-	return r
++	return false
+ }
