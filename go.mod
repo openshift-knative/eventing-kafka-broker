@@ -38,11 +38,11 @@ require (
 require (
 	github.com/google/gofuzz v1.2.0
 	github.com/kedacore/keda/v2 v2.8.1
+	go.opencensus.io v0.23.0
 	knative.dev/eventing v0.37.0
 	knative.dev/hack v0.0.0-20230417170854-f591fea109b3
 	knative.dev/pkg v0.0.0-20230418073056-dfad48eaa5d0
 	knative.dev/reconciler-test v0.0.0-20230420091239-6c21623d2555
-	go.opencensus.io v0.23.0
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
@@ -62,6 +62,7 @@ require (
 	contrib.go.opencensus.io/exporter/zipkin v0.1.2 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/ahmetb/gen-crd-api-reference-docs v0.3.1-0.20210420163308-c1402a70e2f1 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 // indirect
 	github.com/benbjohnson/clock v1.1.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -126,6 +127,7 @@ require (
 	github.com/rickb777/plural v1.2.2 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/fastuuid v1.2.0 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tsenart/vegeta/v12 v12.8.4 // indirect
 	github.com/wavesoftware/go-ensure v1.0.0 // indirect
@@ -154,6 +156,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/code-generator v0.25.4 // indirect
 	k8s.io/gengo v0.0.0-20221011193443-fad74ee6edd9 // indirect
+	k8s.io/klog v1.0.0 // indirect
 	k8s.io/klog/v2 v2.80.2-0.20221028030830-9ae4992afb54 // indirect
 	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
