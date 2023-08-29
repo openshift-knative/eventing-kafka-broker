@@ -2044,6 +2044,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       restartPolicy: Always
 ---
 ---
@@ -2429,6 +2431,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
 
           ports:
             - name: https-webhook
@@ -2727,6 +2731,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 # Copyright 2020 The Knative Authors
 #
@@ -2780,6 +2786,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
 ---
 # Copyright 2021 The Knative Authors
 #
@@ -3152,13 +3160,16 @@ spec:
             - name: WAIT_STARTUP_SECONDS
               value: "8"
             - name: JAVA_TOOL_OPTIONS
-              value: "-XX:+CrashOnOutOfMemoryError"
+              value: "-XX:+CrashOnOutOfMemoryError -XX:InitialRAMPercentage=70.0 -XX:MinRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0"
 
           resources:
             requests:
               cpu: 1000m
               # 600Mi for virtual replicas + 100Mi overhead
               memory: 700Mi
+            limits:
+              cpu: 2000m
+              memory: 1000Mi
 
           livenessProbe:
             failureThreshold: 3
@@ -3186,6 +3197,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: config-kafka-source-data-plane
           configMap:
@@ -3622,6 +3635,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: config-kafka-broker-data-plane
           configMap:
@@ -3804,6 +3819,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: kafka-broker-brokers-triggers
           configMap:
@@ -4278,6 +4295,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: config-kafka-channel-data-plane
           configMap:
@@ -4460,6 +4479,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: kafka-channel-channels-subscriptions
           configMap:
@@ -4857,6 +4878,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: kafka-sink-sinks
           configMap:
