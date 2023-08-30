@@ -2044,6 +2044,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       restartPolicy: Always
 ---
 ---
@@ -2429,6 +2431,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
 
           ports:
             - name: https-webhook
