@@ -342,6 +342,8 @@ spec:
             capabilities:
               drop:
               - ALL
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: kafka-sink-sinks
           configMap:
