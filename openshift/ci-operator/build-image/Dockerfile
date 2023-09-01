@@ -13,6 +13,11 @@ RUN echo "[kubernetes]" >> /etc/yum.repos.d/kubernetes.repo && \
 
 RUN yum install -y kubectl httpd-tools
 
+RUN wget https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
+    chmod 700 ./get-helm-3
+
+RUN ./get-helm-3 --version v3.11.3 --no-sudo && helm version
+
 RUN GOFLAGS='' go install github.com/mikefarah/yq/v3@latest
 
 # go install creates $GOPATH/.cache with root permissions, we delete it here
