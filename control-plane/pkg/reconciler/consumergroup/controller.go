@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/storage/names"
 	"k8s.io/client-go/tools/cache"
-	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka/offset"
 	"knative.dev/eventing/pkg/scheduler"
 	kubeclient "knative.dev/pkg/client/injection/kube/client"
 	"knative.dev/pkg/client/injection/kube/informers/apps/v1/statefulset"
@@ -47,6 +46,8 @@ import (
 	"knative.dev/pkg/reconciler"
 	"knative.dev/pkg/resolver"
 	"knative.dev/pkg/system"
+
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka/offset"
 
 	statefulsetscheduler "knative.dev/eventing/pkg/scheduler/statefulset"
 
@@ -251,7 +252,7 @@ func createStatefulSetScheduler(ctx context.Context, c SchedulerConfig, lister s
 		lister,
 		c.RefreshPeriod,
 		c.Capacity,
-		"", //  scheduler.SchedulerPolicyType field only applicable for old scheduler policy
+		scheduler.MAXFILLUP, //  scheduler.SchedulerPolicyType field only applicable for old scheduler policy
 		nodeinformer.Get(ctx).Lister(),
 		newEvictor(ctx, zap.String("kafka.eventing.knative.dev/component", "evictor")).evict,
 		c.SchedulerPolicy,
