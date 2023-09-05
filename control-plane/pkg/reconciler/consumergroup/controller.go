@@ -44,6 +44,7 @@ import (
 	"knative.dev/pkg/controller"
 	"knative.dev/pkg/logging"
 	"knative.dev/pkg/reconciler"
+	"knative.dev/pkg/resolver"
 	"knative.dev/pkg/system"
 
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka/offset"
@@ -151,6 +152,8 @@ func NewController(ctx context.Context, watcher configmap.Watcher) *controller.I
 			},
 		}
 	})
+
+	r.Resolver = resolver.NewURIResolverFromTracker(ctx, impl.Tracker)
 
 	configStore := config.NewStore(ctx, func(name string, value *config.KafkaFeatureFlags) {
 		r.KafkaFeatureFlags.Reset(value)
