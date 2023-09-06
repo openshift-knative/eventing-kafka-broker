@@ -1,0 +1,17 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+index 96008b849..6c00a231b 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+@@ -133,10 +133,10 @@ func (a *autoscaler) Start(ctx context.Context) {
+ 		case <-ctx.Done():
+ 			return
+ 		case <-time.After(a.refreshPeriod):
+-			a.logger.Infow("Triggering scale down")
++			a.logger.Infow("Triggering scale down", zap.Bool("isLeader", a.isLeader.Load()))
+ 			attemptScaleDown = true
+ 		case <-a.trigger:
+-			a.logger.Infow("Triggering scale up")
++			a.logger.Infow("Triggering scale up", zap.Bool("isLeader", a.isLeader.Load()))
+ 			attemptScaleDown = false
+ 		}
+ 

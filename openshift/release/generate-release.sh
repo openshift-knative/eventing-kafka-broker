@@ -9,6 +9,7 @@ git apply openshift/patches/disable-ko-publish-rekt.patch
 git apply openshift/patches/override-min-version.patch
 git apply openshift/patches/autoscaler_fix.patch
 git apply openshift/patches/remove_resource_version_check.patch
+git apply openshift/patches/autoscaler_leader_log.patch
 
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
