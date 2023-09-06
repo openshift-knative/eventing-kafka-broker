@@ -133,10 +133,10 @@ func (a *autoscaler) Start(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-time.After(a.refreshPeriod):
-			a.logger.Infow("Triggering scale down")
+			a.logger.Infow("Triggering scale down", zap.Bool("isLeader", a.isLeader.Load()))
 			attemptScaleDown = true
 		case <-a.trigger:
-			a.logger.Infow("Triggering scale up")
+			a.logger.Infow("Triggering scale up", zap.Bool("isLeader", a.isLeader.Load()))
 			attemptScaleDown = false
 		}
 

@@ -34,6 +34,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apiserver/pkg/storage/names"
 	"k8s.io/client-go/kubernetes"
 	corelisters "k8s.io/client-go/listers/core/v1"
@@ -46,6 +47,7 @@ import (
 	"knative.dev/pkg/reconciler"
 
 	sources "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/prober"
 
 	"knative.dev/eventing/pkg/scheduler"
 
@@ -137,6 +139,15 @@ type Reconciler struct {
 	// DeleteConsumerGroupMetadataCounter is an in-memory counter to count how many times we have
 	// tried to delete consumer group metadata from Kafka.
 	DeleteConsumerGroupMetadataCounter *counter.Counter
+
+	// InitOffsetLatestInitialOffsetCache is the cache for consumer group offset initialization.
+	//
+	// When there is high load and multiple consumer group schedule calls, we get many
+	// `dial tcp 10.130.4.8:9092: i/o timeout` errors when trying to connect to Kafka.
+	// This leads to increased "time to readiness" for consumer groups.
+	InitOffsetLatestInitialOffsetCache prober.Cache
+
+	EnqueueKey func(key string)
 }
 
 func (r *Reconciler) ReconcileKind(ctx context.Context, cg *kafkainternals.ConsumerGroup) reconciler.Event {
@@ -217,6 +228,8 @@ func (r *Reconciler) FinalizeKind(ctx context.Context, cg *kafkainternals.Consum
 		}
 		r.DeleteConsumerGroupMetadataCounter.Del(string(cg.GetUID()))
 	}
+
+	r.InitOffsetLatestInitialOffsetCache.Expire(keyOf(cg))
 
 	return nil
 }
@@ -482,6 +495,10 @@ func (r *Reconciler) reconcileInitialOffset(ctx context.Context, cg *kafkaintern
 		return nil
 	}
 
+	if status := r.InitOffsetLatestInitialOffsetCache.GetStatus(keyOf(cg)); status == prober.StatusReady {
+		return nil
+	}
+
 	saramaSecurityOption, err := r.newAuthConfigOption(ctx, cg)
 	if err != nil {
 		return fmt.Errorf("failed to create config options for Kafka cluster auth: %w", err)
@@ -517,6 +534,10 @@ func (r *Reconciler) reconcileInitialOffset(ctx context.Context, cg *kafkaintern
 	if _, err := r.InitOffsetsFunc(ctx, kafkaClient, kafkaClusterAdminClient, topics, groupId); err != nil {
 		return fmt.Errorf("failed to initialize offset: %w", err)
 	}
+
+	r.InitOffsetLatestInitialOffsetCache.UpsertStatus(keyOf(cg), prober.StatusReady, nil, func(key string, arg interface{}) {
+		r.EnqueueKey(key)
+	})
 
 	return nil
 }
@@ -751,4 +772,8 @@ func recordInitializeOffsetsLatency(ctx context.Context, cg *kafkainternals.Cons
 
 		metrics.Record(ctx, initializeOffsetsLatencyStat.M(time.Since(startTime).Milliseconds()))
 	}()
+}
+
+func keyOf(cg metav1.Object) string {
+	return types.NamespacedName{Namespace: cg.GetNamespace(), Name: cg.GetName()}.String()
 }

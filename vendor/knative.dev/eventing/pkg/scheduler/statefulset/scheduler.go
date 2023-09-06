@@ -228,15 +228,6 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
 	s.reservedMu.Lock()
 	defer s.reservedMu.Unlock()
 
-	vpods, err := s.vpodLister()
-	if err != nil {
-		return nil, err
-	}
-	vpodFromLister := st.GetVPod(vpod.GetKey(), vpods)
-	if vpodFromLister != nil && vpod.GetResourceVersion() != vpodFromLister.GetResourceVersion() {
-		return nil, fmt.Errorf("vpod to schedule has resource version different from one in indexer")
-	}
-
 	placements, err := s.scheduleVPod(vpod)
 	if placements == nil {
 		return placements, err

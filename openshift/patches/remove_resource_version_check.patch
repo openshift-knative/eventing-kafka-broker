@@ -1,0 +1,20 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+index a95242ee2..083767450 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+@@ -228,15 +228,6 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
+ 	s.reservedMu.Lock()
+ 	defer s.reservedMu.Unlock()
+ 
+-	vpods, err := s.vpodLister()
+-	if err != nil {
+-		return nil, err
+-	}
+-	vpodFromLister := st.GetVPod(vpod.GetKey(), vpods)
+-	if vpodFromLister != nil && vpod.GetResourceVersion() != vpodFromLister.GetResourceVersion() {
+-		return nil, fmt.Errorf("vpod to schedule has resource version different from one in indexer")
+-	}
+-
+ 	placements, err := s.scheduleVPod(vpod)
+ 	if placements == nil {
+ 		return placements, err
