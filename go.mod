@@ -42,7 +42,7 @@ require (
 	knative.dev/eventing v0.38.0
 	knative.dev/hack v0.0.0-20230712131415-ddae80293c43
 	knative.dev/pkg v0.0.0-20230718152110-aef227e72ead
-	knative.dev/reconciler-test v0.0.0-20230726074640-26cee79ad63d
+	knative.dev/reconciler-test v0.0.0-20230817082142-9e58415bcb84
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
@@ -164,3 +164,5 @@ require (
 )
 
 replace github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
+
+replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20230901062933-33b0c175e2ab

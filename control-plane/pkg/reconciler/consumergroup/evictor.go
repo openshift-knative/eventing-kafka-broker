@@ -63,12 +63,9 @@ func newEvictor(ctx context.Context, fields ...zap.Field) evictor {
 func (e evictor) evict(pod *corev1.Pod, vpod scheduler.VPod, from *eventingduckv1alpha1.Placement) error {
 	key := vpod.GetKey()
 
-	logger := e.logger.
-		With(zap.String("consumergroup", key.String())).
-		With(zap.String("pod", fmt.Sprintf("%s/%s", pod.GetNamespace(), pod.GetName())))
-
-	if err := e.disablePodScheduling(logger, pod.DeepCopy() /* Do not modify informer copy. */); err != nil {
-		return fmt.Errorf("failed to mark pod unschedulable: %w", err)
+	logger := e.logger.With(zap.String("consumergroup", key.String()))
+	if pod != nil {
+		logger = logger.With(zap.String("pod", fmt.Sprintf("%s/%s", pod.GetNamespace(), pod.GetName())))
 	}
 
 	cgBefore, err := e.InternalsClient.

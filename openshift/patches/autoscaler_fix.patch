@@ -1,0 +1,66 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+index 53b184e90..96008b849 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/autoscaler.go
+@@ -106,7 +106,7 @@ func (a *autoscaler) Demote(b reconciler.Bucket) {
+ 
+ func newAutoscaler(ctx context.Context, cfg *Config, stateAccessor st.StateAccessor) *autoscaler {
+ 	return &autoscaler{
+-		logger:            logging.FromContext(ctx),
++		logger:            logging.FromContext(ctx).With(zap.String("component", "autoscaler")),
+ 		statefulSetClient: kubeclient.Get(ctx).AppsV1().StatefulSets(cfg.StatefulSetNamespace),
+ 		statefulSetName:   cfg.StatefulSetName,
+ 		vpodLister:        cfg.VPodLister,
+@@ -133,8 +133,10 @@ func (a *autoscaler) Start(ctx context.Context) {
+ 		case <-ctx.Done():
+ 			return
+ 		case <-time.After(a.refreshPeriod):
++			a.logger.Infow("Triggering scale down")
+ 			attemptScaleDown = true
+ 		case <-a.trigger:
++			a.logger.Infow("Triggering scale up")
+ 			attemptScaleDown = false
+ 		}
+ 
+@@ -145,9 +147,14 @@ func (a *autoscaler) Start(ctx context.Context) {
+ }
+ 
+ func (a *autoscaler) Autoscale(ctx context.Context) {
++	select {
+ 	// We trigger the autoscaler asynchronously by using the channel so that the scale down refresh
+ 	// period is reset.
+-	a.trigger <- struct{}{}
++	case a.trigger <- struct{}{}:
++	default:
++		// We don't want to block if the channel's buffer is full, it will be triggered eventually.
++
++	}
+ }
+ 
+ func (a *autoscaler) syncAutoscale(ctx context.Context, attemptScaleDown bool) error {
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+index 471a5062b..a95242ee2 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+@@ -253,7 +253,7 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
+ }
+ 
+ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1.Placement, error) {
+-	logger := s.logger.With("key", vpod.GetKey())
++	logger := s.logger.With("key", vpod.GetKey(), zap.String("component", "scheduler"))
+ 	// Get the current placements state
+ 	// Quite an expensive operation but safe and simple.
+ 	state, err := s.stateAccessor.State(s.reserved)
+@@ -332,10 +332,11 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
+ 
+ 	if left > 0 {
+ 		// Give time for the autoscaler to do its job
+-		logger.Info("not enough pod replicas to schedule. Awaiting autoscaler", zap.Any("placement", placements), zap.Int32("left", left))
++		logger.Infow("not enough pod replicas to schedule")
+ 
+ 		// Trigger the autoscaler
+ 		if s.autoscaler != nil {
++			logger.Infow("Awaiting autoscaler", zap.Any("placement", placements), zap.Int32("left", left))
+ 			s.autoscaler.Autoscale(s.ctx)
+ 		}
+ 
