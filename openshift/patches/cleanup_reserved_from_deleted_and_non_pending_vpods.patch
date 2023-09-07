@@ -1,0 +1,25 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+index 083767450..ed1defaa6 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+@@ -253,6 +253,20 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
+ 		return nil, err
+ 	}
+ 
++	// Clean up reserved from removed resources that don't appear in the vpod list anymore and have
++	// no pending resources.
++	reserved := make(map[types.NamespacedName]map[string]int32)
++	for k, v := range s.reserved {
++		if pendings, ok := state.Pending[k]; ok {
++			if pendings == 0 {
++				reserved[k] = map[string]int32{}
++			} else {
++				reserved[k] = v
++			}
++		}
++	}
++	s.reserved = reserved
++
+ 	logger.Debugw("scheduling", zap.Any("state", state))
+ 
+ 	existingPlacements := vpod.GetPlacements()
