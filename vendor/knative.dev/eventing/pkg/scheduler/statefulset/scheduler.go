@@ -258,13 +258,41 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
 	existingPlacements := vpod.GetPlacements()
 	var left int32
 
-	// Remove unschedulable pods from placements
+	// Remove unschedulable or adjust overcommitted pods from placements
 	var placements []duckv1alpha1.Placement
 	if len(existingPlacements) > 0 {
 		placements = make([]duckv1alpha1.Placement, 0, len(existingPlacements))
 		for _, p := range existingPlacements {
-			if state.IsSchedulablePod(st.OrdinalFromPodName(p.PodName)) {
-				placements = append(placements, *p.DeepCopy())
+			p := p.DeepCopy()
+			ordinal := st.OrdinalFromPodName(p.PodName)
+
+			if !state.IsSchedulablePod(ordinal) {
+				continue
+			}
+
+			// Handle overcommitted pods.
+			if state.FreeCap[ordinal] < 0 {
+				// vr > free => vr: 9, overcommit 4 -> free: 0, vr: 5, pending: +4
+				// vr = free => vr: 4, overcommit 4 -> free: 0, vr: 0, pending: +4
+				// vr < free => vr: 3, overcommit 4 -> free: -1, vr: 0, pending: +3
+
+				overcommit := -state.FreeCap[ordinal]
+
+				if p.VReplicas >= overcommit {
+					state.SetFree(ordinal, 0)
+					state.Pending[vpod.GetKey()] += overcommit
+
+					p.VReplicas = p.VReplicas - overcommit
+				} else {
+					state.SetFree(ordinal, p.VReplicas-overcommit)
+					state.Pending[vpod.GetKey()] += p.VReplicas
+				
+					p.VReplicas = 0
+				}
+			}
+
+			if p.VReplicas > 0 {
+				placements = append(placements, *p)
 			}
 		}
 	}

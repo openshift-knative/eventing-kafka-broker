@@ -1,0 +1,62 @@
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+index 2d5460cf8..65018e7c5 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/state/state.go
+@@ -361,7 +361,7 @@ func (s *stateBuilder) updateFreeCapacity(free []int32, last int32, podName stri
+ 	// Assert the pod is not overcommitted
+ 	if free[ordinal] < 0 {
+ 		// This should not happen anymore. Log as an error but do not interrupt the current scheduling.
+-		s.logger.Errorw("pod is overcommitted", zap.String("podName", podName), zap.Int32("free", free[ordinal]))
++		s.logger.Warnw("pod is overcommitted", zap.String("podName", podName), zap.Int32("free", free[ordinal]))
+ 	}
+ 
+ 	if ordinal > last {
+diff --git a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+index ed1defaa6..d9bcef1f8 100644
+--- a/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
++++ b/vendor/knative.dev/eventing/pkg/scheduler/statefulset/scheduler.go
+@@ -272,13 +272,41 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
+ 	existingPlacements := vpod.GetPlacements()
+ 	var left int32
+ 
+-	// Remove unschedulable pods from placements
++	// Remove unschedulable or adjust overcommitted pods from placements
+ 	var placements []duckv1alpha1.Placement
+ 	if len(existingPlacements) > 0 {
+ 		placements = make([]duckv1alpha1.Placement, 0, len(existingPlacements))
+ 		for _, p := range existingPlacements {
+-			if state.IsSchedulablePod(st.OrdinalFromPodName(p.PodName)) {
+-				placements = append(placements, *p.DeepCopy())
++			p := p.DeepCopy()
++			ordinal := st.OrdinalFromPodName(p.PodName)
++
++			if !state.IsSchedulablePod(ordinal) {
++				continue
++			}
++
++			// Handle overcommitted pods.
++			if state.FreeCap[ordinal] < 0 {
++				// vr > free => vr: 9, overcommit 4 -> free: 0, vr: 5, pending: +4
++				// vr = free => vr: 4, overcommit 4 -> free: 0, vr: 0, pending: +4
++				// vr < free => vr: 3, overcommit 4 -> free: -1, vr: 0, pending: +3
++
++				overcommit := -state.FreeCap[ordinal]
++
++				if p.VReplicas >= overcommit {
++					state.SetFree(ordinal, 0)
++					state.Pending[vpod.GetKey()] += overcommit
++
++					p.VReplicas = p.VReplicas - overcommit
++				} else {
++					state.SetFree(ordinal, p.VReplicas-overcommit)
++					state.Pending[vpod.GetKey()] += p.VReplicas
++				
++					p.VReplicas = 0
++				}
++			}
++
++			if p.VReplicas > 0 {
++				placements = append(placements, *p)
+ 			}
+ 		}
+ 	}
