@@ -39,6 +39,10 @@ test-reconciler:
 	sh openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler
 
+test-reconciler-keda:
+	sh test/keda-reconciler-tests.sh
+.PHONY: test-reconciler-keda
+
 # Requires ko 0.2.0 or newer.
 # Target used by github actions.
 test-images:
