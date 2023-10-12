@@ -35,7 +35,7 @@ spec:
       serviceAccountName: "{{ .name }}"
       containers:
         - name: eventshub-forwarder
-          image: {{ .image }}
+          image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-eventshub:knative-v1.9
           imagePullPolicy: "IfNotPresent"
           env:
             - name: "NAME"

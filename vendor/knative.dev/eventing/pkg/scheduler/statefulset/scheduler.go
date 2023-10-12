@@ -228,15 +228,6 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
 	s.reservedMu.Lock()
 	defer s.reservedMu.Unlock()
 
-	vpods, err := s.vpodLister()
-	if err != nil {
-		return nil, err
-	}
-	vpodFromLister := st.GetVPod(vpod.GetKey(), vpods)
-	if vpodFromLister != nil && vpod.GetResourceVersion() != vpodFromLister.GetResourceVersion() {
-		return nil, fmt.Errorf("vpod to schedule has resource version different from one in indexer")
-	}
-
 	placements, err := s.scheduleVPod(vpod)
 	if placements == nil {
 		return placements, err
@@ -253,7 +244,7 @@ func (s *StatefulSetScheduler) Schedule(vpod scheduler.VPod) ([]duckv1alpha1.Pla
 }
 
 func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1.Placement, error) {
-	logger := s.logger.With("key", vpod.GetKey())
+	logger := s.logger.With("key", vpod.GetKey(), zap.String("component", "scheduler"))
 	// Get the current placements state
 	// Quite an expensive operation but safe and simple.
 	state, err := s.stateAccessor.State(s.reserved)
@@ -261,6 +252,20 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
 		logger.Debug("error while refreshing scheduler state (will retry)", zap.Error(err))
 		return nil, err
 	}
+
+	// Clean up reserved from removed resources that don't appear in the vpod list anymore and have
+	// no pending resources.
+	reserved := make(map[types.NamespacedName]map[string]int32)
+	for k, v := range s.reserved {
+		if pendings, ok := state.Pending[k]; ok {
+			if pendings == 0 {
+				reserved[k] = map[string]int32{}
+			} else {
+				reserved[k] = v
+			}
+		}
+	}
+	s.reserved = reserved
 
 	logger.Debugw("scheduling", zap.Any("state", state))
 
@@ -332,10 +337,11 @@ func (s *StatefulSetScheduler) scheduleVPod(vpod scheduler.VPod) ([]duckv1alpha1
 
 	if left > 0 {
 		// Give time for the autoscaler to do its job
-		logger.Info("not enough pod replicas to schedule. Awaiting autoscaler", zap.Any("placement", placements), zap.Int32("left", left))
+		logger.Infow("not enough pod replicas to schedule")
 
 		// Trigger the autoscaler
 		if s.autoscaler != nil {
+			logger.Infow("Awaiting autoscaler", zap.Any("placement", placements), zap.Int32("left", left))
 			s.autoscaler.Autoscale(s.ctx)
 		}
 
