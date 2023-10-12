@@ -49,7 +49,7 @@ spec:
     spec:
       containers:
       - name: heartbeats
-        image: registry.ci.openshift.org/openshift/knative-eventing-kafka-broker-test-heartbeats:knative-v1.9
+        image: ko://knative.dev/eventing/cmd/heartbeats
         imagePullPolicy: IfNotPresent
         args:
         - {{ .args }}
