@@ -18,7 +18,7 @@ spec:
       delivery-timeout: "enabled"
       kreference-mapping: "disabled"
       strict-subscriber: "disabled"
-      new-trigger-filters: "disabled"
+      new-trigger-filters: "enabled"
     config-br-defaults:
       default-br-config: |
         clusterDefault:
