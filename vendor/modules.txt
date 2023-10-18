@@ -1568,6 +1568,7 @@ knative.dev/reconciler-test/pkg/resources/knativeservice
 knative.dev/reconciler-test/pkg/resources/secret
 knative.dev/reconciler-test/pkg/resources/service
 knative.dev/reconciler-test/pkg/state
+knative.dev/reconciler-test/resources/certificate
 knative.dev/reconciler-test/resources/svc
 # sigs.k8s.io/controller-runtime v0.12.3
 ## explicit; go 1.17
