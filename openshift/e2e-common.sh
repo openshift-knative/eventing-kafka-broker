@@ -25,10 +25,12 @@ default_test_image_template=$(
 END
 )
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 export TEST_IMAGE_TEMPLATE=${TEST_IMAGE_TEMPLATE:-$default_test_image_template}
 
 # shellcheck disable=SC1090
-source "$(dirname "$0")/../test/e2e-common.sh"
+source "${SCRIPT_DIR}/../test/e2e-common.sh"
 
 # Loops until duration (car) is exceeded or command (cdr) returns non-zero
 function timeout() {
@@ -114,7 +116,7 @@ function run_e2e_new_tests() {
     make generate-release
   fi
 
-  images_file=$(dirname $(realpath "$0"))/images.yaml
+  images_file="${SCRIPT_DIR}"/images.yaml
   cat "${images_file}"
 
   if [[ ${FIRST_EVENT_DELAY_ENABLED:-true} == true ]]; then
