@@ -74,12 +74,18 @@ func NewController(ctx context.Context, watcher configmap.Watcher, configs *conf
 		)
 	}
 
+	featureStore := feature.NewStore(logging.FromContext(ctx).Named("feature-config-store"))
+	featureStore.WatchConfigs(watcher)
+
 	features := feature.FromContext(ctx)
 	caCerts, err := reconciler.getCaCerts()
 	if err != nil && (features.IsStrictTransportEncryption() || features.IsPermissiveTransportEncryption()) {
 		logger.Warn("failed to get CA certs when at least one address uses TLS", zap.Error(err))
 	}
-	impl := sinkreconciler.NewImpl(ctx, reconciler)
+	impl := sinkreconciler.NewImpl(ctx, reconciler, func(impl *controller.Impl) controller.Options {
+		return controller.Options{
+			ConfigStore: featureStore}
+	})
 	IPsLister := prober.IPsListerFromService(types.NamespacedName{Namespace: configs.SystemNamespace, Name: configs.IngressName})
 	reconciler.IngressHost = network.GetServiceHostname(configs.IngressName, configs.SystemNamespace)
 	reconciler.Prober, err = prober.NewComposite(ctx, configs.IngressPodPort, configs.IngressPodTlsPort, IPsLister, impl.EnqueueKey, &caCerts)
