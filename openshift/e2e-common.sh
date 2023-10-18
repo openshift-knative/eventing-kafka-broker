@@ -5,6 +5,8 @@ export SYSTEM_NAMESPACE=$EVENTING_NAMESPACE
 export TRACING_NAMESPACE=$EVENTING_NAMESPACE
 export KNATIVE_DEFAULT_NAMESPACE=$EVENTING_NAMESPACE
 
+export SKIP_GENERATE_RELEASE=${SKIP_GENERATE_RELEASE:-false}
+
 default_test_image_template=$(
   cat <<-END
 {{- with .Name }}
@@ -108,7 +110,10 @@ function run_conformance_tests() {
 function run_e2e_new_tests() {
   export BROKER_CLASS="Kafka"
 
-  make generate-release
+  if [ "$SKIP_GENERATE_RELEASE" = false ]; then
+    make generate-release
+  fi
+
   images_file=$(dirname $(realpath "$0"))/images.yaml
   cat "${images_file}"
 
