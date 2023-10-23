@@ -346,7 +346,7 @@ func (r *Reconciler) reconcileKind(ctx context.Context, channel *messagingv1beta
 		addressableStatus.Addresses = []duckv1.Addressable{httpAddress}
 	}
 
-	proberAddressable := prober.NewAddressable{
+	proberAddressable := prober.ProberAddressable{
 		AddressStatus: &addressableStatus,
 		ResourceKey: types.NamespacedName{
 			Namespace: channel.GetNamespace(),
