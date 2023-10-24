@@ -1231,7 +1231,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# knative.dev/eventing v0.37.4-0.20231012084230-37dc77d8856a => github.com/openshift-knative/eventing v0.99.1-0.20230831170232-cf89b7eadfce
+# knative.dev/eventing v0.37.5 => github.com/openshift-knative/eventing v0.99.1-0.20230831170232-cf89b7eadfce
 ## explicit; go 1.19
 knative.dev/eventing/cmd/event_display
 knative.dev/eventing/cmd/heartbeats
@@ -1384,7 +1384,7 @@ knative.dev/eventing/test/upgrade/prober/wathola/sender
 ## explicit; go 1.18
 knative.dev/hack
 knative.dev/hack/shell
-# knative.dev/pkg v0.0.0-20231011201526-df28feae6d34
+# knative.dev/pkg v0.0.0-20231023160942-0c39ce4b3a7f
 ## explicit; go 1.18
 knative.dev/pkg/apiextensions/storageversion
 knative.dev/pkg/apiextensions/storageversion/cmd/migrate
@@ -1496,7 +1496,7 @@ knative.dev/pkg/webhook/json
 knative.dev/pkg/webhook/resourcesemantics
 knative.dev/pkg/webhook/resourcesemantics/defaulting
 knative.dev/pkg/webhook/resourcesemantics/validation
-# knative.dev/reconciler-test v0.0.0-20231012155627-6eb37a768042
+# knative.dev/reconciler-test v0.0.0-20231023114053-616ce2cecb19
 ## explicit; go 1.18
 knative.dev/reconciler-test/cmd/eventshub
 knative.dev/reconciler-test/pkg/environment
