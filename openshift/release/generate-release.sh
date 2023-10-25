@@ -13,9 +13,6 @@ git apply openshift/patches/cleanup_reserved_from_deleted_and_non_pending_vpods.
 git apply openshift/patches/handle_overcommitted_pods.patch
 git apply openshift/patches/chmod-codegen.patch
 
-chmod +x $(dirname $0)/../../vendor/k8s.io/code-generator/generate-groups.sh
-chmod +x $(dirname $0)/../../vendor/knative.dev/pkg/hack/generate-knative.sh
-
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
 
