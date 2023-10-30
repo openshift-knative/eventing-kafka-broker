@@ -40,10 +40,10 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/kedacore/keda/v2 v2.8.1
 	go.opencensus.io v0.24.0
-	knative.dev/eventing v0.38.5-0.20231013071011-c1626f188e72
+	knative.dev/eventing v0.38.6-0.20231024083920-1bdedcc2016a
 	knative.dev/hack v0.0.0-20230712131415-ddae80293c43
-	knative.dev/pkg v0.0.0-20231011193800-bd99f2f98be7
-	knative.dev/reconciler-test v0.0.0-20231012160321-e52650f9e174
+	knative.dev/pkg v0.0.0-20231023150739-56bfe0dd9626
+	knative.dev/reconciler-test v0.0.0-20231024065608-1f72fcb94bc1
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
