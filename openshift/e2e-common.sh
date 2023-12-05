@@ -96,6 +96,7 @@ function run_e2e_tests() {
 
   echo "Running e2e tests, directory ./test/e2e_channel/"
   go_test_e2e -timeout=100m -short ./test/e2e_channel/ \
+    -channels=messaging.knative.dev/v1beta1:KafkaChannel \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
 
@@ -106,6 +107,7 @@ function run_conformance_tests() {
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 
   go_test_e2e -timeout=100m ./test/e2e_channel/conformance \
+    -channels=messaging.knative.dev/v1beta1:KafkaChannel \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
 
