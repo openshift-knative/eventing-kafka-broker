@@ -39,6 +39,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/kedacore/keda/v2 v2.8.1
+	go.opencensus.io v0.24.0
 	knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a
 	knative.dev/hack v0.0.0-20231123073118-c0f04e812cfe
 	knative.dev/pkg v0.0.0-20231103161548-f5b42e8dea44
@@ -132,7 +133,6 @@ require (
 	github.com/wavesoftware/go-ensure v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
-	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/automaxprocs v1.4.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
@@ -165,4 +165,4 @@ require (
 
 replace github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
 
-replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20230901062933-33b0c175e2ab
+replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970

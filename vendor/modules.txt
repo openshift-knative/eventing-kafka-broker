@@ -1266,7 +1266,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a
+# knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
 ## explicit; go 1.19
 knative.dev/eventing/cmd/event_display
 knative.dev/eventing/cmd/heartbeats
@@ -1588,4 +1588,4 @@ sigs.k8s.io/structured-merge-diff/v4/value
 ## explicit; go 1.12
 sigs.k8s.io/yaml
 # github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
-# knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20230901062933-33b0c175e2ab
+# knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
