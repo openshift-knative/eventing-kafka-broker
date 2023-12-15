@@ -226,9 +226,9 @@ public class ConsumerVerticleBuilder {
     }
 
   private PemTrustOptions openshiftPemTrustOptions() {
-    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt");
+    // TODO: Go for all files
+    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt/ca-bundle.crt");
   }
-
 
   private ResponseHandler createResponseHandler(final Vertx vertx) {
         if (consumerVerticleContext.getEgress().hasReplyUrl()) {
