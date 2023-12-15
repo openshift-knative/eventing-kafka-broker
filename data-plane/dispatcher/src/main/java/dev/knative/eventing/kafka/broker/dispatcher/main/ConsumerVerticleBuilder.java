@@ -213,11 +213,15 @@ public class ConsumerVerticleBuilder {
     }
 
     private WebClientOptions createWebClientOptionsFromCACerts(final String caCerts) {
-        if (caCerts != null && !caCerts.isEmpty()) {
-            return new WebClientOptions(consumerVerticleContext.getWebClientOptions())
-                    .setPemTrustOptions(new PemTrustOptions().addCertValue(Buffer.buffer(caCerts)));
-        }
-        return consumerVerticleContext.getWebClientOptions();
+      if (caCerts != null && !caCerts.isEmpty()) {
+        return new WebClientOptions(consumerVerticleContext.getWebClientOptions())
+          .setPemTrustOptions(new PemTrustOptions(openshiftPemTrustOptions()).addCertValue(Buffer.buffer(caCerts)));
+      }
+        return consumerVerticleContext.getWebClientOptions().setPemTrustOptions(openshiftPemTrustOptions());
+    }
+
+    private PemTrustOptions openshiftPemTrustOptions() {
+        return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt");
     }
 
     private ResponseHandler createResponseHandler(final Vertx vertx) {
