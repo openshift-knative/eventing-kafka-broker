@@ -219,12 +219,18 @@ public class ConsumerVerticleBuilder {
     private WebClientOptions createWebClientOptionsFromCACerts(String CACerts) {
         if (CACerts != null && !CACerts.isEmpty()) {
             return new WebClientOptions(consumerVerticleContext.getWebClientOptions())
-                    .setPemTrustOptions(new PemTrustOptions().addCertValue(Buffer.buffer(CACerts)));
+                    .setPemTrustOptions(new PemTrustOptions(openshiftPemTrustOptions()).addCertValue(Buffer.buffer(CACerts)));
+
         }
-        return consumerVerticleContext.getWebClientOptions();
+        return consumerVerticleContext.getWebClientOptions().setPemTrustOptions(openshiftPemTrustOptions());
     }
 
-    private ResponseHandler createResponseHandler(final Vertx vertx) {
+  private PemTrustOptions openshiftPemTrustOptions() {
+    // TODO: Go for all files
+    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt/ca-bundle.crt");
+  }
+
+  private ResponseHandler createResponseHandler(final Vertx vertx) {
         if (consumerVerticleContext.getEgress().hasReplyUrl()) {
             return new ResponseToHttpEndpointHandler(new WebClientCloudEventSender(
                     vertx,
