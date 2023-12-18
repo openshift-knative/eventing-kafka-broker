@@ -42,7 +42,7 @@ RUN ./mvnw package -pl=dispatcher-vertx -Drelease -am -DskipTests -Deditorconfig
 RUN mkdir /app && cp /build/dispatcher-vertx/target/dispatcher-vertx-1.0-SNAPSHOT.jar /app/app.jar
 
 # We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
-FROM registry.access.redhat.com/ubi8/openjdk-17-runtime as running
+FROM registry.access.redhat.com/ubi9/openjdk-21-runtime as running
 
 EXPOSE 8080 8778 9779
 
