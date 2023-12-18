@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-FROM quay.io/openshift-knative/17-jdk-centos7 as builder
+FROM registry.access.redhat.com/ubi9/openjdk-21 as builder
 
 WORKDIR /build
 
