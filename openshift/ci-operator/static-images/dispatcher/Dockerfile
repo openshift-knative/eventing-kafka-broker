@@ -18,6 +18,8 @@ FROM registry.access.redhat.com/ubi9/openjdk-21 as builder
 
 WORKDIR /build
 
+USER root
+
 COPY /data-plane/pom.xml .
 COPY /data-plane/.editorconfig .
 COPY /data-plane/core/pom.xml core/pom.xml
