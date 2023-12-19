@@ -227,7 +227,7 @@ public class ConsumerVerticleBuilder {
 
   private PemTrustOptions openshiftPemTrustOptions() {
     // TODO: Go for all files
-    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt/ca-bundle.crt");
+    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt");
   }
 
   private ResponseHandler createResponseHandler(final Vertx vertx) {
