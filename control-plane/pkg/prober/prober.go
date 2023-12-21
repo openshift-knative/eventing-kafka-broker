@@ -72,14 +72,6 @@ type NewAddressable struct {
 	ResourceKey types.NamespacedName
 }
 
-// NewProber probes an addressable resource
-type NewProber interface {
-	// Probe probes the provided NewAddressable resource and returns its Status
-	Probe(ctx context.Context, addressable NewAddressable, expected Status) Status
-	// RotateRootCaCerts rotates the CA certs used to make http requests
-	RotateRootCaCerts(caCerts *string) error
-}
-
 // Func type is an adapter to allow the use of
 // ordinary functions as Prober. If f is a function
 // with the appropriate signature, Func(f) is a
