@@ -55,8 +55,12 @@ metadata:
 EOF
 
   ./test/kafka/kafka_setup.sh || return $?
-  create_sasl_secrets || return $?
-  create_tls_secrets || return $?
+
+  ( # Do not leak sensitive information to logs.
+    set +x
+    create_sasl_secrets || return $?
+    create_tls_secrets || return $?
+  )
 
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
