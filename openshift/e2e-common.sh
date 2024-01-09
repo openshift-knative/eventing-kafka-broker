@@ -55,8 +55,12 @@ metadata:
 EOF
 
   ./test/kafka/kafka_setup.sh || return $?
-  create_sasl_secrets || return $?
-  create_tls_secrets || return $?
+
+  ( # Do not leak sensitive information to logs.
+    set +x
+    create_sasl_secrets || return $?
+    create_tls_secrets || return $?
+  )
 
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
@@ -110,6 +114,7 @@ function run_conformance_tests() {
 }
 
 function run_e2e_new_tests() {
+  local common_opts
   export BROKER_CLASS="Kafka"
 
   if [ "$SKIP_GENERATE_RELEASE" = false ]; then
@@ -122,6 +127,9 @@ function run_e2e_new_tests() {
   if [[ ${FIRST_EVENT_DELAY_ENABLED:-true} == true ]]; then
     ./test/scripts/first-event-delay.sh || return $?
   fi
-  go_test_e2e -timeout=100m ./test/e2e_new/... --images.producer.file="${images_file}" || return $?
-  go_test_e2e -timeout=100m ./test/e2e_new_channel/... --images.producer.file="${images_file}" || return $?
+
+  common_opts=(--images.producer.file="${images_file}" --poll.timeout=8m)
+
+  go_test_e2e -timeout=100m ./test/e2e_new/... "${common_opts[@]}" || return $?
+  go_test_e2e -timeout=100m ./test/e2e_new_channel/... "${common_opts[@]}" || return $?
 }

@@ -40,10 +40,10 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/kedacore/keda/v2 v2.8.1
 	go.opencensus.io v0.24.0
-	knative.dev/eventing v0.38.6-0.20231024083920-1bdedcc2016a
-	knative.dev/hack v0.0.0-20230712131415-ddae80293c43
-	knative.dev/pkg v0.0.0-20231023150739-56bfe0dd9626
-	knative.dev/reconciler-test v0.0.0-20231024065608-1f72fcb94bc1
+	knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a
+	knative.dev/hack v0.0.0-20231123073118-c0f04e812cfe
+	knative.dev/pkg v0.0.0-20231103161548-f5b42e8dea44
+	knative.dev/reconciler-test v0.0.0-20231121134246-52a86c40f40c
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
@@ -165,4 +165,4 @@ require (
 
 replace github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
 
-replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20230901062933-33b0c175e2ab
+replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
