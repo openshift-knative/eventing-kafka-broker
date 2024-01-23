@@ -1,5 +1,5 @@
 # DO NOT EDIT! Generated Dockerfile for vendor/knative.dev/eventing/test/test_images/wathola-receiver.
-FROM registry.ci.openshift.org/openshift/release:golang-1.19 as builder
+FROM registry.ci.openshift.org/openshift/release:golang-1.21 as builder
 
 COPY . .
 
