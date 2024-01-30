@@ -72,8 +72,13 @@ EOF
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
   export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-marketplace
-  make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
-    generated-files images install-tracing install-kafka || failed=$?
+  if [[ -z "${INSTALL_KEDA}" ]] || [[ "${INSTALL_KEDA}" != "true" ]]; then
+  	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
+	  generated-files images install-tracing install-kafka || failed=$?
+  else
+	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
+	  generated-files images install-tracing install-kafka-with-keda || failed=$?
+  fi
   popd || return $?
 
   oc apply -f openshift/knative-eventing.yaml

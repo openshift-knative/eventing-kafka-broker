@@ -39,6 +39,10 @@ test-reconciler:
 	sh openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler
 
+test-reconciler-keda:
+	INSTALL_KEDA="true" sh openshift/e2e-rekt-tests.sh
+.PHONY: test-reconciler-keda
+
 test-reconciler-encryption-auth:
 	sh openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler
