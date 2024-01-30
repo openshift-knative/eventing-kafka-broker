@@ -18,10 +18,12 @@ package trigger
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
 
+	"github.com/Shopify/sarama"
 	"go.uber.org/zap"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -433,14 +435,13 @@ func (r *Reconciler) reconcileConsumerGroup(ctx context.Context, broker *eventin
 	if !ok {
 		// Check if a consumer group exists with the old naming convention
 		groupID = string(trigger.UID)
-
 		valid, err := kafka.AreConsumerGroupsPresentAndValid(kafkaClusterAdmin, groupID)
-		if err != nil {
-			return false, fmt.Errorf("unable to query for existing consumergroup: %w", err)
+		if err != nil && !isGroupAuthorizationError(err) {
+			return false, fmt.Errorf("unable to query for existing consumergroup %q: %w", groupID, err)
 		}
 
 		// No existing consumer groups, use new naming
-		if !valid {
+		if !valid || isGroupAuthorizationError(err) {
 			groupID, err = r.KafkaFeatureFlags.ExecuteTriggersConsumerGroupTemplate(trigger.ObjectMeta)
 			if err != nil {
 				return false, fmt.Errorf("couldn't generate new consumergroup id: %w", err)
@@ -482,4 +483,9 @@ func deliveryOrderFromString(val string) (contract.DeliveryOrder, error) {
 	default:
 		return contract.DeliveryOrder_UNORDERED, fmt.Errorf("invalid annotation %s value: %s. Allowed values [ %q | %q ]", deliveryOrderAnnotation, val, internals.Ordered, internals.Unordered)
 	}
+}
+
+func isGroupAuthorizationError(err error) bool {
+	return errors.Is(err, sarama.ErrGroupAuthorizationFailed) ||
+		errors.Is(err, sarama.ErrClusterAuthorizationFailed)
 }

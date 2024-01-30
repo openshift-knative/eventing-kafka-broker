@@ -39,6 +39,7 @@ import (
 	"knative.dev/pkg/resolver"
 	"knative.dev/pkg/tracker"
 
+	apisconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
 	sources "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
 
 	eventingduck "knative.dev/eventing/pkg/apis/duck/v1"
@@ -87,6 +88,9 @@ var (
 	exponential = eventingduck.BackoffPolicyExponential
 
 	bootstrapServers = "kafka-1:9092,kafka-2:9093"
+
+	expectedErrorOnDescribeConsumerGroupsKey = "expectedErrorOnDescribeConsumerGroupsKey"
+	featureFlagsKey                          = "featureFlagsKey"
 )
 
 type EgressBuilder struct {
@@ -196,6 +200,150 @@ func triggerReconciliation(t *testing.T, format string, env config.Env, useNewFi
 						reconcilertesting.WithTriggerDeadLetterSinkNotConfigured(),
 					),
 				},
+			},
+		},
+		{
+			Name: "Reconciled normal - preserve status group.id annotation",
+			Objects: []runtime.Object{
+				NewBroker(
+					BrokerReady,
+					WithTopicStatusAnnotation(BrokerTopic()),
+					WithBootstrapServerStatusAnnotation(bootstrapServers),
+				),
+				newTrigger(
+					withTriggerStatusGroupIdAnnotation("aaa"),
+				),
+				NewService(),
+				NewConfigMapFromContract(&contract.Contract{
+					Resources: []*contract.Resource{
+						{
+							Uid:     BrokerUUID,
+							Topics:  []string{BrokerTopic()},
+							Ingress: &contract.Ingress{Path: receiver.Path(BrokerNamespace, BrokerName)},
+						},
+					},
+				}, env.DataPlaneConfigMapNamespace, env.ContractConfigMapName, env.ContractConfigMapFormat),
+				BrokerDispatcherPod(env.SystemNamespace, nil),
+				DataPlaneConfigMap(env.DataPlaneConfigMapNamespace, env.DataPlaneConfigConfigMapName, brokerreconciler.ConsumerConfigKey,
+					DataPlaneConfigInitialOffset(brokerreconciler.ConsumerConfigKey, sources.OffsetLatest),
+				),
+			},
+			Key: testKey,
+			WantEvents: []string{
+				finalizerUpdatedEvent,
+			},
+			WantPatches: []clientgotesting.PatchActionImpl{
+				patchFinalizers(),
+			},
+			WantUpdates: []clientgotesting.UpdateActionImpl{
+				ConfigMapUpdate(env.DataPlaneConfigMapNamespace, env.ContractConfigMapName, env.ContractConfigMapFormat, &contract.Contract{
+					Resources: []*contract.Resource{
+						{
+							Uid:     BrokerUUID,
+							Topics:  []string{BrokerTopic()},
+							Ingress: &contract.Ingress{Path: receiver.Path(BrokerNamespace, BrokerName)},
+							Egresses: []*contract.Egress{
+								{
+									Destination:   ServiceURL,
+									ConsumerGroup: "aaa",
+									Uid:           TriggerUUID,
+									Reference:     TriggerReference(),
+								},
+							},
+						},
+					},
+					Generation: 1,
+				}),
+				BrokerDispatcherPodUpdate(env.SystemNamespace, map[string]string{
+					base.VolumeGenerationAnnotationKey: "1",
+				}),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: newTrigger(
+						reconcilertesting.WithInitTriggerConditions,
+						reconcilertesting.WithTriggerSubscribed(),
+						withSubscriberURI,
+						reconcilertesting.WithTriggerDependencyReady(),
+						reconcilertesting.WithTriggerBrokerReady(),
+						withTriggerSubscriberResolvedSucceeded(contract.DeliveryOrder_UNORDERED),
+						withTriggerStatusGroupIdAnnotation("aaa"),
+						reconcilertesting.WithTriggerDeadLetterSinkNotConfigured(),
+					),
+				},
+			},
+		},
+		{
+			Name: "Reconciled normal - preserve unauthorized to access uid-based group",
+			Objects: []runtime.Object{
+				NewBroker(
+					BrokerReady,
+					WithTopicStatusAnnotation(BrokerTopic()),
+					WithBootstrapServerStatusAnnotation(bootstrapServers),
+				),
+				newTrigger(),
+				NewService(),
+				NewConfigMapFromContract(&contract.Contract{
+					Resources: []*contract.Resource{
+						{
+							Uid:     BrokerUUID,
+							Topics:  []string{BrokerTopic()},
+							Ingress: &contract.Ingress{Path: receiver.Path(BrokerNamespace, BrokerName)},
+						},
+					},
+				}, env.DataPlaneConfigMapNamespace, env.ContractConfigMapName, env.ContractConfigMapFormat),
+				BrokerDispatcherPod(env.SystemNamespace, nil),
+				DataPlaneConfigMap(env.DataPlaneConfigMapNamespace, env.DataPlaneConfigConfigMapName, brokerreconciler.ConsumerConfigKey,
+					DataPlaneConfigInitialOffset(brokerreconciler.ConsumerConfigKey, sources.OffsetLatest),
+				),
+			},
+			Key: testKey,
+			WantEvents: []string{
+				finalizerUpdatedEvent,
+			},
+			WantPatches: []clientgotesting.PatchActionImpl{
+				patchFinalizers(),
+			},
+			WantUpdates: []clientgotesting.UpdateActionImpl{
+				ConfigMapUpdate(env.DataPlaneConfigMapNamespace, env.ContractConfigMapName, env.ContractConfigMapFormat, &contract.Contract{
+					Resources: []*contract.Resource{
+						{
+							Uid:     BrokerUUID,
+							Topics:  []string{BrokerTopic()},
+							Ingress: &contract.Ingress{Path: receiver.Path(BrokerNamespace, BrokerName)},
+							Egresses: []*contract.Egress{
+								{
+									Destination:   ServiceURL,
+									ConsumerGroup: fmt.Sprintf("knative-trigger-%s-%s", TriggerNamespace, TriggerName),
+									Uid:           TriggerUUID,
+									Reference:     TriggerReference(),
+								},
+							},
+						},
+					},
+					Generation: 1,
+				}),
+				BrokerDispatcherPodUpdate(env.SystemNamespace, map[string]string{
+					base.VolumeGenerationAnnotationKey: "1",
+				}),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: newTrigger(
+						reconcilertesting.WithInitTriggerConditions,
+						reconcilertesting.WithTriggerSubscribed(),
+						withSubscriberURI,
+						reconcilertesting.WithTriggerDependencyReady(),
+						reconcilertesting.WithTriggerBrokerReady(),
+						withTriggerSubscriberResolvedSucceeded(contract.DeliveryOrder_UNORDERED),
+						withTriggerStatusGroupIdAnnotation(fmt.Sprintf("knative-trigger-%s-%s", TriggerNamespace, TriggerName)),
+						reconcilertesting.WithTriggerDeadLetterSinkNotConfigured(),
+					),
+				},
+			},
+			OtherTestData: map[string]interface{}{
+				expectedErrorOnDescribeConsumerGroupsKey: fmt.Errorf("error: %w", sarama.ErrGroupAuthorizationFailed),
+				featureFlagsKey:                          apisconfig.DefaultFeaturesConfig(),
 			},
 		},
 		{
@@ -2841,6 +2989,9 @@ func useTableWithFlags(t *testing.T, table TableTest, env *config.Env, flags fea
 
 		logger := logging.FromContext(ctx)
 
+		expectedErrorOnDescribeConsumerGroups, _ := row.OtherTestData[expectedErrorOnDescribeConsumerGroupsKey].(error)
+		featureFlags, _ := row.OtherTestData[featureFlagsKey].(*apisconfig.KafkaFeatureFlags)
+
 		reconciler := &Reconciler{
 			Reconciler: &base.Reconciler{
 				KubeClient:                   kubeclient.Get(ctx),
@@ -2864,6 +3015,7 @@ func useTableWithFlags(t *testing.T, table TableTest, env *config.Env, flags fea
 			Env:                       env,
 			BrokerClass:               kafka.BrokerClass,
 			DataPlaneConfigMapLabeler: base.NoopConfigmapOption,
+			KafkaFeatureFlags:         featureFlags,
 			InitOffsetsFunc: func(ctx context.Context, kafkaClient sarama.Client, kafkaAdminClient sarama.ClusterAdmin, topics []string, consumerGroup string) (int32, error) {
 				return 1, nil
 			},
@@ -2889,7 +3041,8 @@ func useTableWithFlags(t *testing.T, table TableTest, env *config.Env, flags fea
 							State:   "Stable",
 						},
 					},
-					T: t,
+					ExpectedErrorOnDescribeConsumerGroups: expectedErrorOnDescribeConsumerGroups,
+					T:                                     t,
 				}, nil
 			},
 		}
