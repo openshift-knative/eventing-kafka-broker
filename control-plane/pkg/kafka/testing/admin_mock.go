@@ -173,7 +173,7 @@ func (m *MockKafkaClusterAdmin) DescribeConsumerGroups(groups []string) ([]*sara
 		m.T.Errorf("unexpected consumer groups %v, expected %v", groups, m.ExpectedConsumerGroups)
 	}
 
-	return m.ExpectedGroupDescriptionOnDescribeConsumerGroups, m.ExpectedErrorOnDescribeTopics
+	return m.ExpectedGroupDescriptionOnDescribeConsumerGroups, m.ExpectedErrorOnDescribeConsumerGroups
 }
 
 func (m *MockKafkaClusterAdmin) ListConsumerGroupOffsets(group string, topicPartitions map[string][]int32) (*sarama.OffsetFetchResponse, error) {
