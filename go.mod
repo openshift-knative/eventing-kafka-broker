@@ -1,6 +1,6 @@
 module knative.dev/eventing-kafka-broker
 
-go 1.19
+go 1.21
 
 require (
 	github.com/Shopify/sarama v1.37.0
@@ -43,7 +43,7 @@ require (
 	knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a
 	knative.dev/hack v0.0.0-20231123073118-c0f04e812cfe
 	knative.dev/pkg v0.0.0-20231103161548-f5b42e8dea44
-	knative.dev/reconciler-test v0.0.0-20231121134246-52a86c40f40c
+	knative.dev/reconciler-test v0.0.0-20240118172306-00c4131cf6be
 	sigs.k8s.io/controller-runtime v0.12.3
 )
 
@@ -165,4 +165,4 @@ require (
 
 replace github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
 
-replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
+replace knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20240126100517-8c8de08f5c0e

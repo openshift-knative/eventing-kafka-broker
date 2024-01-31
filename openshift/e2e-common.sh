@@ -72,12 +72,44 @@ EOF
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
   export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-marketplace
-  make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
-    generated-files images install-tracing install-kafka || failed=$?
+  if [[ "${INSTALL_KEDA:-'false'}" != "true" ]]; then
+  	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
+	  generated-files images install-tracing install-kafka || failed=$?
+  else
+	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
+	  generated-files images install-tracing install-kafka-with-keda || failed=$?
+  fi
   popd || return $?
 
   oc apply -f openshift/knative-eventing.yaml
   oc wait --for=condition=Ready knativeeventing.operator.knative.dev knative-eventing -n knative-eventing --timeout=900s
+
+  local openshift_version=$(oc version -o yaml | yq read - openshiftVersion)
+  local cert_manager_namespace="cert-manager"
+  if printf '%s\n4.12\n' "${openshift_version}" | sort --version-sort -C; then
+      # OCP version is older as 4.12 and thus cert-manager-operator is only available as tech-preview in this version (cert-manager-operator GA'ed in OCP 4.12)
+      echo "Running on OpenShift ${openshift_version} which supports cert-manager-operator only in tech-preview"
+      cert_manager_namespace="openshift-cert-manager"
+  else
+    echo "Running on OpenShift ${openshift_version} which supports GA'ed cert-manager-operator"
+  fi
+
+  oc apply \
+    -f "${SCRIPT_DIR}/tls/issuers/eventing-ca-issuer.yaml" \
+    -f "${SCRIPT_DIR}/tls/issuers/selfsigned-issuer.yaml" || return $?
+
+  oc apply -n "${cert_manager_namespace}" -f "${SCRIPT_DIR}/tls/issuers/ca-certificate.yaml" || return $?
+
+  local ca_cert_tls_secret="knative-eventing-ca"
+  echo "Waiting until secrets: ${ca_cert_tls_secret} exist in ${cert_manager_namespace}"
+  wait_until_object_exists secret "${ca_cert_tls_secret}" "${cert_manager_namespace}" || return $?
+
+  oc get secret -n "${cert_manager_namespace}" "${ca_cert_tls_secret}" -o=jsonpath='{.data.tls\.crt}' | base64 -d > tls.crt || return $?
+  oc get secret -n "${cert_manager_namespace}" "${ca_cert_tls_secret}" -o=jsonpath='{.data.ca\.crt}' | base64 -d > ca.crt || return $?
+  oc create configmap -n knative-eventing knative-eventing-bundle --from-file=tls.crt --from-file=ca.crt \
+    --dry-run=client -o yaml | kubectl apply -n knative-eventing -f - || return $?
+
+  oc label configmap -n knative-eventing knative-eventing-bundle networking.knative.dev/trust-bundle=true
 
   return $failed
 }
@@ -132,4 +164,31 @@ function run_e2e_new_tests() {
 
   go_test_e2e -timeout=100m ./test/e2e_new/... "${common_opts[@]}" || return $?
   go_test_e2e -timeout=100m ./test/e2e_new_channel/... "${common_opts[@]}" || return $?
+}
+
+function run_e2e_encryption_auth_tests(){
+  header "Running E2E Encryption and Auth Tests"
+
+  oc patch knativeeventing --type merge -n "${EVENTING_NAMESPACE}" knative-eventing --patch-file "${SCRIPT_DIR}/knative-eventing-encryption-auth.yaml"
+
+  images_file=$(dirname $(realpath "$0"))/images.yaml
+  make generate-release
+  cat "${images_file}"
+
+  oc wait --for=condition=Ready knativeeventing.operator.knative.dev knative-eventing -n "${EVENTING_NAMESPACE}" --timeout=900s || return $?
+
+  local regex="TLS"
+
+  local test_name="${1:-}"
+  local run_command="-run ${regex}"
+  local failed=0
+
+  if [ -n "$test_name" ]; then
+      local run_command="-run ^(${test_name})$"
+  fi
+  # check for test flags
+  RUN_FLAGS="-timeout=1h -parallel=20 -run ${regex}"
+  go_test_e2e ${RUN_FLAGS} ./test/e2e_new --images.producer.file="${images_file}" || failed=$?
+
+  return $failed
 }

@@ -88,6 +88,7 @@ github.com/cloudevents/sdk-go/v2
 github.com/cloudevents/sdk-go/v2/binding
 github.com/cloudevents/sdk-go/v2/binding/format
 github.com/cloudevents/sdk-go/v2/binding/spec
+github.com/cloudevents/sdk-go/v2/binding/transformer
 github.com/cloudevents/sdk-go/v2/client
 github.com/cloudevents/sdk-go/v2/context
 github.com/cloudevents/sdk-go/v2/event
@@ -1266,8 +1267,8 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
-## explicit; go 1.19
+# knative.dev/eventing v0.38.7-0.20231114105650-05b92c7f910a => github.com/openshift-knative/eventing v0.99.1-0.20240126100517-8c8de08f5c0e
+## explicit; go 1.21
 knative.dev/eventing/cmd/event_display
 knative.dev/eventing/cmd/heartbeats
 knative.dev/eventing/hack
@@ -1291,6 +1292,7 @@ knative.dev/eventing/pkg/apis/sources
 knative.dev/eventing/pkg/apis/sources/config
 knative.dev/eventing/pkg/apis/sources/v1
 knative.dev/eventing/pkg/apis/sources/v1beta2
+knative.dev/eventing/pkg/broker
 knative.dev/eventing/pkg/client/clientset/versioned
 knative.dev/eventing/pkg/client/clientset/versioned/fake
 knative.dev/eventing/pkg/client/clientset/versioned/scheme
@@ -1344,6 +1346,8 @@ knative.dev/eventing/pkg/duck
 knative.dev/eventing/pkg/eventingtls
 knative.dev/eventing/pkg/eventingtls/eventingtlstesting
 knative.dev/eventing/pkg/kncloudevents
+knative.dev/eventing/pkg/kncloudevents/attributes
+knative.dev/eventing/pkg/metrics
 knative.dev/eventing/pkg/reconciler/testing
 knative.dev/eventing/pkg/reconciler/testing/scheme
 knative.dev/eventing/pkg/reconciler/testing/v1
@@ -1361,6 +1365,7 @@ knative.dev/eventing/pkg/scheduler/plugins/core/removewithhighestordinalpriority
 knative.dev/eventing/pkg/scheduler/plugins/kafka/nomaxresourcecount
 knative.dev/eventing/pkg/scheduler/state
 knative.dev/eventing/pkg/scheduler/statefulset
+knative.dev/eventing/pkg/tracing
 knative.dev/eventing/pkg/utils
 knative.dev/eventing/test
 knative.dev/eventing/test/conformance/helpers
@@ -1392,6 +1397,7 @@ knative.dev/eventing/test/rekt/features/broker
 knative.dev/eventing/test/rekt/features/channel
 knative.dev/eventing/test/rekt/features/featureflags
 knative.dev/eventing/test/rekt/features/knconf
+knative.dev/eventing/test/rekt/features/source
 knative.dev/eventing/test/rekt/features/trigger
 knative.dev/eventing/test/rekt/resources/account_role
 knative.dev/eventing/test/rekt/resources/addressable
@@ -1451,6 +1457,8 @@ knative.dev/pkg/client/injection/kube/informers/apps/v1/statefulset
 knative.dev/pkg/client/injection/kube/informers/apps/v1/statefulset/fake
 knative.dev/pkg/client/injection/kube/informers/core/v1/configmap
 knative.dev/pkg/client/injection/kube/informers/core/v1/configmap/fake
+knative.dev/pkg/client/injection/kube/informers/core/v1/configmap/filtered
+knative.dev/pkg/client/injection/kube/informers/core/v1/configmap/filtered/fake
 knative.dev/pkg/client/injection/kube/informers/core/v1/namespace
 knative.dev/pkg/client/injection/kube/informers/core/v1/node
 knative.dev/pkg/client/injection/kube/informers/core/v1/node/fake
@@ -1463,6 +1471,8 @@ knative.dev/pkg/client/injection/kube/informers/core/v1/service/fake
 knative.dev/pkg/client/injection/kube/informers/core/v1/serviceaccount
 knative.dev/pkg/client/injection/kube/informers/factory
 knative.dev/pkg/client/injection/kube/informers/factory/fake
+knative.dev/pkg/client/injection/kube/informers/factory/filtered
+knative.dev/pkg/client/injection/kube/informers/factory/filtered/fake
 knative.dev/pkg/client/injection/kube/informers/rbac/v1/clusterrolebinding
 knative.dev/pkg/codegen/cmd/injection-gen
 knative.dev/pkg/codegen/cmd/injection-gen/args
@@ -1540,7 +1550,7 @@ knative.dev/pkg/webhook/json
 knative.dev/pkg/webhook/resourcesemantics
 knative.dev/pkg/webhook/resourcesemantics/defaulting
 knative.dev/pkg/webhook/resourcesemantics/validation
-# knative.dev/reconciler-test v0.0.0-20231121134246-52a86c40f40c
+# knative.dev/reconciler-test v0.0.0-20240118172306-00c4131cf6be
 ## explicit; go 1.18
 knative.dev/reconciler-test/cmd/eventshub
 knative.dev/reconciler-test/pkg/environment
@@ -1588,4 +1598,4 @@ sigs.k8s.io/structured-merge-diff/v4/value
 ## explicit; go 1.12
 sigs.k8s.io/yaml
 # github.com/cloudevents/sdk-go/sql/v2 => github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a
-# knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20231204165534-958f85c43970
+# knative.dev/eventing => github.com/openshift-knative/eventing v0.99.1-0.20240126100517-8c8de08f5c0e

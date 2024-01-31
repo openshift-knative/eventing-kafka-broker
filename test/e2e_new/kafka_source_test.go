@@ -23,12 +23,14 @@ import (
 	"testing"
 	"time"
 
-	"knative.dev/eventing-kafka-broker/test/rekt/features"
 	"knative.dev/pkg/system"
 	"knative.dev/reconciler-test/pkg/environment"
+	"knative.dev/reconciler-test/pkg/eventshub"
 	"knative.dev/reconciler-test/pkg/feature"
 	"knative.dev/reconciler-test/pkg/k8s"
 	"knative.dev/reconciler-test/pkg/knative"
+
+	"knative.dev/eventing-kafka-broker/test/rekt/features"
 )
 
 func TestKafkaSourceCreateSecretsAfterKafkaSource(t *testing.T) {
@@ -114,6 +116,21 @@ func TestKafkaSourceBinaryEvent(t *testing.T) {
 	)
 
 	env.Test(ctx, t, features.KafkaSourceBinaryEvent())
+}
+
+func TestKafkaSourceBinaryEventWithExtensions(t *testing.T) {
+	t.Parallel()
+
+	ctx, env := global.Environment(
+		knative.WithKnativeNamespace(system.Namespace()),
+		knative.WithLoggingConfig,
+		knative.WithTracingConfig,
+		k8s.WithEventListener,
+		environment.WithPollTimings(PollInterval, PollTimeout),
+		environment.Managed(t),
+	)
+
+	env.Test(ctx, t, features.KafkaSourceBinaryEventWithExtensions())
 }
 
 func TestKafkaSourceStructuredEvent(t *testing.T) {
@@ -210,6 +227,22 @@ func TestKafkaSourceUpdate(t *testing.T) {
 }
 
 func TestKafkaSourceKedaScaling(t *testing.T) {
+  t.Parallel()
+
+	ctx, env := global.Environment(
+		knative.WithKnativeNamespace(system.Namespace()),
+		knative.WithLoggingConfig,
+		knative.WithTracingConfig,
+		k8s.WithEventListener,
+    environment.WithPollTimings(5*time.Second, 4*time.Minute),
+		environment.Managed(t),
+	)
+
+	env.Test(ctx, t, features.KafkaSourceScalesToZeroWithKeda())
+}
+
+func TestKafkaSourceTLSSink(t *testing.T) {
+
 	t.Parallel()
 
 	ctx, env := global.Environment(
@@ -217,10 +250,26 @@ func TestKafkaSourceKedaScaling(t *testing.T) {
 		knative.WithLoggingConfig,
 		knative.WithTracingConfig,
 		k8s.WithEventListener,
-		environment.WithPollTimings(5*time.Second, 4*time.Minute),
+		environment.WithPollTimings(PollInterval, PollTimeout),
+		eventshub.WithTLS(t),
 		environment.Managed(t),
 	)
 
-	env.Test(ctx, t, features.KafkaSourceScalesToZeroWithKeda())
+	env.ParallelTest(ctx, t, features.KafkaSourceTLSSink())
+}
 
+func TestKafkaSourceTLSTrustBundle(t *testing.T) {
+
+	t.Parallel()
+
+	ctx, env := global.Environment(
+		knative.WithKnativeNamespace(system.Namespace()),
+		knative.WithLoggingConfig,
+		knative.WithTracingConfig,
+		k8s.WithEventListener,
+		environment.WithPollTimings(PollInterval, PollTimeout),
+		environment.Managed(t),
+	)
+
+	env.ParallelTest(ctx, t, features.KafkaSourceTLSSinkTrustBundle())
 }

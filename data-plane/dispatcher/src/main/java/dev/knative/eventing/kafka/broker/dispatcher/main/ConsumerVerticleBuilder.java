@@ -216,18 +216,20 @@ public class ConsumerVerticleBuilder {
         };
     }
 
-    private WebClientOptions createWebClientOptionsFromCACerts(String CACerts) {
-        if (CACerts != null && !CACerts.isEmpty()) {
-            return new WebClientOptions(consumerVerticleContext.getWebClientOptions())
-                    .setPemTrustOptions(new PemTrustOptions(openshiftPemTrustOptions()).addCertValue(Buffer.buffer(CACerts)));
-
+    private WebClientOptions createWebClientOptionsFromCACerts(final String caCerts) {
+        final var pemTrustOptions = new PemTrustOptions(openshiftPemTrustOptions());
+        for (String trustBundle : consumerVerticleContext.getTrustBundles()) {
+            pemTrustOptions.addCertValue(Buffer.buffer(trustBundle));
         }
-        return consumerVerticleContext.getWebClientOptions().setPemTrustOptions(openshiftPemTrustOptions());
+        if (caCerts != null && !caCerts.isEmpty()) {
+            pemTrustOptions.addCertValue(Buffer.buffer(caCerts));
+        }
+        return new WebClientOptions(consumerVerticleContext.getWebClientOptions()).setTrustOptions(pemTrustOptions);
     }
 
   private PemTrustOptions openshiftPemTrustOptions() {
     // TODO: Go for all files
-    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt/ca-bundle.crt");
+    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt");
   }
 
   private ResponseHandler createResponseHandler(final Vertx vertx) {

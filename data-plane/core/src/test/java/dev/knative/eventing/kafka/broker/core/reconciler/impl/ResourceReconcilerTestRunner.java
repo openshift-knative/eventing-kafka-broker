@@ -23,12 +23,14 @@ import io.vertx.core.Future;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ResourceReconcilerTestRunner {
 
     public static class ReconcileStep {
 
-        private final Collection<DataPlaneContract.Resource> resources;
+        private final DataPlaneContract.Contract contract;
+
         private final ResourceReconcilerTestRunner runner;
 
         private final List<String> newIngresses = new ArrayList<>();
@@ -41,7 +43,15 @@ public class ResourceReconcilerTestRunner {
 
         public ReconcileStep(
                 final Collection<DataPlaneContract.Resource> resources, final ResourceReconcilerTestRunner runner) {
-            this.resources = resources;
+            this(
+                    DataPlaneContract.Contract.newBuilder()
+                            .addAllResources(resources)
+                            .build(),
+                    runner);
+        }
+
+        public ReconcileStep(final DataPlaneContract.Contract contract, final ResourceReconcilerTestRunner runner) {
+            this.contract = contract;
             this.runner = runner;
         }
 
@@ -95,7 +105,16 @@ public class ResourceReconcilerTestRunner {
         return this;
     }
 
+    public ResourceReconcilerTestRunner reconcile(DataPlaneContract.Contract contract) {
+        final var step = new ReconcileStep(contract, this);
+        this.reconcileSteps.add(step);
+        return this;
+    }
+
     public ReconcileStep expect() {
+        if (this.reconcileSteps.isEmpty()) {
+          throw new NoSuchElementException();
+        }
         return this.reconcileSteps.get(this.reconcileSteps.size() - 1);
     }
 
@@ -140,11 +159,7 @@ public class ResourceReconcilerTestRunner {
 
         for (int i = 0; i < reconcileSteps.size(); i++) {
             final var step = reconcileSteps.get(i);
-            assertThat(reconciler
-                            .reconcile(DataPlaneContract.Contract.newBuilder()
-                                    .addAllResources(step.resources)
-                                    .build())
-                            .succeeded())
+            assertThat(reconciler.reconcile(step.contract).succeeded())
                     .as("Step " + i)
                     .isEqualTo(step.future.succeeded());
 
