@@ -33,11 +33,8 @@ import (
 	"go.uber.org/zap"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
-	testpkg "knative.dev/eventing-kafka-broker/test/pkg"
-	"knative.dev/eventing-kafka-broker/test/rekt/features/featuressteps"
-	"knative.dev/eventing-kafka-broker/test/rekt/resources/kafkasink"
 
-  "knative.dev/pkg/apis"
+	"knative.dev/pkg/apis"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 	kubeclient "knative.dev/pkg/client/injection/kube/client"
 	"knative.dev/pkg/network"
@@ -744,7 +741,7 @@ func KafkaSourceScalesToZeroWithKeda() *feature.Feature {
 	f.Setup("install eventshub receiver", eventshub.Install(receiver, eventshub.StartReceiver))
 
 	kafkaSourceOpts := []manifest.CfgFn{
-		kafkasource.WithSink(service.AsKReference(receiver), ""),
+		kafkasource.WithSink(service.AsDestinationRef(receiver)),
 		kafkasource.WithTopics([]string{topic}),
 		kafkasource.WithBootstrapServers(testingpkg.BootstrapServersPlaintextArr),
 	}
@@ -773,7 +770,7 @@ func verifyConsumerGroupReplicas(source string, replicas int32, allowNotFound bo
 	return func(ctx context.Context, t feature.T) {
 		var seenReplicas int32
 		interval, timeout := environment.PollTimingsFromContext(ctx)
-		err := wait.PollUntilContextTimeout(ctx, interval, timeout, true, func(ctx context.Context) (bool, error) {
+		err := wait.PollImmediate(interval, timeout, func() (bool, error) {
 			ns := environment.FromContext(ctx).Namespace()
 
 			ks, err := sourcesclient.Get(ctx).
