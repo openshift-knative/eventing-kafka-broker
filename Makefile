@@ -40,11 +40,11 @@ test-reconciler:
 .PHONY: test-reconciler
 
 test-reconciler-keda:
-	INSTALL_KEDA="true" sh openshift/e2e-rekt-tests.sh
+	INSTALL_KEDA="true" openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler-keda
 
 test-reconciler-encryption-auth:
-	sh openshift/e2e-rekt-tests.sh
+	sh openshift/e2e-rekt-encryption-auth-tests.sh
 .PHONY: test-reconciler
 
 # Requires ko 0.2.0 or newer.

@@ -324,7 +324,7 @@ func (r *Reconciler) reconcileKind(ctx context.Context, channel *messagingv1beta
 		}
 
 		httpAddress := receiver.ChannelHTTPAddress(channelHttpHost)
-		httpsAddress := receiver.HTTPSAddress(channelHttpsHost, channelService, caCerts)
+		httpsAddress := receiver.HTTPSAddress(channelHttpsHost, channel, caCerts)
 		// Permissive mode:
 		// - status.address http address with path-based routing
 		// - status.addresses:
@@ -342,7 +342,7 @@ func (r *Reconciler) reconcileKind(ctx context.Context, channel *messagingv1beta
 			return err
 		}
 
-		httpsAddress := receiver.HTTPSAddress(channelHttpsHost, channelService, caCerts)
+		httpsAddress := receiver.HTTPSAddress(channelHttpsHost, channel, caCerts)
 		addressableStatus.Addresses = []duckv1.Addressable{httpsAddress}
 		addressableStatus.Address = &httpsAddress
 	} else {
