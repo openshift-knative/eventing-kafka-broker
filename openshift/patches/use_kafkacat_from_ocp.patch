@@ -6,8 +6,8 @@ index 3b295492..7ddf1346 100644
  	strimziUserResource  = "kafkausers"
  	interval             = 3 * time.Second
  	timeout              = 4 * time.Minute
--	kafkaCatImage        = "docker.io/edenhill/kafkacat:1.6.0"
-+	kafkaCatImage        = "quay.io/openshift-knative/kafkacat:1.6.0"
+-	kafkaCatImage        = "docker.io/edenhill/kcat:1.7.1"
++	kafkaCatImage        = "quay.io/openshift-knative/kcat:1.7.1"
  )
  
  var (
