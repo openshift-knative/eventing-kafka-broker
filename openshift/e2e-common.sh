@@ -54,6 +54,10 @@ function timeout() {
 }
 
 function install_serverless() {
+  ekb_tag="$(yq r openshift/project.yaml project.tag)"
+  ekb_branch=${ekb_tag/knative-nightly/release-next}
+  ekb_branch=${ekb_branch/knative-v/release-v}
+
   header "Installing Serverless Operator"
 
   cat <<EOF | oc apply -f -
@@ -76,6 +80,11 @@ EOF
 
   local operator_dir=/tmp/serverless-operator
   git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
+
+  # use same eventing-core version as for EKB
+  yq w --inplace "${operator_dir}/olm-catalog/serverless-operator/project.yaml" 'dependencies.eventing' "${ekb_tag}"
+  yq w --inplace "${operator_dir}/olm-catalog/serverless-operator/project.yaml" 'dependencies.eventing_artifacts_branch' "${ekb_branch}"
+
   export GOPATH=/tmp/go
   local failed=0
   pushd $operator_dir || return $?
