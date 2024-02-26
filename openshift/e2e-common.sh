@@ -79,7 +79,7 @@ EOF
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
   local operator_dir=/tmp/serverless-operator
-  git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
+  git clone --branch remove-knativeeventing-version-check https://github.com/creydr/serverless-operator.git $operator_dir
 
   # use same eventing-core version as for EKB
   yq w --inplace "${operator_dir}/olm-catalog/serverless-operator/project.yaml" 'dependencies.eventing' "${ekb_tag}"
