@@ -10,6 +10,7 @@ function resolve_resources() {
   local image_name=${5:-""}
 
   local version=${release/release-/}
+  local tag="knative-${version}"
 
   echo "Writing resolved yaml to $resolved_file_name ${version}"
 
@@ -25,8 +26,8 @@ function resolve_resources() {
       sed -i -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(test/\)\(.*\)+\1\2 \3\4test-\5+g" \
         -e "s+ko://++" \
         -e "s+app.kubernetes.io/version: devel+app.kubernetes.io/version: ${release}+" \
-        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-test-\4:${version}+g" \
-        -e "s+\(.* image: \)\({{ \.image }}\)\(.*\)+\1${image_prefix}-test-${image_name}:${version}+g" \
+        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-test-\4:${tag}+g" \
+        -e "s+\(.* image: \)\({{ \.image }}\)\(.*\)+\1${image_prefix}-test-${image_name}:${tag}+g" \
         "$yaml"
     else
       echo "---" >>"$resolved_file_name"
@@ -34,9 +35,9 @@ function resolve_resources() {
         -e "s+ko://++" \
         -e "s+kafka.eventing.knative.dev/release: devel+kafka.eventing.knative.dev/release: ${release}+" \
         -e "s+app.kubernetes.io/version: devel+app.kubernetes.io/version: ${release}+" \
-        -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}-dispatcher:${version}+" \
-        -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}-receiver:${version}+" \
-        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-\4:${version}+g" \
+        -e "s+\${KNATIVE_KAFKA_DISPATCHER_IMAGE}+${image_prefix}-dispatcher:${tag}+" \
+        -e "s+\${KNATIVE_KAFKA_RECEIVER_IMAGE}+${image_prefix}-receiver:${tag}+" \
+        -e "s+\(.* image: \)\(knative.dev\)\(.*/\)\(.*\)+\1${image_prefix}-\4:${tag}+g" \
         "$yaml" >>"$resolved_file_name"
     fi
   done
