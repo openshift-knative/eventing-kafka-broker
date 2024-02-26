@@ -10,6 +10,7 @@ GITHUB_ACTIONS=true $(dirname $0)/../../hack/update-codegen.sh
 rm -f control-plane/config/eventing-kafka-broker/200-controller/100-config-tracing.yaml
 
 release=$(yq r openshift/project.yaml project.tag)
+tag=$release
 release=${release/knative-/}
 
 echo "Release: $release"
@@ -35,24 +36,24 @@ eventing_kafka_tls_networking="${artifacts_dir}eventing-kafka-tls-networking.yam
 eventing_kafka="${artifacts_dir}eventing-kafka.yaml"
 
 # the Broker Control Plane parts
-resolve_resources control-plane/config/eventing-kafka-broker/100-broker $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/100-sink $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/100-source $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/100-channel $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/100-kafka-internal $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/200-controller $eventing_kafka_controller "$image_prefix"
-resolve_resources control-plane/config/eventing-kafka-broker/200-webhook $eventing_kafka_controller "$image_prefix"
+resolve_resources control-plane/config/eventing-kafka-broker/100-broker $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/100-sink $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/100-source $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/100-channel $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/100-kafka-internal $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/200-controller $eventing_kafka_controller "$image_prefix" "$tag"
+resolve_resources control-plane/config/eventing-kafka-broker/200-webhook $eventing_kafka_controller "$image_prefix" "$tag"
 
 # the Broker Data Plane folders
-resolve_resources data-plane/config/broker $eventing_kafka_broker "$image_prefix"
-resolve_resources data-plane/config/sink $eventing_kafka_sink "$image_prefix"
-resolve_resources data-plane/config/source $eventing_kafka_source "$image_prefix"
-resolve_resources data-plane/config/channel $eventing_kafka_channel "$image_prefix"
+resolve_resources data-plane/config/broker $eventing_kafka_broker "$image_prefix" "$tag"
+resolve_resources data-plane/config/sink $eventing_kafka_sink "$image_prefix" "$tag"
+resolve_resources data-plane/config/source $eventing_kafka_source "$image_prefix" "$tag"
+resolve_resources data-plane/config/channel $eventing_kafka_channel "$image_prefix" "$tag"
 
 # TLS resources
-resolve_resources data-plane/config/broker-tls $eventing_kafka_tls_networking "$image_prefix"
-resolve_resources data-plane/config/channel-tls $eventing_kafka_tls_networking "$image_prefix"
-resolve_resources data-plane/config/sink-tls $eventing_kafka_tls_networking "$image_prefix"
+resolve_resources data-plane/config/broker-tls $eventing_kafka_tls_networking "$image_prefix" "$tag"
+resolve_resources data-plane/config/channel-tls $eventing_kafka_tls_networking "$image_prefix" "$tag"
+resolve_resources data-plane/config/sink-tls $eventing_kafka_tls_networking "$image_prefix" "$tag"
 
 # Post-install jobs
 resolve_resources control-plane/config/post-install $eventing_kafka_post_install "$image_prefix"
