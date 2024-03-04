@@ -56,7 +56,7 @@ resolve_resources data-plane/config/channel-tls $eventing_kafka_tls_networking "
 resolve_resources data-plane/config/sink-tls $eventing_kafka_tls_networking "$image_prefix" "$tag"
 
 # Post-install jobs
-resolve_resources control-plane/config/post-install $eventing_kafka_post_install "$image_prefix"
+resolve_resources control-plane/config/post-install $eventing_kafka_post_install "$image_prefix" "$tag"
 
 # One file with everything
 cat $eventing_kafka_controller >> $eventing_kafka
