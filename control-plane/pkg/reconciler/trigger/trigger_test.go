@@ -51,6 +51,7 @@ import (
 	"knative.dev/eventing/pkg/eventingtls/eventingtlstesting"
 	reconcilertesting "knative.dev/eventing/pkg/reconciler/testing/v1"
 
+	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/config"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/contract"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/kafka"
@@ -503,7 +504,7 @@ func triggerReconciliation(t *testing.T, format string, env config.Env, useNewFi
 					WithTopicStatusAnnotation(BrokerTopic()),
 					WithBootstrapServerStatusAnnotation(bootstrapServers),
 				),
-				newTrigger(reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(sources.Ordered))),
+				newTrigger(reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(internals.Ordered))),
 				NewService(),
 				NewConfigMapFromContract(&contract.Contract{
 					Resources: []*contract.Resource{
@@ -560,7 +561,7 @@ func triggerReconciliation(t *testing.T, format string, env config.Env, useNewFi
 						reconcilertesting.WithTriggerBrokerReady(),
 						withTriggerSubscriberResolvedSucceeded(contract.DeliveryOrder_ORDERED),
 						withTriggerStatusGroupIdAnnotation(TriggerUUID),
-						reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(sources.Ordered)),
+						reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(internals.Ordered)),
 						reconcilertesting.WithTriggerDeadLetterSinkNotConfigured(),
 					),
 				},
@@ -574,7 +575,7 @@ func triggerReconciliation(t *testing.T, format string, env config.Env, useNewFi
 					WithTopicStatusAnnotation(BrokerTopic()),
 					WithBootstrapServerStatusAnnotation(bootstrapServers),
 				),
-				newTrigger(reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(sources.Unordered))),
+				newTrigger(reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(internals.Unordered))),
 				NewService(),
 				NewConfigMapFromContract(&contract.Contract{
 					Resources: []*contract.Resource{
@@ -631,7 +632,7 @@ func triggerReconciliation(t *testing.T, format string, env config.Env, useNewFi
 						reconcilertesting.WithTriggerBrokerReady(),
 						withTriggerSubscriberResolvedSucceeded(contract.DeliveryOrder_UNORDERED),
 						withTriggerStatusGroupIdAnnotation(TriggerUUID),
-						reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(sources.Unordered)),
+						reconcilertesting.WithAnnotation(deliveryOrderAnnotation, string(internals.Unordered)),
 						reconcilertesting.WithTriggerDeadLetterSinkNotConfigured(),
 					),
 				},

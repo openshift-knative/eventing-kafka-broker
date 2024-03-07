@@ -39,7 +39,7 @@ import (
 	eventinglisters "knative.dev/eventing/pkg/client/listers/eventing/v1"
 
 	apisconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
-	sources "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
+	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/config"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/contract"
 	coreconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/core/config"
@@ -481,12 +481,12 @@ func (r *Reconciler) reconcileConsumerGroup(ctx context.Context, broker *eventin
 
 func deliveryOrderFromString(val string) (contract.DeliveryOrder, error) {
 	switch strings.ToLower(val) {
-	case string(sources.Ordered):
+	case string(internals.Ordered):
 		return contract.DeliveryOrder_ORDERED, nil
-	case string(sources.Unordered):
+	case string(internals.Unordered):
 		return contract.DeliveryOrder_UNORDERED, nil
 	default:
-		return contract.DeliveryOrder_UNORDERED, fmt.Errorf("invalid annotation %s value: %s. Allowed values [ %q | %q ]", deliveryOrderAnnotation, val, sources.Ordered, sources.Unordered)
+		return contract.DeliveryOrder_UNORDERED, fmt.Errorf("invalid annotation %s value: %s. Allowed values [ %q | %q ]", deliveryOrderAnnotation, val, internals.Ordered, internals.Unordered)
 	}
 }
 

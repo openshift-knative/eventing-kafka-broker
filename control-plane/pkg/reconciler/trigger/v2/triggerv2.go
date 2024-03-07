@@ -39,6 +39,7 @@ import (
 	apisconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
 	sources "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
 
+	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 	internalscg "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing/v1alpha1"
 	kedafunc "knative.dev/eventing-kafka-broker/control-plane/pkg/autoscaler/keda"
 	internalsclient "knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/clientset/versioned"
@@ -120,7 +121,7 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, trigger *eventing.Trigge
 
 func (r Reconciler) reconcileConsumerGroup(ctx context.Context, broker *eventing.Broker, trigger *eventing.Trigger) (*internalscg.ConsumerGroup, error) {
 
-	var deliveryOrdering = sources.Unordered
+	var deliveryOrdering = internals.Unordered
 	var err error
 	deliveryOrderingAnnotationValue, ok := trigger.Annotations[deliveryOrderAnnotation]
 	if ok {
@@ -294,13 +295,13 @@ func (r *Reconciler) hasRelevantBrokerClass(broker *eventing.Broker) (bool, stri
 	return brokerClass == kafka.BrokerClass, brokerClass
 }
 
-func deliveryOrderingFromString(val string) (sources.DeliveryOrdering, error) {
+func deliveryOrderingFromString(val string) (internals.DeliveryOrdering, error) {
 	switch strings.ToLower(val) {
-	case string(sources.Ordered):
-		return sources.Ordered, nil
-	case string(sources.Unordered):
-		return sources.Unordered, nil
+	case string(internals.Ordered):
+		return internals.Ordered, nil
+	case string(internals.Unordered):
+		return internals.Unordered, nil
 	default:
-		return sources.Unordered, fmt.Errorf("invalid annotation %s value: %s. Allowed values [ %q | %q ]", deliveryOrderAnnotation, val, sources.Ordered, sources.Unordered)
+		return internals.Unordered, fmt.Errorf("invalid annotation %s value: %s. Allowed values [ %q | %q ]", deliveryOrderAnnotation, val, internals.Ordered, internals.Unordered)
 	}
 }

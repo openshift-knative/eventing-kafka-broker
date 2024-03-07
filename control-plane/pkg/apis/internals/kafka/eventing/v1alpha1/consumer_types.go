@@ -29,6 +29,7 @@ import (
 	sources "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
 
 	eventingv1alpha1 "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/eventing/v1alpha1"
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 )
 
 const (
@@ -152,7 +153,7 @@ type DeliverySpec struct {
 	*eventingduck.DeliverySpec `json:",inline,omitempty"`
 
 	// Ordering is the ordering of the event delivery.
-	Ordering sources.DeliveryOrdering `json:"ordering"`
+	Ordering eventing.DeliveryOrdering `json:"ordering"`
 
 	// InitialOffset initial offset.
 	InitialOffset sources.Offset `json:"initialOffset"`

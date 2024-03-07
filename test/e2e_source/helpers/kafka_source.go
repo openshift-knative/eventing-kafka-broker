@@ -155,7 +155,6 @@ func testKafkaSource(t *testing.T,
 		contribtestlib.CreateKafkaSourceV1Beta1OrFail(client, contribresources.KafkaSourceV1Beta1(
 			bootStrapServer,
 			kafkaTopicName,
-			sourcesv1beta1.Ordered,
 			resources.ServiceRef(recordEventPodName),
 			contribresources.WithNameV1Beta1(kafkaSourceName),
 			contribresources.WithConsumerGroupV1Beta1(consumerGroup),

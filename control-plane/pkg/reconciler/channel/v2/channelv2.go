@@ -51,8 +51,6 @@ import (
 	"knative.dev/pkg/reconciler"
 
 	messagingv1beta1 "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/messaging/v1beta1"
-
-	kafkasource "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/sources/v1beta1"
 	kedafunc "knative.dev/eventing-kafka-broker/control-plane/pkg/autoscaler/keda"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/config"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/contract"
@@ -64,6 +62,7 @@ import (
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/security"
 
 	apisconfig "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
+	internals "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing"
 	internalscg "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internals/kafka/eventing/v1alpha1"
 	internalsclient "knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/clientset/versioned"
 	internalslst "knative.dev/eventing-kafka-broker/control-plane/pkg/client/internals/kafka/listers/eventing/v1alpha1"
@@ -74,7 +73,9 @@ import (
 )
 
 const (
-	DefaultDeliveryOrder = kafkasource.Ordered
+	// TopicPrefix is the Kafka Channel topic prefix - (topic name: knative-messaging-kafka.<channel-namespace>.<channel-name>).
+	TopicPrefix          = "knative-messaging-kafka"
+	DefaultDeliveryOrder = internals.Ordered
 
 	KafkaChannelConditionSubscribersReady apis.ConditionType = "Subscribers" // condition is registered by controller
 
