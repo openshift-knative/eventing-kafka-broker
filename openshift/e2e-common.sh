@@ -54,6 +54,10 @@ function timeout() {
 }
 
 function install_serverless() {
+  ekb_tag="$(yq r openshift/project.yaml project.tag)"
+  ekb_branch=${ekb_tag/knative-nightly/release-next}
+  ekb_branch=${ekb_branch/knative-v/release-v}
+
   header "Installing Serverless Operator"
 
   cat <<EOF | oc apply -f -
@@ -81,12 +85,25 @@ EOF
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
   export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-marketplace
-  if [[ ${INSTALL_KEDA} == "true" ]]; then
-  	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
-	    generated-files images install-tracing install-kafka-with-keda || failed=$?
+
+  export OPENSHIFT_CI="true"
+  export TRACING_BACKEND="zipkin"
+  export USE_RELEASE_NEXT="false"
+  if [ "$ekb_branch" = "release-next" ]; then
+    export USE_RELEASE_NEXT="true"
+    make generated-files-release-next
   else
-    make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
-      generated-files images install-tracing install-kafka || failed=$?
+    # use same eventing-core version as for EKB
+    yq w --inplace "${operator_dir}/olm-catalog/serverless-operator/project.yaml" 'dependencies.eventing' "${ekb_tag}"
+    yq w --inplace "${operator_dir}/olm-catalog/serverless-operator/project.yaml" 'dependencies.eventing_artifacts_branch' "${ekb_branch}"
+
+    make generated-files
+  fi
+
+  if [[ ${INSTALL_KEDA} == "true" ]]; then
+  	make images install-tracing install-kafka-with-keda || failed=$?
+  else
+    make images install-tracing install-kafka || failed=$?
   fi
   popd || return $?
 
