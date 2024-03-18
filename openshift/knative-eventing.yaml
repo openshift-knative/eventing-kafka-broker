@@ -19,6 +19,7 @@ spec:
       kreference-mapping: "disabled"
       strict-subscriber: "disabled"
       new-trigger-filters: "enabled"
+      eventtype-auto-create: "enabled"
     config-br-defaults:
       default-br-config: |
         clusterDefault:
