@@ -146,6 +146,10 @@ function run_e2e_new_tests() {
 
   go_test_e2e -timeout=100m ./test/e2e_new/... "${common_opts[@]}" || return $?
   go_test_e2e -timeout=100m ./test/e2e_new_channel/... "${common_opts[@]}" || return $?
+
+  oc patch knativekafka --type merge -n "${EVENTING_NAMESPACE}" knative-kafka --patch-file "${SCRIPT_DIR}/knative-kafka-update-consumergroup-template.yaml"
+  go_test_e2e -timeout=15m ./test/e2e_new -run TestTriggerUsesConsumerGroupIDFromTemplate || return $?
+  oc patch knativekafka --type merge -n "${EVENTING_NAMESPACE}" knative-kafka --patch-file "${SCRIPT_DIR}/knative-kafka-default-consumergroup-template.yaml"
 }
 
 function run_e2e_encryption_auth_tests(){
