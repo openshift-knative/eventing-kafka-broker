@@ -1,0 +1,4 @@
+spec:
+  config:
+    config-kafka-features:
+      triggers.consumergroup.template: "knative-trigger-{{ .Namespace }}-{{ .Name }}"

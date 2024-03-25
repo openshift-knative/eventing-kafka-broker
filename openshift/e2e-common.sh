@@ -56,6 +56,13 @@ function timeout() {
 function install_serverless() {
   header "Installing Serverless Operator"
 
+  GO111MODULE=off go get -u github.com/openshift-knative/hack/cmd/sobranch
+
+  local release
+  release=$(yq r "${SCRIPT_DIR}/project.yaml" project.tag)
+  release=${release/knative-/}
+  so_branch=$( $(go env GOPATH)/bin/sobranch --upstream-version "${release}")
+
   cat <<EOF | oc apply -f -
 apiVersion: v1
 kind: Namespace
@@ -75,7 +82,7 @@ EOF
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
   local operator_dir=/tmp/serverless-operator
-  git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
+  git clone --branch "${so_branch}" https://github.com/openshift-knative/serverless-operator.git $operator_dir || git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
   export GOPATH=/tmp/go
   local failed=0
   pushd $operator_dir || return $?
@@ -148,6 +155,10 @@ function run_e2e_new_tests() {
 
   go_test_e2e -timeout=100m ./test/e2e_new/... "${common_opts[@]}" || return $?
   go_test_e2e -timeout=100m ./test/e2e_new_channel/... "${common_opts[@]}" || return $?
+
+  oc patch knativekafka --type merge -n "${EVENTING_NAMESPACE}" knative-kafka --patch-file "${SCRIPT_DIR}/knative-kafka-update-consumergroup-template.yaml"
+  go_test_e2e -timeout=15m ./test/e2e_new -run TestTriggerUsesConsumerGroupIDFromTemplate "${common_opts[@]}" || return $?
+  oc patch knativekafka --type merge -n "${EVENTING_NAMESPACE}" knative-kafka --patch-file "${SCRIPT_DIR}/knative-kafka-default-consumergroup-template.yaml"
 }
 
 function run_e2e_encryption_auth_tests(){
