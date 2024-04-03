@@ -158,8 +158,6 @@ spec:
             capabilities:
               drop:
               - ALL
-            seccompProfile:
-              type: RuntimeDefault
       volumes:
         - name: config-kafka-channel-data-plane
           configMap:
