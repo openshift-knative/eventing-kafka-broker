@@ -122,9 +122,12 @@ func ManyTriggers() *feature.FeatureSet {
 
 		// Create the broker
 		brokerName := feature.MakeRandomK8sName("broker")
-		f.Setup("install broker", broker.Install(brokerName, broker.WithEnvConfig()...))
-		f.Setup("broker is ready", broker.IsReady(brokerName))
-		f.Setup("broker is addressable", broker.IsAddressable(brokerName))
+
+		f.Setup("install broker", func(ctx context.Context, t feature.T) {
+			broker.Install(brokerName, broker.WithEnvConfig()...)(ctx, t)
+			broker.IsReady(brokerName)(ctx, t)
+			broker.IsAddressable(brokerName)(ctx, t)
+		})
 
 		for sink, eventFilter := range testcase.eventFilters {
 			f.Setup("install sink", eventshub.Install(sink, eventshub.StartReceiver))
@@ -141,8 +144,10 @@ func ManyTriggers() *feature.FeatureSet {
 			}
 
 			// Install the trigger
-			f.Setup("install trigger", trigger.Install(sink, brokerName, cfg...))
-			f.Setup("trigger goes ready", trigger.IsReady(sink))
+			f.Setup("install trigger", func(ctx context.Context, t feature.T) {
+				trigger.Install(sink, brokerName, cfg...)(ctx, t)
+				trigger.IsReady(sink)(ctx, t)
+			})
 		}
 
 		for _, event := range testcase.eventsToSend {
