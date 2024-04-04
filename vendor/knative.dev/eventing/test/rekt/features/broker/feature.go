@@ -123,32 +123,34 @@ func ManyTriggers() *feature.FeatureSet {
 		// Create the broker
 		brokerName := feature.MakeRandomK8sName("broker")
 
-		f.Setup("install broker", func(ctx context.Context, t feature.T) {
+		f.Setup("install broker, sinks and triggers", func(ctx context.Context, t feature.T) {
 			broker.Install(brokerName, broker.WithEnvConfig()...)(ctx, t)
+
+			for sink, eventFilter := range testcase.eventFilters {
+				eventshub.Install(sink, eventshub.StartReceiver)(ctx, t)
+
+				filter := eventingv1.TriggerFilterAttributes{
+					"type":   eventFilter.Type,
+					"source": eventFilter.Source,
+				}
+
+				// Point the Trigger subscriber to the sink svc.
+				cfg := []manifest.CfgFn{
+					trigger.WithSubscriber(service.AsKReference(sink), ""),
+					trigger.WithFilter(filter),
+					trigger.WithExtensions(eventFilter.Extensions),
+				}
+
+				trigger.Install(sink, brokerName, cfg...)(ctx, t)
+			}
+
 			broker.IsReady(brokerName)(ctx, t)
 			broker.IsAddressable(brokerName)(ctx, t)
-		})
 
-		for sink, eventFilter := range testcase.eventFilters {
-			f.Setup("install sink", eventshub.Install(sink, eventshub.StartReceiver))
-			filter := eventingv1.TriggerFilterAttributes{
-				"type":   eventFilter.Type,
-				"source": eventFilter.Source,
-			}
-
-			// Point the Trigger subscriber to the sink svc.
-			cfg := []manifest.CfgFn{
-				trigger.WithSubscriber(service.AsKReference(sink), ""),
-				trigger.WithFilter(filter),
-				trigger.WithExtensions(eventFilter.Extensions),
-			}
-
-			// Install the trigger
-			f.Setup("install trigger", func(ctx context.Context, t feature.T) {
-				trigger.Install(sink, brokerName, cfg...)(ctx, t)
+			for sink, _ := range testcase.eventFilters {
 				trigger.IsReady(sink)(ctx, t)
-			})
-		}
+			}
+		})
 
 		for _, event := range testcase.eventsToSend {
 			eventToSend := cloudevents.NewEvent()
