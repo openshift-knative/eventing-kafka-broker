@@ -20,8 +20,10 @@ import static dev.knative.eventing.kafka.broker.core.utils.Logging.keyValue;
 import dev.knative.eventing.kafka.broker.core.ReactiveProducerFactory;
 import dev.knative.eventing.kafka.broker.core.eventbus.ContractMessageCodec;
 import dev.knative.eventing.kafka.broker.core.eventbus.ContractPublisher;
+import dev.knative.eventing.kafka.broker.core.features.FeaturesConfig;
 import dev.knative.eventing.kafka.broker.core.file.FileWatcher;
 import dev.knative.eventing.kafka.broker.core.metrics.Metrics;
+import dev.knative.eventing.kafka.broker.core.oidc.OIDCDiscoveryConfig;
 import dev.knative.eventing.kafka.broker.core.reconciler.impl.ResourcesReconcilerMessageHandler;
 import dev.knative.eventing.kafka.broker.core.tracing.TracingConfig;
 import dev.knative.eventing.kafka.broker.core.utils.Configurations;
@@ -39,6 +41,7 @@ import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -60,11 +63,13 @@ public class Main {
      * @param args command line arguments.
      */
     public static void start(final String[] args, final ReactiveProducerFactory kafkaProducerFactory)
-            throws IOException {
+            throws IOException, ExecutionException, InterruptedException {
         ReceiverEnv env = new ReceiverEnv(System::getenv);
 
         OpenTelemetrySdk openTelemetry =
                 TracingConfig.fromDir(env.getConfigTracingPath()).setup();
+
+        FeaturesConfig featuresConfig = new FeaturesConfig(env.getConfigFeaturesPath());
 
         // Read producer properties and override some defaults
         Properties producerConfigs = Configurations.readPropertiesSync(env.getProducerConfigFilePath());
@@ -97,6 +102,24 @@ public class Main {
         httpsServerOptions.setPort(env.getIngressTLSPort());
         httpsServerOptions.setTracingPolicy(TracingPolicy.PROPAGATE);
 
+        // Setup OIDC discovery config
+        OIDCDiscoveryConfig oidcDiscoveryConfig = null;
+        try {
+            oidcDiscoveryConfig = OIDCDiscoveryConfig.build(vertx)
+                    .toCompletionStage()
+                    .toCompletableFuture()
+                    .get();
+        } catch (ExecutionException ex) {
+            if (featuresConfig.isAuthenticationOIDC()) {
+                logger.error("Could not load OIDC config while OIDC authentication feature is enabled.");
+                throw ex;
+            } else {
+                logger.warn(
+                        "Could not load OIDC configuration. This will lead to problems, when the {} flag will be enabled later",
+                        FeaturesConfig.KEY_AUTHENTICATION_OIDC);
+            }
+        }
+
         // Configure the verticle to deploy and the deployment options
         final Supplier<Verticle> receiverVerticleFactory = new ReceiverVerticleFactory(
                 env,
@@ -104,7 +127,8 @@ public class Main {
                 Metrics.getRegistry(),
                 httpServerOptions,
                 httpsServerOptions,
-                kafkaProducerFactory);
+                kafkaProducerFactory,
+                oidcDiscoveryConfig);
         DeploymentOptions deploymentOptions =
                 new DeploymentOptions().setInstances(Runtime.getRuntime().availableProcessors());
 

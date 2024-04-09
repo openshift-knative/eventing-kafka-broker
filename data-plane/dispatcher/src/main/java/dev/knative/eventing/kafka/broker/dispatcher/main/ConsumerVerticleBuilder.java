@@ -18,6 +18,7 @@ package dev.knative.eventing.kafka.broker.dispatcher.main;
 import static dev.knative.eventing.kafka.broker.core.utils.Logging.keyValue;
 
 import dev.knative.eventing.kafka.broker.contract.DataPlaneContract;
+import dev.knative.eventing.kafka.broker.core.NamespacedName;
 import dev.knative.eventing.kafka.broker.core.ReactiveKafkaConsumer;
 import dev.knative.eventing.kafka.broker.core.ReactiveKafkaProducer;
 import dev.knative.eventing.kafka.broker.core.metrics.Metrics;
@@ -100,6 +101,7 @@ public class ConsumerVerticleBuilder {
         final var metricsCloser = Metrics.register(consumer.unwrap());
         consumerVerticle.setCloser(metricsCloser);
 
+        // setting up cloud events sender
         final var egressSubscriberSender = createConsumerRecordSender(vertx);
         final var egressDeadLetterSender = createDeadLetterSinkRecordSender(vertx);
         final var responseHandler = createResponseHandler(vertx);
@@ -237,6 +239,10 @@ public class ConsumerVerticleBuilder {
                             createWebClientOptionsFromCACerts(
                                     consumerVerticleContext.getEgress().getReplyUrlCACerts())),
                     consumerVerticleContext.getEgress().getReplyUrl(),
+                    consumerVerticleContext.getEgress().getReplyUrlAudience(),
+                    new NamespacedName(
+                            consumerVerticleContext.getResource().getReference().getNamespace(),
+                            consumerVerticleContext.getEgress().getOidcServiceAccountName()),
                     consumerVerticleContext,
                     Metrics.Tags.senderContext("reply")));
         }
@@ -262,6 +268,10 @@ public class ConsumerVerticleBuilder {
                         createWebClientOptionsFromCACerts(
                                 consumerVerticleContext.getEgress().getDestinationCACerts())),
                 consumerVerticleContext.getEgress().getDestination(),
+                consumerVerticleContext.getEgress().getDestinationAudience(),
+                new NamespacedName(
+                        consumerVerticleContext.getResource().getReference().getNamespace(),
+                        consumerVerticleContext.getEgress().getOidcServiceAccountName()),
                 consumerVerticleContext,
                 Metrics.Tags.senderContext("subscriber"));
     }
@@ -280,6 +290,10 @@ public class ConsumerVerticleBuilder {
                             createWebClientOptionsFromCACerts(
                                     consumerVerticleContext.getEgressConfig().getDeadLetterCACerts())),
                     consumerVerticleContext.getEgressConfig().getDeadLetter(),
+                    consumerVerticleContext.getEgressConfig().getDeadLetterAudience(),
+                    new NamespacedName(
+                            consumerVerticleContext.getResource().getReference().getNamespace(),
+                            consumerVerticleContext.getEgress().getOidcServiceAccountName()),
                     consumerVerticleContext,
                     Metrics.Tags.senderContext("deadlettersink"));
         }

@@ -39,9 +39,9 @@ RUN ./mvnw install -am -DskipTests -Drelease -Dlicense.skip -Deditorconfig.skip 
 
 COPY /data-plane/ .
 
-RUN ./mvnw package -pl=dispatcher-vertx -Drelease -am -DskipTests -Deditorconfig.skip --no-transfer-progress
+RUN ./mvnw package -pl=dispatcher-loom -Drelease -am -DskipTests -Deditorconfig.skip --no-transfer-progress
 
-RUN mkdir /app && cp /build/dispatcher-vertx/target/dispatcher-vertx-1.0-SNAPSHOT.jar /app/app.jar
+RUN mkdir /app && cp /build/dispatcher-loom/target/dispatcher-loom-1.0-SNAPSHOT.jar /app/app.jar
 
 # We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
 FROM registry.access.redhat.com/ubi8/openjdk-21-runtime as running
