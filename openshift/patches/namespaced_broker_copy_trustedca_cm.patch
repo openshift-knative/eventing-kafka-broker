@@ -1,0 +1,12 @@
+diff --git a/control-plane/pkg/reconciler/broker/namespaced_broker.go b/control-plane/pkg/reconciler/broker/namespaced_broker.go
+index 759c13e94..c5a1fb07a 100644
+--- a/control-plane/pkg/reconciler/broker/namespaced_broker.go
++++ b/control-plane/pkg/reconciler/broker/namespaced_broker.go
+@@ -388,6 +388,7 @@ func (r *NamespacedReconciler) configMapsFromSystemNamespace(broker *eventing.Br
+ 		"config-tracing",
+ 		"config-features",
+ 		"kafka-config-logging",
++		"config-openshift-trusted-cabundle",
+ 	}
+ 	resources := make([]unstructured.Unstructured, 0, len(configMaps))
+ 	for _, name := range configMaps {
