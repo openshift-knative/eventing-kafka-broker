@@ -144,7 +144,7 @@ function run_e2e_new_tests() {
     ./test/scripts/first-event-delay.sh || return $?
   fi
 
-  common_opts=(--images.producer.file="${images_file}" --poll.timeout=8m -parallel 4)
+  common_opts=(--images.producer.file="${images_file}" --poll.timeout=8m -parallel 12)
 
   go_test_e2e -timeout=100m ./test/e2e_new/... "${common_opts[@]}" || return $?
   go_test_e2e -timeout=100m ./test/e2e_new_channel/... "${common_opts[@]}" || return $?
