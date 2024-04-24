@@ -167,8 +167,6 @@ spec:
             capabilities:
               drop:
               - ALL
-            seccompProfile:
-              type: RuntimeDefault
       volumes:
         - name: contract-resources
           configMap:
