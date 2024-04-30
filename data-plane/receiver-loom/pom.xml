@@ -161,6 +161,18 @@
                   </includes>
                 </filter>
                 <filter>
+                  <artifact>ch.qos.logback:logback-core</artifact>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>ch.qos.logback:logback-classic</artifact>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </filter>
+                <filter>
                   <artifact>org.apache.kafka:kafka-clients</artifact>
                   <includes>
                     <include>**</include>
