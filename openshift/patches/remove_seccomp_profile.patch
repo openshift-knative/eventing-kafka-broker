@@ -67,30 +67,17 @@ index 27d9ecc44..12b78c93b 100644
          - name: config-kafka-broker-data-plane
            configMap:
 diff --git a/data-plane/config/broker/500-receiver.yaml b/data-plane/config/broker/500-receiver.yaml
-index 484f4352e..bfdd00c97 100644
+index 46dadb553..4a88d62c4 100644
 --- a/data-plane/config/broker/500-receiver.yaml
 +++ b/data-plane/config/broker/500-receiver.yaml
-@@ -167,8 +167,6 @@ spec:
+@@ -165,8 +165,6 @@ spec:
              capabilities:
                drop:
                - ALL
 -            seccompProfile:
 -              type: RuntimeDefault
        volumes:
-         - name: contract-resources
-           configMap:
-diff --git a/data-plane/config/brokerv2/500-dispatcher.yaml b/data-plane/config/brokerv2/500-dispatcher.yaml
-index 27d9ecc44..12b78c93b 100644
---- a/data-plane/config/brokerv2/500-dispatcher.yaml
-+++ b/data-plane/config/brokerv2/500-dispatcher.yaml
-@@ -158,8 +158,6 @@ spec:
-             capabilities:
-               drop:
-                 - ALL
--            seccompProfile:
--              type: RuntimeDefault
-       volumes:
-         - name: config-kafka-broker-data-plane
+         - name: kafka-broker-brokers-triggers
            configMap:
 diff --git a/data-plane/config/channel/500-dispatcher.yaml b/data-plane/config/channel/500-dispatcher.yaml
 index 4668cbb36..bf2bee908 100644
