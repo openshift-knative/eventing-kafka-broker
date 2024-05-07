@@ -69,7 +69,7 @@ class ReceiverVerticleFactory implements Supplier<Verticle> {
                 httpServerOptions,
                 httpsServerOptions,
                 v -> new IngressProducerReconcilableStore(
-                        AuthProvider.kubernetes(),
+                        AuthProvider.kubernetes(v),
                         producerConfigs,
                         properties -> kafkaProducerFactory.create(v, properties)),
                 this.ingressRequestHandler,
