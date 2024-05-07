@@ -1,0 +1,74 @@
+From 8668bbe21ccd155d86fb37da523722b9b3c59153 Mon Sep 17 00:00:00 2001
+From: Marek Schmidt <maschmid@redhat.com>
+Date: Mon, 15 Apr 2024 10:44:35 +0200
+Subject: [PATCH] backport fix ManyTriggers possible starvation of Setup
+ features
+
+---
+ .../test/rekt/features/broker/feature.go      | 46 +++++++++++--------
+ 1 file changed, 27 insertions(+), 19 deletions(-)
+
+diff --git a/vendor/knative.dev/eventing/test/rekt/features/broker/feature.go b/vendor/knative.dev/eventing/test/rekt/features/broker/feature.go
+index 80063a5670..5651422af9 100644
+--- a/vendor/knative.dev/eventing/test/rekt/features/broker/feature.go
++++ b/vendor/knative.dev/eventing/test/rekt/features/broker/feature.go
+@@ -118,32 +118,40 @@ func ManyTriggers() *feature.FeatureSet {
+ 
+ 	for _, testcase := range tests {
+ 
++		testcase := testcase // capture variable
+ 		f := feature.NewFeatureNamed(testcase.name)
+ 
+ 		// Create the broker
+ 		brokerName := feature.MakeRandomK8sName("broker")
+-		f.Setup("install broker", broker.Install(brokerName, broker.WithEnvConfig()...))
+-		f.Setup("broker is ready", broker.IsReady(brokerName))
+-		f.Setup("broker is addressable", broker.IsAddressable(brokerName))
+-
+-		for sink, eventFilter := range testcase.eventFilters {
+-			f.Setup("install sink", eventshub.Install(sink, eventshub.StartReceiver))
+-			filter := eventingv1.TriggerFilterAttributes{
+-				"type":   eventFilter.Type,
+-				"source": eventFilter.Source,
+-			}
+ 
+-			// Point the Trigger subscriber to the sink svc.
+-			cfg := []manifest.CfgFn{
+-				trigger.WithSubscriber(service.AsKReference(sink), ""),
+-				trigger.WithFilter(filter),
+-				trigger.WithExtensions(eventFilter.Extensions),
++		f.Setup("install broker, sinks and triggers", func(ctx context.Context, t feature.T) {
++			broker.Install(brokerName, broker.WithEnvConfig()...)(ctx, t)
++
++			for sink, eventFilter := range testcase.eventFilters {
++				eventshub.Install(sink, eventshub.StartReceiver)(ctx, t)
++
++				filter := eventingv1.TriggerFilterAttributes{
++					"type":   eventFilter.Type,
++					"source": eventFilter.Source,
++				}
++
++				// Point the Trigger subscriber to the sink svc.
++				cfg := []manifest.CfgFn{
++					trigger.WithSubscriber(service.AsKReference(sink), ""),
++					trigger.WithFilter(filter),
++					trigger.WithExtensions(eventFilter.Extensions),
++				}
++
++				trigger.Install(sink, brokerName, cfg...)(ctx, t)
+ 			}
+ 
+-			// Install the trigger
+-			f.Setup("install trigger", trigger.Install(sink, brokerName, cfg...))
+-			f.Setup("trigger goes ready", trigger.IsReady(sink))
+-		}
++			broker.IsReady(brokerName)(ctx, t)
++			broker.IsAddressable(brokerName)(ctx, t)
++
++			for sink := range testcase.eventFilters {
++				trigger.IsReady(sink)(ctx, t)
++			}
++		})
+ 
+ 		for _, event := range testcase.eventsToSend {
+ 			eventToSend := cloudevents.NewEvent()
