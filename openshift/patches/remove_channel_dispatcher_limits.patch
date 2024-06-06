@@ -1,8 +1,16 @@
 diff --git a/data-plane/config/channel/500-dispatcher.yaml b/data-plane/config/channel/500-dispatcher.yaml
-index cd0ef05e1..cd853c25f 100644
+index cd0ef05e1..b10154145 100644
 --- a/data-plane/config/channel/500-dispatcher.yaml
 +++ b/data-plane/config/channel/500-dispatcher.yaml
-@@ -128,9 +128,6 @@ spec:
+@@ -121,16 +121,13 @@ spec:
+             - name: WAIT_STARTUP_SECONDS
+               value: "8"
+             - name: JAVA_TOOL_OPTIONS
+-              value: "-XX:+CrashOnOutOfMemoryError -XX:InitialRAMPercentage=70.0 -XX:MinRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0"
++              value: "-XX:+CrashOnOutOfMemoryError"
+ 
+           resources:
+             requests:
                cpu: 1000m
                # 600Mi for virtual replicas + 100Mi overhead
                memory: 700Mi
