@@ -187,4 +187,8 @@ function run_sacura_tests(){
 
   go_test_e2e -tags=sacura -timeout=60m ./test/e2e/... \
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
+
+  # Cleanup the sacura namespaces after a successful test
+  oc delete namespace sacura
+  oc delete namespace sacura-sink-source
 }
