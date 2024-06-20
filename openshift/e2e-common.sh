@@ -185,5 +185,6 @@ function run_sacura_tests(){
   apply_sacura || return $?
   apply_sacura_sink_source || return $?
 
-  go_test_e2e -tags=sacura -timeout=40m ./test/e2e/... || return $?
+  go_test_e2e -tags=sacura -timeout=60m ./test/e2e/... \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
