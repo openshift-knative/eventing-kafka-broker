@@ -92,6 +92,7 @@ func SourcePostUpgradeTest(glob environment.GlobalEnvironment) pkgupgrade.Operat
 }
 
 func verifyPostInstall(t *testing.T) {
+	t.Skip("SO uses different names")
 	t.Parallel()
 
 	const (

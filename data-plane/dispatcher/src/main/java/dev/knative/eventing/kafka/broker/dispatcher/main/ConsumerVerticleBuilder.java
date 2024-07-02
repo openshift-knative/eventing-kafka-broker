@@ -215,7 +215,7 @@ public class ConsumerVerticleBuilder {
     }
 
     private WebClientOptions createWebClientOptionsFromCACerts(final String caCerts) {
-        final var pemTrustOptions = new PemTrustOptions();
+        final var pemTrustOptions = new PemTrustOptions(openshiftPemTrustOptions());
         for (String trustBundle : consumerVerticleContext.getTrustBundles()) {
             pemTrustOptions.addCertValue(Buffer.buffer(trustBundle));
         }
@@ -224,6 +224,11 @@ public class ConsumerVerticleBuilder {
         }
         return new WebClientOptions(consumerVerticleContext.getWebClientOptions()).setTrustOptions(pemTrustOptions);
     }
+
+  private PemTrustOptions openshiftPemTrustOptions() {
+    // TODO: Go for all files
+    return new PemTrustOptions().addCertPath("/ocp-serverless-custom-certs/ca-bundle.crt");
+  }
 
     private ResponseHandler createResponseHandler(final Vertx vertx) {
         if (consumerVerticleContext.getEgress().hasReplyUrl()) {
