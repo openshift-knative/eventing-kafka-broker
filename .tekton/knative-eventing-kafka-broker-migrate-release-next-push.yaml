@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/openshift-knative/eventing-kafka-broker?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
+      == "release-next"
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: serverless-operator-release-next
+    appstudio.openshift.io/component: knative-eventing-kafka-broker-migrate-release-next
+    pipelines.appstudio.openshift.io/type: build
+  name: knative-eventing-kafka-broker-migrate-release-next-on-push
+  namespace: ocp-serverless-tenant
+spec:
+  params:
+    - name: dockerfile
+      value: openshift/ci-operator/knative-images/migrate/Dockerfile
+    - name: git-url
+      value: '{{source_url}}'
+    - name: output-image
+      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-release-next/knative-eventing-kafka-broker-migrate:{{revision}}
+    - name: revision
+      value: '{{revision}}'
+  pipelineRef:
+    name: docker-build-oci-ta
+  taskRunTemplate: {}
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+    - name: git-auth
+      secret:
+        secretName: '{{ git_auth_secret }}'

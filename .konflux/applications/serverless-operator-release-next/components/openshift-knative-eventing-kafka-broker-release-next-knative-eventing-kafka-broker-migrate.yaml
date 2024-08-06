@@ -1,0 +1,19 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    image.redhat.com/generate: "true"
+    appstudio.openshift.io/pac-provision: request
+    build.appstudio.openshift.io/pipeline: '{"name":"docker-build","bundle":"latest"}'
+    build.appstudio.openshift.io/request: configure-pac
+  name: knative-eventing-kafka-broker-migrate-release-next
+spec:
+  componentName: knative-eventing-kafka-broker-migrate
+  application: serverless-operator-release-next
+   
+  source:
+    git:
+      url: https://github.com/openshift-knative/eventing-kafka-broker.git
+      context: 
+      dockerfileUrl: openshift/ci-operator/knative-images/migrate/Dockerfile
+      revision: release-next
