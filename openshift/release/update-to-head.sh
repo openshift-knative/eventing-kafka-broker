@@ -19,6 +19,7 @@ git checkout upstream/main -B ${REPO_BRANCH}
 # Update openshift's main and take all needed files from there.
 git fetch openshift main
 git checkout openshift/main openshift OWNERS Makefile
+git checkout openshift/main .konflux .tekton || true
 
 # Remove GH Action hooks from upstream
 rm -rf .github/workflows
