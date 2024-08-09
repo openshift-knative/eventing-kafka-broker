@@ -18,6 +18,7 @@ package dev.knative.eventing.kafka.broker.receiver.main;
 import dev.knative.eventing.kafka.broker.core.ReactiveProducerFactory;
 import dev.knative.eventing.kafka.broker.core.eventtype.EventType;
 import dev.knative.eventing.kafka.broker.core.eventtype.EventTypeCreatorImpl;
+import dev.knative.eventing.kafka.broker.core.eventtype.EventTypeListerFactory;
 import dev.knative.eventing.kafka.broker.core.oidc.OIDCDiscoveryConfig;
 import dev.knative.eventing.kafka.broker.core.security.AuthProvider;
 import dev.knative.eventing.kafka.broker.receiver.IngressRequestHandler;
@@ -29,7 +30,6 @@ import io.cloudevents.CloudEvent;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.client.dsl.MixedOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
-import io.fabric8.kubernetes.client.informers.cache.Lister;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
@@ -49,6 +49,7 @@ class ReceiverVerticleFactory implements Supplier<Verticle> {
 
     private final IngressRequestHandler ingressRequestHandler;
     private final OIDCDiscoveryConfig oidcDiscoveryConfig;
+    private final EventTypeListerFactory eventTypeListerFactory;
 
     private ReactiveProducerFactory<String, CloudEvent> kafkaProducerFactory;
 
@@ -60,9 +61,9 @@ class ReceiverVerticleFactory implements Supplier<Verticle> {
             final HttpServerOptions httpsServerOptions,
             final ReactiveProducerFactory<String, CloudEvent> kafkaProducerFactory,
             final MixedOperation<EventType, KubernetesResourceList<EventType>, Resource<EventType>> eventTypeClient,
-            final Lister<EventType> eventTypeLister,
             Vertx vertx,
-            final OIDCDiscoveryConfig oidcDiscoveryConfig)
+            final OIDCDiscoveryConfig oidcDiscoveryConfig,
+            final EventTypeListerFactory eventTypeListerFactory)
             throws NoSuchAlgorithmException {
         {
             this.env = env;
@@ -72,9 +73,10 @@ class ReceiverVerticleFactory implements Supplier<Verticle> {
             this.ingressRequestHandler = new IngressRequestHandlerImpl(
                     StrictRequestToRecordMapper.getInstance(),
                     metricsRegistry,
-                    new EventTypeCreatorImpl(eventTypeClient, eventTypeLister, vertx));
+                    new EventTypeCreatorImpl(eventTypeClient, vertx));
             this.kafkaProducerFactory = kafkaProducerFactory;
             this.oidcDiscoveryConfig = oidcDiscoveryConfig;
+            this.eventTypeListerFactory = eventTypeListerFactory;
         }
     }
 
@@ -87,7 +89,8 @@ class ReceiverVerticleFactory implements Supplier<Verticle> {
                 v -> new IngressProducerReconcilableStore(
                         AuthProvider.kubernetes(v),
                         producerConfigs,
-                        properties -> kafkaProducerFactory.create(v, properties)),
+                        properties -> kafkaProducerFactory.create(v, properties),
+                        eventTypeListerFactory),
                 this.ingressRequestHandler,
                 secretVolumePath,
                 oidcDiscoveryConfig);

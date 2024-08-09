@@ -36,22 +36,15 @@ public class EventTypeCreatorImpl implements EventTypeCreator {
 
     private final MixedOperation<EventType, KubernetesResourceList<EventType>, Resource<EventType>> eventTypeClient;
 
-    private final Lister<EventType> eventTypeLister;
-
     private MessageDigest messageDigest;
 
     private final WorkerExecutor executor;
 
     public EventTypeCreatorImpl(
             MixedOperation<EventType, KubernetesResourceList<EventType>, Resource<EventType>> eventTypeClient,
-            Lister<EventType> eventTypeLister,
             Vertx vertx)
             throws IllegalArgumentException, NoSuchAlgorithmException {
         this.eventTypeClient = eventTypeClient;
-        if (eventTypeLister == null) {
-            throw new IllegalArgumentException("eventTypeLister must be non null");
-        }
-        this.eventTypeLister = eventTypeLister;
         this.executor = vertx.createSharedWorkerExecutor("et-creator-worker", 1);
         this.messageDigest = MessageDigest.getInstance("MD5");
     }
@@ -68,15 +61,12 @@ public class EventTypeCreatorImpl implements EventTypeCreator {
         return name;
     }
 
-    private EventType eventTypeExists(String etName, DataPlaneContract.Reference reference) {
-        return this.eventTypeLister.namespace(reference.getNamespace()).get(etName);
-    }
-
     @Override
-    public Future<EventType> create(CloudEvent event, DataPlaneContract.Reference ownerReference) {
+    public Future<EventType> create(
+            CloudEvent event, Lister<EventType> eventTypeLister, DataPlaneContract.Reference ownerReference) {
         return this.executor.executeBlocking(() -> {
             final var name = this.getName(event, ownerReference);
-            final var eventType = this.eventTypeExists(name, ownerReference);
+            final var eventType = eventTypeLister.get(name);
             if (eventType != null) {
                 return eventType;
             }

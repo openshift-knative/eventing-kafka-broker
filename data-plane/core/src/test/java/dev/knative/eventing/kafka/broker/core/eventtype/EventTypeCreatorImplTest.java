@@ -21,7 +21,6 @@ import io.cloudevents.core.v1.CloudEventBuilder;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.OwnerReferenceBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.informers.cache.Lister;
 import io.fabric8.kubernetes.client.server.mock.EnableKubernetesMockClient;
 import io.fabric8.kubernetes.client.server.mock.KubernetesMockServer;
 import io.vertx.core.Vertx;
@@ -46,9 +45,8 @@ public class EventTypeCreatorImplTest {
     @Test
     public void testCreate(Vertx vertx, VertxTestContext vertxTestContext) throws NoSuchAlgorithmException {
         final var eventTypeClient = kubernetesClient.resources(EventType.class);
-        final var informer = kubernetesClient.informers().sharedIndexInformerFor(EventType.class, 100L);
-        final var eventTypeLister = new Lister<>(informer.getIndexer());
-        var eventTypeCreator = new EventTypeCreatorImpl(eventTypeClient, eventTypeLister, vertx);
+        final var listerFactory = new EventTypeListerFactory(eventTypeClient);
+        var eventTypeCreator = new EventTypeCreatorImpl(eventTypeClient, vertx);
         var event = new CloudEventBuilder()
                 .withType("example.event.type")
                 .withSource(URI.create("/example/source"))
@@ -63,16 +61,16 @@ public class EventTypeCreatorImplTest {
                 .setUuid("12345")
                 .build();
         eventTypeCreator
-                .create(event, reference)
+                .create(event, listerFactory.getForNamespace("default"), reference)
                 .onFailure((exception) -> {
-                    informer.close();
+                    listerFactory.close();
                     vertxTestContext.failNow(exception);
                 })
                 .onSuccess((et -> {
                     KubernetesResourceList<EventType> eventTypeList =
                             eventTypeClient.inNamespace("default").list();
 
-                    informer.close();
+                    listerFactory.close();
                     Assertions.assertNotNull(eventTypeList);
                     Assertions.assertEquals(1, eventTypeList.getItems().size());
                     var eventType = eventTypeList.getItems().get(0);
@@ -98,10 +96,9 @@ public class EventTypeCreatorImplTest {
     @Test
     public void testCreatesOnlyOnce(Vertx vertx, VertxTestContext vertxTestContext) throws NoSuchAlgorithmException {
         final var eventTypeClient = kubernetesClient.resources(EventType.class);
-        final var informer = kubernetesClient.informers().sharedIndexInformerFor(EventType.class, 100L);
-        informer.run();
-        final var eventTypeLister = new Lister<>(informer.getIndexer());
-        var eventTypeCreator = new EventTypeCreatorImpl(eventTypeClient, eventTypeLister, vertx);
+        final var listerFactory = new EventTypeListerFactory(eventTypeClient);
+
+        var eventTypeCreator = new EventTypeCreatorImpl(eventTypeClient, vertx);
         var event = new CloudEventBuilder()
                 .withType("example.event.type")
                 .withSource(URI.create("/example/source"))
@@ -116,9 +113,9 @@ public class EventTypeCreatorImplTest {
                 .setUuid("12345")
                 .build();
         eventTypeCreator
-                .create(event, reference)
+                .create(event, listerFactory.getForNamespace("default"), reference)
                 .onFailure((exception) -> {
-                    informer.close();
+                    listerFactory.close();
                     vertxTestContext.failNow(exception);
                 })
                 .onSuccess((et -> {
@@ -148,20 +145,21 @@ public class EventTypeCreatorImplTest {
                         // make sure that the informer has time to resync, the webhook doens't seem to run in the tests
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
+                        listerFactory.close();
                         vertxTestContext.failNow(e);
                     }
                     return eventTypeCreator
-                            .create(event, reference)
+                            .create(event, listerFactory.getForNamespace("default"), reference)
                             .onFailure((exception) -> {
                                 logger.warn("failure occurred, closing informer", exception);
-                                informer.close();
+                                listerFactory.close();
                                 vertxTestContext.failNow(exception);
                             })
                             .onSuccess((et -> {
                                 KubernetesResourceList<EventType> eventTypeList =
                                         eventTypeClient.inNamespace("default").list();
 
-                                informer.close();
+                                listerFactory.close();
 
                                 Assertions.assertNotNull(eventTypeList);
                                 Assertions.assertEquals(
