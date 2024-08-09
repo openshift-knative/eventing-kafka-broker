@@ -1,0 +1,16 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    build.appstudio.openshift.io/pipeline: '{"name":"docker-build","bundle":"latest"}'
+  name: knative-eventing-kafka-broker-post-install-release-next
+spec:
+  componentName: knative-eventing-kafka-broker-post-install
+  application: serverless-operator-release-next
+   
+  source:
+    git:
+      url: https://github.com/openshift-knative/eventing-kafka-broker.git
+      context: 
+      dockerfileUrl: openshift/ci-operator/knative-images/post-install/Dockerfile
+      revision: release-next
