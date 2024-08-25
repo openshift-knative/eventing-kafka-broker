@@ -1,0 +1,13 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+  annotations:
+    image-controller.appstudio.redhat.com/update-component-image: "true"
+  labels:
+    appstudio.redhat.com/application: serverless-operator-release-next
+    appstudio.redhat.com/component: knative-eventing-kafka-broker-kafka-controller-release-next
+  name: knative-eventing-kafka-broker-kafka-controller-release-next
+spec:
+  image:
+    name: serverless-operator-release-next/knative-eventing-kafka-broker-kafka-controller
+    visibility: public
