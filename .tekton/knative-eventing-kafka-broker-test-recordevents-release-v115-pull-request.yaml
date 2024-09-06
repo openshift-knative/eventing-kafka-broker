@@ -4,31 +4,32 @@ metadata:
   annotations:
     build.appstudio.openshift.io/repo: https://github.com/openshift-knative/eventing-kafka-broker?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
       == "release-v1.15" 
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: serverless-operator-release-135
-    appstudio.openshift.io/component: knative-eventing-kafka-broker-event-display-release-v115
+    appstudio.openshift.io/component: knative-eventing-kafka-broker-test-recordevents-release-v115
     pipelines.appstudio.openshift.io/type: build
-  name: knative-eventing-kafka-broker-event-display-release-v115-on-push
+  name: knative-eventing-kafka-broker-test-recordevents-release-v115-on-pull-request
   namespace: ocp-serverless-tenant
 spec:
   params:
     - name: dockerfile
-      value: openshift/ci-operator/knative-images/event_display/Dockerfile
+      value: openshift/ci-operator/knative-test-images/recordevents/Dockerfile
     - name: build-args
       value: [ VERSION=release-1.35, ]
     - name: git-url
       value: '{{source_url}}'
+    - name: image-expires-after
+      value: 5d
     - name: output-image
-      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-release-135/knative-eventing-kafka-broker-event-display:{{revision}}
+      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-release-135/knative-eventing-kafka-broker-test-recordevents:on-pr-{{revision}}
     - name: revision
       value: '{{revision}}'
-    - name: additional-tags
-      value: [ release-1.35,  latest, ]
   pipelineRef:
     name: docker-build
   taskRunTemplate: {}

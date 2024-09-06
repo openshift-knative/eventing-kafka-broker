@@ -7,7 +7,7 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "release-v1.15"
+      == "release-v1.15" 
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: serverless-operator-release-135
@@ -19,12 +19,16 @@ spec:
   params:
     - name: dockerfile
       value: openshift/ci-operator/static-images/receiver/Dockerfile
+    - name: build-args
+      value: [ VERSION=release-1.35, ]
     - name: git-url
       value: '{{source_url}}'
     - name: output-image
       value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-release-135/knative-eventing-kafka-broker-receiver:{{revision}}
     - name: revision
       value: '{{revision}}'
+    - name: additional-tags
+      value: [ release-1.35,  latest, ]
   pipelineRef:
     name: docker-build
   taskRunTemplate: {}
