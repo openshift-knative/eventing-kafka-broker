@@ -71,12 +71,26 @@ EOF
     create_tls_secrets || return $?
   )
 
+  export GOPATH=/tmp/go
+
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
+  install_hack_tools || exit 1
+
+  local release
+  release=$(yq r "${SCRIPT_DIR}/project.yaml" project.tag)
+  release=${release/knative-/}
+  so_branch=$( $(go env GOPATH)/bin/sobranch --upstream-version "${release}")
+
+  USE_IMAGE_RELEASE_TAG="$(yq r "${SCRIPT_DIR}/project.yaml" project.tag)"
+  export USE_IMAGE_RELEASE_TAG
+
+  echo "Tag: ${USE_IMAGE_RELEASE_TAG}"
+
   local operator_dir=/tmp/serverless-operator
-  git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
-  export GOPATH=/tmp/go
+  git clone --branch "${so_branch}" https://github.com/openshift-knative/serverless-operator.git $operator_dir || git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
+
   local failed=0
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
@@ -177,4 +191,13 @@ function run_e2e_encryption_auth_tests(){
   go_test_e2e ${RUN_FLAGS} ./test/e2e_new --images.producer.file="${images_file}" || failed=$?
 
   return $failed
+}
+
+function install_hack_tools() {
+	git clone https://github.com/openshift-knative/hack.git /tmp/hack
+	cd /tmp/hack && \
+	  go install github.com/openshift-knative/hack/cmd/generate && \
+	  go install github.com/openshift-knative/hack/cmd/sobranch && \
+	  cd - && rm -rf /tmp/hack
+	return $?
 }
