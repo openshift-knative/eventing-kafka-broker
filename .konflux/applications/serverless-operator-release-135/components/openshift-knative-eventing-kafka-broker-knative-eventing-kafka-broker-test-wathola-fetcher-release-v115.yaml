@@ -1,0 +1,16 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    build.appstudio.openshift.io/pipeline: '{"name":"docker-build","bundle":"latest"}'
+  name: knative-eventing-kafka-broker-test-wathola-fetcher-release-v115
+spec:
+  componentName: knative-eventing-kafka-broker-test-wathola-fetcher
+  application: serverless-operator-release-135
+   
+  source:
+    git:
+      url: https://github.com/openshift-knative/eventing-kafka-broker.git
+      context: 
+      dockerfileUrl: openshift/ci-operator/knative-test-images/wathola-fetcher/Dockerfile
+      revision: release-v1.15
