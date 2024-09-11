@@ -1,8 +1,8 @@
 diff --git a/data-plane/dispatcher/src/main/java/dev/knative/eventing/kafka/broker/dispatcher/main/ConsumerVerticleBuilder.java b/data-plane/dispatcher/src/main/java/dev/knative/eventing/kafka/broker/dispatcher/main/ConsumerVerticleBuilder.java
-index f9053ea2d..c2d7b1813 100644
+index 436ff7305..6a6b6bee2 100644
 --- a/data-plane/dispatcher/src/main/java/dev/knative/eventing/kafka/broker/dispatcher/main/ConsumerVerticleBuilder.java
 +++ b/data-plane/dispatcher/src/main/java/dev/knative/eventing/kafka/broker/dispatcher/main/ConsumerVerticleBuilder.java
-@@ -213,7 +213,7 @@ public class ConsumerVerticleBuilder {
+@@ -186,7 +186,7 @@ public class ConsumerVerticleBuilder {
      }
  
      private WebClientOptions createWebClientOptionsFromCACerts(final String caCerts) {
@@ -11,7 +11,7 @@ index f9053ea2d..c2d7b1813 100644
          for (String trustBundle : consumerVerticleContext.getTrustBundles()) {
              pemTrustOptions.addCertValue(Buffer.buffer(trustBundle));
          }
-@@ -223,6 +223,11 @@ public class ConsumerVerticleBuilder {
+@@ -196,6 +196,11 @@ public class ConsumerVerticleBuilder {
          return new WebClientOptions(consumerVerticleContext.getWebClientOptions()).setTrustOptions(pemTrustOptions);
      }
  
@@ -22,4 +22,4 @@ index f9053ea2d..c2d7b1813 100644
 +
      private ResponseHandler createResponseHandler(final Vertx vertx) {
          if (consumerVerticleContext.getEgress().hasReplyUrl()) {
-             return new ResponseToHttpEndpointHandler(new WebClientCloudEventSender(
+             var handler = new ResponseToHttpEndpointHandler(new WebClientCloudEventSender(
