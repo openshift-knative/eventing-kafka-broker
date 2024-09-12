@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-committed-offset-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-committed-offset
+    name: serverless-operator-135/kn-ekb-test-committed-offset
     visibility: public

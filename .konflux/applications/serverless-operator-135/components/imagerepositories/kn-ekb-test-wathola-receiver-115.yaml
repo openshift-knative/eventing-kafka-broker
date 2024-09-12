@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-wathola-receiver-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-wathola-receiver
+    name: serverless-operator-135/kn-ekb-test-wathola-receiver
     visibility: public

@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-eventshub-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-eventshub
+    name: serverless-operator-135/kn-ekb-test-eventshub
     visibility: public

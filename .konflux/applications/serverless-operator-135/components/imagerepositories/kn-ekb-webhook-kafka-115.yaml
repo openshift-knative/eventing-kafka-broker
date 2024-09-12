@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-webhook-kafka-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-webhook-kafka
+    name: serverless-operator-135/kn-ekb-webhook-kafka
     visibility: public

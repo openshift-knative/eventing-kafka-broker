@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-event-display-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-event-display
+    name: serverless-operator-135/kn-ekb-event-display
     visibility: public

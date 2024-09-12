@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-kafka-controller-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-kafka-controller
+    name: serverless-operator-135/kn-ekb-kafka-controller
     visibility: public

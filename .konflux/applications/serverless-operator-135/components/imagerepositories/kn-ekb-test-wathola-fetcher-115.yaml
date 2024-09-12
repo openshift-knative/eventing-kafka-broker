@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-wathola-fetcher-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-wathola-fetcher
+    name: serverless-operator-135/kn-ekb-test-wathola-fetcher
     visibility: public

@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-print-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-print
+    name: serverless-operator-135/kn-ekb-test-print
     visibility: public

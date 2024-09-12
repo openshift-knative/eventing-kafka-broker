@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-post-install-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-post-install
+    name: serverless-operator-135/kn-ekb-post-install
     visibility: public

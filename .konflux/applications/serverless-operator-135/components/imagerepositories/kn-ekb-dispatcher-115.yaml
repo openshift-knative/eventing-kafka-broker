@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-dispatcher-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-dispatcher
+    name: serverless-operator-135/kn-ekb-dispatcher
     visibility: public

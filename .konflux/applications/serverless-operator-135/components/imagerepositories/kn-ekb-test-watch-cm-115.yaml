@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-watch-cm-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-watch-cm
+    name: serverless-operator-135/kn-ekb-test-watch-cm
     visibility: public

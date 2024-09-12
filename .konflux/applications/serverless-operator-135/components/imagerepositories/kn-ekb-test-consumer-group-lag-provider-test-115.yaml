@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-consumer-group-lag-provider-test-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-consumer-group-lag-provider-test
+    name: serverless-operator-135/kn-ekb-test-consumer-group-lag-provider-test
     visibility: public

@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-logs-exporter-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-logs-exporter
+    name: serverless-operator-135/kn-ekb-test-logs-exporter
     visibility: public

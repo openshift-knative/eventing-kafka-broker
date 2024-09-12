@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-kafka-consumer-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-kafka-consumer
+    name: serverless-operator-135/kn-ekb-test-kafka-consumer
     visibility: public

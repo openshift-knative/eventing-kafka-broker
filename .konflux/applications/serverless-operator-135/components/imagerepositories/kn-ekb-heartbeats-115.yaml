@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-heartbeats-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-heartbeats
+    name: serverless-operator-135/kn-ekb-heartbeats
     visibility: public

@@ -9,5 +9,5 @@ metadata:
   name: kn-ekb-test-request-sender-115
 spec:
   image:
-    name: serverless-operator-135/knative-eventing-kafka-broker-test-request-sender
+    name: serverless-operator-135/kn-ekb-test-request-sender
     visibility: public
