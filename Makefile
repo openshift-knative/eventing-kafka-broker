@@ -28,15 +28,15 @@ test-install:
 .PHONY: test-install
 
 test-e2e:
-	sh openshift/e2e-tests.sh
+	openshift/e2e-tests.sh
 .PHONY: test-e2e
 
 test-conformance:
-	sh openshift/e2e-conformance-tests.sh
+	openshift/e2e-conformance-tests.sh
 .PHONY: test-conformance
 
 test-reconciler:
-	sh openshift/e2e-rekt-tests.sh
+	openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler
 
 test-reconciler-keda:
@@ -44,7 +44,7 @@ test-reconciler-keda:
 .PHONY: test-reconciler-keda
 
 test-reconciler-encryption-auth:
-	sh openshift/e2e-rekt-encryption-auth-tests.sh
+	openshift/e2e-rekt-encryption-auth-tests.sh
 .PHONY: test-reconciler
 
 # Requires ko 0.2.0 or newer.
