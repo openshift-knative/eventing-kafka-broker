@@ -55,11 +55,6 @@ import (
 
 const (
 	deliveryOrderAnnotation = "kafka.eventing.knative.dev/delivery.order"
-	// TopicPrefix is the Kafka Broker topic prefix - (topic name: knative-broker-<broker-namespace>-<broker-name>).
-	TopicPrefix = "knative-broker-"
-
-	// ExternalTopicAnnotation for using external kafka topic for the broker
-	ExternalTopicAnnotation = "kafka.eventing.knative.dev/external.topic"
 )
 
 type Reconciler struct {
@@ -131,6 +126,13 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, trigger *eventing.Trigge
 	}
 	propagateConsumerGroupStatus(cg, trigger)
 
+	return nil
+}
+
+func (r *Reconciler) FinalizeKind(context.Context, *eventing.Trigger) reconciler.Event {
+	// No-op, left here for backward compatibility.
+	// This configures the knative/pkg base reconciler to remove the finalizer,
+	// for more details, see https://github.com/knative-extensions/eventing-kafka-broker/issues/4034
 	return nil
 }
 
