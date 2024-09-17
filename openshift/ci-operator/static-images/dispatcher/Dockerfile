@@ -48,6 +48,17 @@ EXPOSE 8080 8778 9779
 
 USER 185
 
+LABEL \
+      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel8-container" \
+      name="openshift-serverless-1/eventing-kafka-broker-dispatcher-rhel8" \
+      version=$VERSION \
+      summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
+      maintainer="serverless-support@redhat.com" \
+      description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Dispatcher" \
+      io.openshift.tags=Dispatcher
+
 COPY --from=builder /app /app
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
