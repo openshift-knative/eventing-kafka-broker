@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Eventshub" \
+      io.openshift.tags="eventshub"
 
 ENTRYPOINT ["/usr/bin/eventshub"]

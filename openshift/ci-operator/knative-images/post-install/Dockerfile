@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Post Install" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Post Install" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Post Install"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Post Install" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Post Install" \
+      io.openshift.tags="post-install"
 
 ENTRYPOINT ["/usr/bin/post-install"]
