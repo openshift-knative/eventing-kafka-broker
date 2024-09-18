@@ -71,8 +71,6 @@ EOF
     create_tls_secrets || return $?
   )
 
-  export GOPATH=/tmp/go
-
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
