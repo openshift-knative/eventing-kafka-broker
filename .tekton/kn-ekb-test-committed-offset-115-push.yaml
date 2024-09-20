@@ -23,6 +23,8 @@ spec:
       value: [ VERSION=release-1.35,  GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22,  GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal, ]
     - name: git-url
       value: '{{source_url}}'
+    - name: hermetic
+      value: "true"
     - name: output-image
       value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-135/kn-ekb-test-committed-offset:{{revision}}
     - name: revision
