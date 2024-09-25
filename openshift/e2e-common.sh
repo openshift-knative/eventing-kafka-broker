@@ -178,3 +178,17 @@ function run_e2e_encryption_auth_tests(){
 
   return $failed
 }
+
+function run_sacura_tests(){
+  header "Running Sacura Tests"
+
+  apply_sacura || return $?
+  apply_sacura_sink_source || return $?
+
+  go_test_e2e -tags=sacura -timeout=60m ./test/e2e/... \
+    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
+
+  # Cleanup the sacura namespaces after a successful test
+  oc delete namespace sacura
+  oc delete namespace sacura-sink-source
+}
