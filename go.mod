@@ -2,8 +2,6 @@ module knative.dev/eventing-kafka-broker
 
 go 1.22
 
-toolchain go1.22.5
-
 require (
 	github.com/IBM/sarama v1.43.2
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
@@ -37,7 +35,7 @@ require (
 	k8s.io/apiserver v0.29.2
 	k8s.io/client-go v0.29.2
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e
-	knative.dev/eventing v0.41.0
+	knative.dev/eventing v0.41.7-0.20240923180940-09cb6334226f
 	knative.dev/hack v0.0.0-20240404013450-1133b37da8d7
 	knative.dev/pkg v0.0.0-20240416145024-0f34a8815650
 	knative.dev/reconciler-test v0.0.0-20240503125949-8fd5ae6217a3

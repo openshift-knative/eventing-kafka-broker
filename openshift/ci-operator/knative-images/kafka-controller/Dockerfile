@@ -1,20 +1,33 @@
 # DO NOT EDIT! Generated Dockerfile for control-plane/cmd/kafka-controller.
-FROM registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.22-openshift-4.17 as builder
+ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.22-openshift-4.17
+ARG GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
+
+FROM $GO_BUILDER as builder
 
 COPY . .
 
-RUN mkdir -p /var/run/ko && \
-    mkdir -p control-plane/cmd/kafka-controller/kodata && \
-    go build -o /usr/bin/main ./control-plane/cmd/kafka-controller && \
-    cp -r control-plane/cmd/kafka-controller/kodata /var/run/ko
+ENV CGO_ENABLED=1
+ENV GOEXPERIMENT=strictfipsruntime
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+RUN go build -tags strictfipsruntime -o /usr/bin/main ./control-plane/cmd/kafka-controller
 
-# install the missing zoneinfo to ubi-minimal
-RUN microdnf install tzdata
+FROM $GO_RUNTIME
+
+ARG VERSION=knative-v1.14
+
+COPY --from=builder /usr/bin/main /usr/bin/kafka-controller
 
 USER 65532
 
-COPY --from=builder /usr/bin/main /usr/bin/main
-COPY --from=builder /var/run/ko /var/run/ko
-ENTRYPOINT ["/usr/bin/main"]
+LABEL \
+      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-kafka-controller-rhel8-container" \
+      name="openshift-serverless-1/eventing-kafka-broker-kafka-controller-rhel8" \
+      version=$VERSION \
+      summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Controller" \
+      maintainer="serverless-support@redhat.com" \
+      description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Controller" \
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Controller" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Kafka Controller" \
+      io.openshift.tags="kafka-controller"
+
+ENTRYPOINT ["/usr/bin/kafka-controller"]

@@ -6,7 +6,6 @@ source $(dirname $0)/resolve.sh
 
 GITHUB_ACTIONS=true $(dirname $0)/../../hack/update-codegen.sh
 git apply openshift/patches/refactor_newfilters.patch
-git apply openshift/patches/trigger_tests_set_annotations_correctly_now.patch
 git apply openshift/patches/rekt-serviceaccounts-delete.patch
 
 # Eventing core will bring the config tracing ConfigMap, so remove it from heret
