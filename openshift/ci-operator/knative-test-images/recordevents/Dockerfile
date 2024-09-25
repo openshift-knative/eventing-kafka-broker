@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
+      io.openshift.tags="vendor-knative.dev-eventing-test-test-images-recordevents"
 
 ENTRYPOINT ["/usr/bin/recordevents"]

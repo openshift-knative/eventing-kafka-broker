@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Source Controller" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Source Controller" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Source Controller"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Source Controller" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Kafka Source Controller" \
+      io.openshift.tags="kafka-source-controller"
 
 ENTRYPOINT ["/usr/bin/kafka-source-controller"]

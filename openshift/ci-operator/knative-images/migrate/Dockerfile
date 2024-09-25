@@ -26,6 +26,8 @@ LABEL \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Migrate" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Migrate" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Migrate"
+      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Migrate" \
+      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Migrate" \
+      io.openshift.tags="migrate"
 
 ENTRYPOINT ["/usr/bin/migrate"]
