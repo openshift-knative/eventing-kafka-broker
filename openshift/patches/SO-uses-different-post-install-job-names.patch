@@ -1,0 +1,12 @@
+diff --git a/test/upgrade/postupgrade.go b/test/upgrade/postupgrade.go
+index cee2d5c1..aa57e6e4 100644
+--- a/test/upgrade/postupgrade.go
++++ b/test/upgrade/postupgrade.go
+@@ -61,6 +61,7 @@ func SinkPostUpgradeTest() pkgupgrade.Operation {
+ }
+ 
+ func verifyPostInstall(t *testing.T) {
++	t.Skip("SO uses different names")
+ 	t.Parallel()
+ 
+ 	const (
