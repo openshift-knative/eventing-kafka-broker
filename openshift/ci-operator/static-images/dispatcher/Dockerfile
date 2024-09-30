@@ -28,36 +28,21 @@ COPY /data-plane/receiver-loom/pom.xml receiver-loom/pom.xml
 COPY /data-plane/dispatcher/pom.xml dispatcher/pom.xml
 COPY /data-plane/dispatcher-loom/pom.xml dispatcher-loom/pom.xml
 COPY /data-plane/contract/pom.xml contract/pom.xml
-COPY /data-plane/mvnw .
-COPY /data-plane/.mvn/wrapper .mvn/wrapper
 
 # Install dependencies. Note: don't build a single submodule (receiver or dispatcher) since it just slows down
 # consecutive builds.
-RUN ./mvnw install -am -DskipTests -Drelease -Dlicense.skip -Deditorconfig.skip --no-transfer-progress
+RUN mvn install -am -DskipTests -Drelease -Dlicense.skip -Deditorconfig.skip --no-transfer-progress
 
 COPY /data-plane/ .
 
-RUN ./mvnw package -pl=dispatcher-loom -Drelease -am -DskipTests -Deditorconfig.skip --no-transfer-progress
+RUN mvn package -pl=dispatcher-loom -Drelease -am -DskipTests -Deditorconfig.skip --no-transfer-progress
 
 RUN mkdir /app && cp /build/dispatcher-loom/target/dispatcher-loom-1.0-SNAPSHOT.jar /app/app.jar
 
 # We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
 FROM registry.access.redhat.com/ubi8/openjdk-21-runtime as running
 
-EXPOSE 8080 8778 9779
-
 USER 185
-
-LABEL \
-      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel8-container" \
-      name="openshift-serverless-1/eventing-kafka-broker-dispatcher-rhel8" \
-      version=$VERSION \
-      summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
-      maintainer="serverless-support@redhat.com" \
-      description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
-      io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
-      io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Dispatcher" \
-      io.openshift.tags=Dispatcher
 
 COPY --from=builder /app /app
 
