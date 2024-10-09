@@ -19,13 +19,13 @@ metadata:
 spec:
   params:
     - name: dockerfile
-      value: openshift/ci-operator/static-images/receiver/Dockerfile
+      value: openshift/ci-operator/static-images/receiver/hermetic/Dockerfile
     - name: build-args
-      value: [ VERSION=release-1.35,  GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22,  GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal, ]
+      value: [ VERSION=1.35.0,  GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22,  GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal, ]
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
-      value: "false"
+      value: "true"
     - name: image-expires-after
       value: 5d
     - name: output-image
@@ -33,7 +33,7 @@ spec:
     - name: revision
       value: '{{revision}}'
   pipelineRef:
-    name: docker-build
+    name: docker-java-build
   taskRunTemplate: {}
   workspaces:
     - name: workspace
