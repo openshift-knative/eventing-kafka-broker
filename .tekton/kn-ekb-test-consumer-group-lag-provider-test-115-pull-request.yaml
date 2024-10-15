@@ -7,8 +7,7 @@ metadata:
     build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
-      == "release-v1.15" 
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-v1.15" 
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: serverless-operator-135
@@ -21,7 +20,10 @@ spec:
     - name: dockerfile
       value: openshift/ci-operator/knative-test-images/consumer-group-lag-provider-test/Dockerfile
     - name: build-args
-      value: [ VERSION=1.35.0,  GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22,  GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal, ]
+      value:
+        - VERSION=1.35.0
+        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22
+        - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
