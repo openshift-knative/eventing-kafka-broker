@@ -1,0 +1,5 @@
+spec:
+  config:
+    config-features:
+      transport-encryption: "strict"
+      authentication-oidc: "enabled"
