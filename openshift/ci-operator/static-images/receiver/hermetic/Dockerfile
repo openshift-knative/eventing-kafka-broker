@@ -51,5 +51,6 @@ LABEL \
       io.openshift.tags=receiver
 
 COPY --from=builder /app /app
+COPY LICENSE /licenses/
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

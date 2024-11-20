@@ -51,5 +51,6 @@ LABEL \
       io.openshift.tags=dispatcher
 
 COPY --from=builder /app /app
+COPY LICENSE /licenses/
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

@@ -45,5 +45,6 @@ FROM registry.access.redhat.com/ubi8/openjdk-21-runtime as running
 USER 185
 
 COPY --from=builder /app /app
+COPY LICENSE /licenses/
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
