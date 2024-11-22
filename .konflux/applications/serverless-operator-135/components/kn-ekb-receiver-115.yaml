@@ -17,5 +17,5 @@ spec:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git
       context: 
-      dockerfileUrl: openshift/ci-operator/static-images/receiver/Dockerfile
+      dockerfileUrl: openshift/ci-operator/static-images/receiver/hermetic/Dockerfile
       revision: release-v1.15
