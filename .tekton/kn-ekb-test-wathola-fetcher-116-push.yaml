@@ -35,6 +35,7 @@ spec:
       value: '{{revision}}'
     - name: additional-tags
       value:
+        - $(context.pipelineRun.uid)-{{revision}}
         - 1.36.0
         - latest
   pipelineRef:
