@@ -17,7 +17,6 @@
 ARG JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
 ARG JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
 ARG DEPS_IMAGE
-ARG VERSION=""
 
 FROM $DEPS_IMAGE AS deps
 
@@ -36,6 +35,7 @@ RUN mvn -Dmaven.repo.local=/third_party/maven --offline package -pl=dispatcher-l
 RUN mkdir /app && cp /build/dispatcher-loom/target/dispatcher-loom-1.0-SNAPSHOT.jar /app/app.jar
 
 FROM $JAVA_RUNTIME AS running
+ARG VERSION=""
 
 USER 185
 
@@ -43,6 +43,7 @@ LABEL \
       com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel8-container" \
       name="openshift-serverless-1/eventing-kafka-broker-dispatcher-rhel8" \
       version=$VERSION \
+      release=$VERSION \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
@@ -51,5 +52,6 @@ LABEL \
       io.openshift.tags=dispatcher
 
 COPY --from=builder /app /app
+COPY LICENSE /licenses/
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

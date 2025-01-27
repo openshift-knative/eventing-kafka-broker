@@ -4,6 +4,7 @@ ARG GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
 
 FROM $GO_BUILDER as builder
 
+WORKDIR /workspace
 COPY . .
 
 ENV CGO_ENABLED=1
@@ -16,6 +17,7 @@ FROM $GO_RUNTIME
 ARG VERSION=knative-v1.16
 
 COPY --from=builder /usr/bin/main /usr/bin/wathola-receiver
+COPY LICENSE /licenses/
 
 USER 65532
 

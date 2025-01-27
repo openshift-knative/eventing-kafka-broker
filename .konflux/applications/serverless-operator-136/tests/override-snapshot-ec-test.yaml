@@ -1,19 +1,19 @@
 apiVersion: appstudio.redhat.com/v1beta2
 kind: IntegrationTestScenario
 metadata:
-  name: serverless-operator-136-ec
+  name: serverless-operator-136-ec-override-snapshot
 spec:
   params: 
     - name: POLICY_CONFIGURATION
-      value: rhtap-releng-tenant/registry-standard-stage
+      value: rhtap-releng-tenant/registry-ocp-serverless-prod
     - name: TIMEOUT
       value: "120m"
     - name: WORKERS
       value: "8"
   application: serverless-operator-136
   contexts:
-    - description: Application testing
-      name: application
+    - description: Override Snapshot testing
+      name: override
   resolverRef:
     params:
       - name: url

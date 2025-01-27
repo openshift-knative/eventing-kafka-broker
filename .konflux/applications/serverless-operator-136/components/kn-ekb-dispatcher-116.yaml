@@ -3,14 +3,20 @@ kind: Component
 metadata:
   annotations:
     build.appstudio.openshift.io/pipeline: '{"name":"docker-build","bundle":"latest"}'
+    build.appstudio.openshift.io/request: configure-pac-no-mr
   name: kn-ekb-dispatcher-116
 spec:
   componentName: kn-ekb-dispatcher-116
   application: serverless-operator-136
    
+  build-nudges-ref:
+    
+    - "serverless-bundle-136"
+    
+  
   source:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git
       context: 
-      dockerfileUrl: openshift/ci-operator/static-images/dispatcher/Dockerfile
+      dockerfileUrl: openshift/ci-operator/static-images/dispatcher/hermetic/Dockerfile
       revision: release-v1.16
