@@ -8,10 +8,12 @@ spec:
       value: rhtap-releng-tenant/registry-standard-stage
     - name: TIMEOUT
       value: "120m"
+    - name: WORKERS
+      value: "8"
   application: serverless-operator-135
   contexts:
     - description: Application testing
-      name: application
+      name: push
   resolverRef:
     params:
       - name: url
