@@ -29,11 +29,11 @@ require (
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
 	google.golang.org/protobuf v1.35.1
-	k8s.io/api v0.30.3
+	k8s.io/api v0.30.9
 	k8s.io/apiextensions-apiserver v0.30.3
-	k8s.io/apimachinery v0.30.3
+	k8s.io/apimachinery v0.30.9
 	k8s.io/apiserver v0.30.3
-	k8s.io/client-go v0.30.3
+	k8s.io/client-go v0.30.9
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
 	knative.dev/eventing v0.43.4-0.20241219143011-7da3cee603c5
 	knative.dev/hack v0.0.0-20241010131451-05b2fb30cb4d
