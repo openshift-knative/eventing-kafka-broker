@@ -26,12 +26,22 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         patch:
             update-types:
                 - patch
@@ -75,12 +85,20 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         patch:
             update-types:
                 - patch
@@ -125,12 +143,22 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         patch:
             update-types:
                 - patch
@@ -174,12 +202,20 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         patch:
             update-types:
                 - patch
@@ -224,12 +260,22 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - knative.dev/*
+                - k8s.io/*
+                - github.com/openshift/*
+                - sigs.k8s.io/controller-runtime*
         patch:
             update-types:
                 - patch
@@ -273,12 +319,20 @@ updates:
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         minor:
             update-types:
                 - minor
             patterns:
                 - '*'
             applies-to: version-updates
+            exclude-patterns:
+                - io.vertx*
+                - com.redhat.quarkus.platform*
+                - io.quarkus*
         patch:
             update-types:
                 - patch
