@@ -19,6 +19,33 @@ updates:
           update-types:
             - version-update:semver-major
             - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
       target-branch: release-v1.15
       commit-message:
         prefix: '[release-v1.15][gomod]'
@@ -41,6 +68,33 @@ updates:
           update-types:
             - version-update:semver-major
             - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
       target-branch: release-v1.15
       commit-message:
         prefix: '[release-v1.15][maven]'
@@ -64,6 +118,33 @@ updates:
           update-types:
             - version-update:semver-major
             - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
       target-branch: release-v1.16
       commit-message:
         prefix: '[release-v1.16][gomod]'
@@ -86,7 +167,133 @@ updates:
           update-types:
             - version-update:semver-major
             - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
       target-branch: release-v1.16
       commit-message:
         prefix: '[release-v1.16][maven]'
+      open-pull-requests-limit: 10
+    - package-ecosystem: gomod
+      directories:
+        - /
+      schedule:
+        interval: weekly
+      ignore:
+        - dependency-name: knative.dev/*
+        - dependency-name: k8s.io/*
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+        - dependency-name: github.com/openshift/*
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+        - dependency-name: sigs.k8s.io/controller-runtime
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
+      target-branch: release-v1.17
+      commit-message:
+        prefix: '[release-v1.17][gomod]'
+      open-pull-requests-limit: 10
+    - package-ecosystem: maven
+      directories:
+        - /data-plane
+      schedule:
+        interval: weekly
+      ignore:
+        - dependency-name: io.quarkus*
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+        - dependency-name: com.redhat.quarkus.platform*
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+        - dependency-name: io.vertx*
+          update-types:
+            - version-update:semver-major
+            - version-update:semver-minor
+      groups:
+        major:
+            update-types:
+                - major
+            patterns:
+                - '*'
+            applies-to: version-updates
+        minor:
+            update-types:
+                - minor
+            patterns:
+                - '*'
+            applies-to: version-updates
+        patch:
+            update-types:
+                - patch
+            patterns:
+                - '*'
+            applies-to: version-updates
+        security:
+            update-types:
+                - patch
+                - minor
+                - major
+            patterns:
+                - '*'
+            applies-to: security-updates
+      target-branch: release-v1.17
+      commit-message:
+        prefix: '[release-v1.17][maven]'
       open-pull-requests-limit: 10
