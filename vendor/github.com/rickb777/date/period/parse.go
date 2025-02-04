@@ -76,10 +76,10 @@ func parse(period string, normalise bool) (*period64, error) {
 	}
 	remaining = remaining[1:]
 
-	var number, weekValue, prevFraction int
+	var integer, fraction, weekValue int64
 	result := &period64{input: period, neg: neg}
 	var years, months, weeks, days, hours, minutes, seconds itemState
-	var designator, prevDesignator byte
+	var designator, previousFractionDesignator byte
 	var err error
 	nComponents := 0
 
@@ -99,15 +99,16 @@ func parse(period string, normalise bool) (*period64, error) {
 			remaining = remaining[1:]
 
 		} else {
-			number, designator, remaining, err = parseNextField(remaining, period)
+			integer, fraction, designator, remaining, err = parseNextField(remaining, period)
 			if err != nil {
 				return nil, err
 			}
 
-			fraction := number % 10
-			if prevFraction != 0 && fraction != 0 {
-				return nil, fmt.Errorf("%s: '%c' & '%c' only the last field can have a fraction", period, prevDesignator, designator)
+			if previousFractionDesignator != 0 && fraction != 0 {
+				return nil, fmt.Errorf("%s: '%c' & '%c' only the last field can have a fraction", period, previousFractionDesignator, designator)
 			}
+
+			number := integer*10 + fraction
 
 			switch designator {
 			case 'Y':
@@ -135,8 +136,9 @@ func parse(period string, normalise bool) (*period64, error) {
 				return nil, err
 			}
 
-			prevFraction = fraction
-			prevDesignator = designator
+			if fraction != 0 {
+				previousFractionDesignator = designator
+			}
 		}
 	}
 
@@ -163,7 +165,7 @@ const (
 	Set
 )
 
-func (i itemState) testAndSet(number int, designator byte, result *period64, value *int) (itemState, error) {
+func (i itemState) testAndSet(number int64, designator byte, result *period64, value *int64) (itemState, error) {
 	switch i {
 	case Unready:
 		return i, fmt.Errorf("%s: '%c' designator cannot occur here", result.input, designator)
@@ -177,47 +179,47 @@ func (i itemState) testAndSet(number int, designator byte, result *period64, val
 
 //-------------------------------------------------------------------------------------------------
 
-func parseNextField(str, original string) (int, byte, string, error) {
+func parseNextField(str, original string) (int64, int64, byte, string, error) {
 	i := scanDigits(str)
 	if i < 0 {
-		return 0, 0, "", fmt.Errorf("%s: missing designator at the end", original)
+		return 0, 0, 0, "", fmt.Errorf("%s: missing designator at the end", original)
 	}
 
 	des := str[i]
-	number, err := parseDecimalNumber(str[:i], original, des)
-	return number, des, str[i+1:], err
+	integer, fraction, err := parseDecimalNumber(str[:i], original, des)
+	return integer, fraction, des, str[i+1:], err
 }
 
 // Fixed-point one decimal place
-func parseDecimalNumber(number, original string, des byte) (int, error) {
+func parseDecimalNumber(number, original string, des byte) (int64, int64, error) {
 	dec := strings.IndexByte(number, '.')
 	if dec < 0 {
 		dec = strings.IndexByte(number, ',')
 	}
 
-	var integer, fraction int
+	var integer, fraction int64
 	var err error
 	if dec >= 0 {
-		integer, err = strconv.Atoi(number[:dec])
+		integer, err = strconv.ParseInt(number[:dec], 10, 64)
 		if err == nil {
 			number = number[dec+1:]
 			switch len(number) {
 			case 0: // skip
 			case 1:
-				fraction, err = strconv.Atoi(number)
+				fraction, err = strconv.ParseInt(number, 10, 64)
 			default:
-				fraction, err = strconv.Atoi(number[:1])
+				fraction, err = strconv.ParseInt(number[:1], 10, 64)
 			}
 		}
 	} else {
-		integer, err = strconv.Atoi(number)
+		integer, err = strconv.ParseInt(number, 10, 64)
 	}
 
 	if err != nil {
-		return 0, fmt.Errorf("%s: expected a number but found '%c'", original, des)
+		return 0, 0, fmt.Errorf("%s: expected a number but found '%c'", original, des)
 	}
 
-	return integer*10 + fraction, err
+	return integer, fraction, err
 }
 
 // scanDigits finds the first non-digit byte after a given starting point.
