@@ -175,7 +175,7 @@ function run_e2e_encryption_auth_tests(){
 
   oc wait --for=condition=Ready knativeeventing.operator.knative.dev knative-eventing -n "${EVENTING_NAMESPACE}" --timeout=900s || return $?
 
-  local regex="TLS|OIDC"
+  local regex="TLS|OIDC|AuthZ"
 
   local test_name="${1:-}"
   local run_command="-run ${regex}"
