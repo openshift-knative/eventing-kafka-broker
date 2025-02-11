@@ -21,7 +21,6 @@ WORKDIR /build
 USER root
 
 COPY /data-plane/pom.xml .
-COPY /data-plane/.editorconfig .
 COPY /data-plane/core/pom.xml core/pom.xml
 COPY /data-plane/receiver/pom.xml receiver/pom.xml
 COPY /data-plane/receiver-loom/pom.xml receiver-loom/pom.xml
