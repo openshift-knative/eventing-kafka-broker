@@ -31,10 +31,6 @@ test-e2e:
 	openshift/e2e-tests.sh
 .PHONY: test-e2e
 
-test-conformance:
-	openshift/e2e-conformance-tests.sh
-.PHONY: test-conformance
-
 test-reconciler:
 	openshift/e2e-rekt-tests.sh
 .PHONY: test-reconciler

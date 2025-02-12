@@ -130,17 +130,6 @@ function run_e2e_tests() {
     -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
 }
 
-function run_conformance_tests() {
-  export BROKER_CLASS="Kafka"
-
-  go_test_e2e -timeout=100m ./test/e2e/conformance \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
-
-  go_test_e2e -timeout=100m ./test/e2e_channel/conformance \
-    -channels=messaging.knative.dev/v1beta1:KafkaChannel \
-    -imagetemplate "${TEST_IMAGE_TEMPLATE}" || return $?
-}
-
 function run_e2e_new_tests() {
   local common_opts
   export BROKER_CLASS="Kafka"
