@@ -74,12 +74,10 @@ EOF
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
-  install_hack_tools || exit 1
-
   local release
   release=$(yq r "${SCRIPT_DIR}/project.yaml" project.tag)
   release=${release/knative-/}
-  so_branch=$( $(go env GOPATH)/bin/sobranch --upstream-version "${release}")
+  so_branch=$(go run github.com/openshift-knative/hack/cmd/sobranch@latest --upstream-version "${release}")
 
   USE_IMAGE_RELEASE_TAG="$(yq r "${SCRIPT_DIR}/project.yaml" project.tag)"
   export USE_IMAGE_RELEASE_TAG
@@ -178,13 +176,4 @@ function run_e2e_encryption_auth_tests(){
   go_test_e2e ${RUN_FLAGS} ./test/e2e_new --images.producer.file="${images_file}" || failed=$?
 
   return $failed
-}
-
-function install_hack_tools() {
-	git clone https://github.com/openshift-knative/hack.git /tmp/hack
-	cd /tmp/hack && \
-	  go install github.com/openshift-knative/hack/cmd/generate && \
-	  go install github.com/openshift-knative/hack/cmd/sobranch && \
-	  cd - && rm -rf /tmp/hack
-	return $?
 }
