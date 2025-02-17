@@ -28,12 +28,12 @@ require (
 	go.uber.org/atomic v1.10.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	google.golang.org/protobuf v1.36.4
-	k8s.io/api v0.31.5
-	k8s.io/apiextensions-apiserver v0.31.5
-	k8s.io/apimachinery v0.31.5
-	k8s.io/apiserver v0.31.5
-	k8s.io/client-go v0.31.5
+	google.golang.org/protobuf v1.36.5
+	k8s.io/api v0.31.6
+	k8s.io/apiextensions-apiserver v0.31.6
+	k8s.io/apimachinery v0.31.6
+	k8s.io/apiserver v0.31.6
+	k8s.io/client-go v0.31.6
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
 	knative.dev/eventing v0.44.0
 	knative.dev/hack v0.0.0-20250116150306-c142b4835bc5
@@ -135,7 +135,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/code-generator v0.31.5 // indirect
+	k8s.io/code-generator v0.31.6 // indirect
 	k8s.io/gengo v0.0.0-20240404160639-a0386bf69313 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240228010128-51d4e06bde70 // indirect
 	k8s.io/klog v1.0.0 // indirect
