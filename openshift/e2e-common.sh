@@ -192,10 +192,7 @@ function run_e2e_encryption_auth_tests(){
 }
 
 function install_hack_tools() {
-	git clone https://github.com/openshift-knative/hack.git /tmp/hack
-	cd /tmp/hack && \
-	  go install github.com/openshift-knative/hack/cmd/generate && \
-	  go install github.com/openshift-knative/hack/cmd/sobranch && \
-	  cd - && rm -rf /tmp/hack
+	GOFLAGS='' go install github.com/openshift-knative/hack/cmd/generate@latest && \
+	GOFLAGS='' go install github.com/openshift-knative/hack/cmd/sobranch@latest
 	return $?
 }
