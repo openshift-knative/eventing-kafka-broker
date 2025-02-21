@@ -1209,7 +1209,7 @@ k8s.io/utils/pointer
 k8s.io/utils/ptr
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# knative.dev/eventing v0.44.0
+# knative.dev/eventing v0.44.2
 ## explicit; go 1.22.7
 knative.dev/eventing/cmd/event_display
 knative.dev/eventing/cmd/heartbeats
