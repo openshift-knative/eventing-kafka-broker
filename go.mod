@@ -14,9 +14,9 @@ require (
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/kedacore/keda/v2 v2.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/magiconair/properties v1.8.5
+	github.com/magiconair/properties v1.8.9
 	github.com/manifestival/client-go-client v0.5.0
-	github.com/manifestival/manifestival v0.7.1
+	github.com/manifestival/manifestival v0.7.2
 	github.com/openzipkin/zipkin-go v0.4.3
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/rickb777/date v1.14.1
@@ -29,11 +29,11 @@ require (
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
 	google.golang.org/protobuf v1.35.1
-	k8s.io/api v0.30.3
-	k8s.io/apiextensions-apiserver v0.30.3
-	k8s.io/apimachinery v0.30.3
-	k8s.io/apiserver v0.30.3
-	k8s.io/client-go v0.30.3
+	k8s.io/api v0.30.10
+	k8s.io/apiextensions-apiserver v0.30.10
+	k8s.io/apimachinery v0.30.10
+	k8s.io/apiserver v0.30.10
+	k8s.io/client-go v0.30.10
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
 	knative.dev/eventing v0.43.4-0.20250211152250-d59d3b68f852
 	knative.dev/hack v0.0.0-20250114120502-30344aeba756
@@ -69,6 +69,7 @@ require (
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
+	github.com/go-logr/zapr v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
@@ -132,7 +133,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/code-generator v0.30.3 // indirect
+	k8s.io/code-generator v0.30.10 // indirect
 	k8s.io/gengo v0.0.0-20240404160639-a0386bf69313 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240228010128-51d4e06bde70 // indirect
 	k8s.io/klog v1.0.0 // indirect
