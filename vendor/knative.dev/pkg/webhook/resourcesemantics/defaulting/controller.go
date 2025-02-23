@@ -84,6 +84,12 @@ func newController(ctx context.Context, name string, optsFunc ...OptionFunc) *co
 		f(opts)
 	}
 
+	// if this environment variable is set, it overrides the value in the Options
+	disableNamespaceOwnership := webhook.DisableNamespaceOwnershipFromEnv()
+	if disableNamespaceOwnership != nil {
+		wopts.DisableNamespaceOwnership = *disableNamespaceOwnership
+	}
+
 	key := types.NamespacedName{Name: name}
 
 	wh := &reconciler{
@@ -100,9 +106,10 @@ func newController(ctx context.Context, name string, optsFunc ...OptionFunc) *co
 		handlers:  opts.types,
 		callbacks: opts.callbacks,
 
-		withContext:           opts.wc,
-		disallowUnknownFields: opts.disallowUnknownFields,
-		secretName:            wopts.SecretName,
+		withContext:               opts.wc,
+		disallowUnknownFields:     opts.disallowUnknownFields,
+		secretName:                wopts.SecretName,
+		disableNamespaceOwnership: wopts.DisableNamespaceOwnership,
 
 		client:       client,
 		mwhlister:    mwhInformer.Lister(),
@@ -112,8 +119,8 @@ func newController(ctx context.Context, name string, optsFunc ...OptionFunc) *co
 	logger := logging.FromContext(ctx)
 	controllerOptions := wopts.ControllerOptions
 	if controllerOptions == nil {
-		// TODO: https://github.com/knative/pkg/issues/2418
-		controllerOptions = &controller.ControllerOptions{WorkQueueName: name, Logger: logger.Named(name)}
+		const queueName = "DefaultingWebhook"
+		controllerOptions = &controller.ControllerOptions{WorkQueueName: queueName, Logger: logger.Named(queueName)}
 	}
 	c := controller.NewContext(ctx, wh, *controllerOptions)
 
