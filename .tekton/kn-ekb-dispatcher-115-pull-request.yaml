@@ -42,7 +42,7 @@ spec:
   taskRunSpecs:
     - pipelineTaskName: sast-shell-check
       stepSpecs:
-        - name: sast-shell-check
+        - #name: sast-shell-check
           computeResources:
             requests:
               memory: 2Gi
