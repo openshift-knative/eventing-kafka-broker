@@ -39,6 +39,15 @@ spec:
         - linux/x86_64
     - name: revision
       value: '{{revision}}'
+  taskRunSpecs:
+    - pipelineTaskName: sast-shell-check
+      stepSpecs:
+        - name: sast-shell-check
+          computeResources:
+            requests:
+              memory: 2Gi
+            limits:
+              memory: 2Gi
   pipelineRef:
     name: docker-java-build
   taskRunTemplate: {}
