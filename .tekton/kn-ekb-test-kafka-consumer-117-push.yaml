@@ -20,7 +20,7 @@ spec:
       value: openshift/ci-operator/knative-test-images/kafka-consumer/Dockerfile
     - name: build-args
       value:
-        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.22
+        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.23
         - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
         - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
         - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
@@ -38,6 +38,15 @@ spec:
         - $(context.pipelineRun.uid)-{{revision}}
         - 1.37.0
         - latest
+  taskRunSpecs:
+    - pipelineTaskName: sast-shell-check
+      stepSpecs:
+        - name: sast-shell-check
+          computeResources:
+            requests:
+              memory: 4Gi
+            limits:
+              memory: 4Gi
   pipelineRef:
     name: docker-build
   taskRunTemplate: {}
