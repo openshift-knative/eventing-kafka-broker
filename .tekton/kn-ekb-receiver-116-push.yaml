@@ -38,6 +38,15 @@ spec:
         - $(context.pipelineRun.uid)-{{revision}}
         - 1.36.0
         - latest
+  taskRunSpecs:
+    - pipelineTaskName: sast-shell-check
+      stepSpecs:
+        - name: sast-shell-check
+          computeResources:
+            requests:
+              memory: 4Gi
+            limits:
+              memory: 4Gi
   pipelineRef:
     name: docker-java-build
   taskRunTemplate: {}
