@@ -45,15 +45,15 @@ spec:
         - name: sast-shell-check
           computeResources:
             requests:
-              memory: 2Gi
+              memory: 4Gi
             limits:
-              memory: 2Gi
+              memory: 4Gi
         - name: upload
           computeResources:
             requests:
-              memory: 2Gi
+              memory: 4Gi
             limits:
-              memory: 2Gi
+              memory: 4Gi
   pipelineRef:
     name: docker-java-build
   taskRunTemplate: {}
