@@ -61,7 +61,7 @@
     <kafka.version>3.7.1</kafka.version>
     <debezium.version>2.6.1.Final</debezium.version>
     <jib.version>3.4.0</jib.version>
-    <quarkus.version>3.8.4</quarkus.version>
+    <quarkus.version>3.8.6.SP3-redhat-00002</quarkus.version>
     <antlr.version>4.9.2
     </antlr.version> <!-- Overwritting quarkus's antlr version. Reminder: antlr4-maven-plugin,antlr4-runtime, antlr4 need to have the same version -->
     <palantirJavaFormat.version>2.38.0</palantirJavaFormat.version>
@@ -102,7 +102,31 @@
     </profile>
   </profiles>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>red-hat-enterprise-maven-repository</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>redhat</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+
     <repository>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
       <id>sonatype</id>
@@ -119,7 +143,7 @@
     <dependencies>
       <!-- Vertx -->
       <dependency>
-        <groupId>io.quarkus</groupId>
+        <groupId>com.redhat.quarkus.platform</groupId>
         <artifactId>quarkus-bom</artifactId>
         <version>${quarkus.version}</version>
         <type>pom</type>
