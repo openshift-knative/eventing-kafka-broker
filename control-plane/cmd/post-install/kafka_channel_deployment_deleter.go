@@ -20,6 +20,10 @@ import (
 	"context"
 	"fmt"
 
+	"knative.dev/pkg/logging"
+
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 )
@@ -29,11 +33,27 @@ type kafkaDeploymentDeleter struct {
 }
 
 func (k *kafkaDeploymentDeleter) DeleteChannelDeployments(ctx context.Context) error {
+	logger := logging.FromContext(ctx)
+	logger.Info("Deleting Kafka Channel Deployments")
+
 	deployments := []string{
 		"kafka-channel-dispatcher",
 	}
 
 	for _, deployment := range deployments {
+		logger.Infof("Checking if deployment %s exists", deployment)
+		// if the deployment does not exist, we can skip the deletion
+		_, err := k.k8s.AppsV1().Deployments("knative-eventing").Get(ctx, deployment, metav1.GetOptions{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				logger.Infof("Deployment %s not found, skipping deletion", deployment)
+				continue
+			}
+			logger.Errorf("Failed to get deployment %s: %v", deployment, err)
+			return fmt.Errorf("failed to get deployment %s: %w", deployment, err)
+		}
+
+		logger.Infof("Deleting deployment %s", deployment)
 		if err := k.deleteDeployment(ctx, types.NamespacedName{Name: deployment, Namespace: "knative-eventing"}); err != nil {
 			return fmt.Errorf("failed to delete deployment %s: %v", deployment, err)
 		}
