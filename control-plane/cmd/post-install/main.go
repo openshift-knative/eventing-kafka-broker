@@ -40,7 +40,7 @@ func main() {
 	logger, _ := logging.NewLoggerFromConfig(config, "kafka-broker-post-install")
 	defer logger.Sync()
 
-	logging.WithLogger(ctx, logger)
+	ctx = logging.WithLogger(ctx, logger)
 
 	if err := run(ctx); err != nil {
 		logger.Fatal(err)

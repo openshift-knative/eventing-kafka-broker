@@ -21,6 +21,8 @@ import (
 	"fmt"
 	"time"
 
+	"knative.dev/pkg/logging"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -61,10 +63,14 @@ func (k *kafkaDeploymentDeleter) DeleteBrokerDeployments(ctx context.Context) er
 }
 
 func (k *kafkaDeploymentDeleter) deleteDeployment(ctx context.Context, deployment types.NamespacedName) error {
+	logger := logging.FromContext(ctx)
+
+	logger.Infof("Waiting for statefulset %s/%s to come up", deployment.Namespace, deployment.Name)
 	err := k.waitStatefulSetExists(ctx, deployment)
 	if err != nil {
 		return fmt.Errorf("failed while waiting for statefulset to come up: %w", err)
 	}
+	logger.Infof("Statefulset %s/%s showed up, deleting deployment", deployment.Namespace, deployment.Name)
 
 	err = k.k8s.
 		AppsV1().
@@ -74,6 +80,7 @@ func (k *kafkaDeploymentDeleter) deleteDeployment(ctx context.Context, deploymen
 		return fmt.Errorf("failed to delete deployment %s/%s: %w", deployment.Namespace, deployment.Name, err)
 	}
 
+	logger.Infof("Deleted deployment %s/%s", deployment.Namespace, deployment.Name)
 	return nil
 }
 
