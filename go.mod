@@ -2,8 +2,6 @@ module knative.dev/eventing-kafka-broker
 
 go 1.22.0
 
-toolchain go1.24.1
-
 require (
 	github.com/IBM/sarama v1.43.3
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
