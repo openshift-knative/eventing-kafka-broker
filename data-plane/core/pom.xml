@@ -145,6 +145,7 @@
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+      <version>3.16.0</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
