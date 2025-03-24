@@ -30,5 +30,5 @@ COPY /data-plane/dispatcher/pom.xml dispatcher/pom.xml
 COPY /data-plane/dispatcher-loom/pom.xml dispatcher-loom/pom.xml
 COPY /data-plane/contract/pom.xml contract/pom.xml
 
-RUN mvn package dependency:go-offline -Drelease -DskipTests -Dmaven.repo.local=/third_party/maven
+RUN mvn package dependency:resolve dependency:resolve-plugins -Drelease -DskipTests -Dmaven.repo.local=/third_party/maven
 RUN find /third_party/maven/ -path "*_remote.repositories" | xargs -I{} rm {}
