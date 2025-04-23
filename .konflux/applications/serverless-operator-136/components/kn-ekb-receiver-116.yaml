@@ -9,11 +9,6 @@ spec:
   componentName: kn-ekb-receiver-116
   application: serverless-operator-136
    
-  build-nudges-ref:
-    
-    - "serverless-bundle-136"
-    
-  
   source:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git
