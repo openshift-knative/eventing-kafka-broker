@@ -6,7 +6,8 @@ metadata:
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "release-v1.17" 
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
+      == "release-v1.17"
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: serverless-operator-137
@@ -16,43 +17,45 @@ metadata:
   namespace: ocp-serverless-tenant
 spec:
   params:
-    - name: dockerfile
-      value: openshift/ci-operator/knative-images/event_display/Dockerfile
-    - name: build-args
-      value:
-        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.23
-        - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
-        - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
-        - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
-        - NODE_BUILDER=registry.access.redhat.com/ubi8/nodejs-20
-        - NODE_RUNTIME=registry.access.redhat.com/ubi8/nodejs-20
-        - VERSION=1.37.0
-    - name: git-url
-      value: '{{source_url}}'
-    - name: hermetic
-      value: "true"
-    - name: output-image
-      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-137/kn-ekb-event-display:{{revision}}
-    - name: revision
-      value: '{{revision}}'
-    - name: additional-tags
-      value:
-        - $(context.pipelineRun.uid)-{{revision}}
-        - 1.37.0
-        - latest
-  taskRunSpecs:
-    - pipelineTaskName: sast-shell-check
-      stepSpecs:
-        - name: sast-shell-check
-          computeResources:
-            requests:
-              memory: 4Gi
-            limits:
-              memory: 4Gi
+  - name: dockerfile
+    value: openshift/ci-operator/knative-images/event_display/Dockerfile
+  - name: build-args
+    value:
+    - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.23
+    - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
+    - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
+    - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
+    - NODE_BUILDER=registry.access.redhat.com/ubi8/nodejs-20
+    - NODE_RUNTIME=registry.access.redhat.com/ubi8/nodejs-20
+    - VERSION=1.37.0
+  - name: git-url
+    value: '{{source_url}}'
+  - name: hermetic
+    value: "true"
+  - name: output-image
+    value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-137/kn-ekb-event-display:{{revision}}
+  - name: revision
+    value: '{{revision}}'
+  - name: additional-tags
+    value:
+    - $(context.pipelineRun.uid)-{{revision}}
+    - 1.37.0
+    - latest
   pipelineRef:
     name: docker-build
-  taskRunTemplate: {}
+  taskRunSpecs:
+  - pipelineTaskName: sast-shell-check
+    stepSpecs:
+    - computeResources:
+        limits:
+          memory: 4Gi
+        requests:
+          memory: 4Gi
+      name: sast-shell-check
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-kn-ekb-event-display-117
   workspaces:
-    - name: git-auth
-      secret:
-        secretName: '{{ git_auth_secret }}'
+  - name: git-auth
+    secret:
+      secretName: '{{ git_auth_secret }}'
+status: {}
