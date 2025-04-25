@@ -1,0 +1,3 @@
+project:
+  tag: knative-v1.18
+  imagePrefix: knative-eventing-kafka-broker
