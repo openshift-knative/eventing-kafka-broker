@@ -73,7 +73,7 @@
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.17.0</version>
+      <version>1.17.1.redhat-00001</version>
     </dependency>
 
     <dependency>
