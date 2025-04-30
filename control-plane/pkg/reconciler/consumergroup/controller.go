@@ -22,6 +22,8 @@ import (
 	"strings"
 	"time"
 
+	"knative.dev/pkg/injection/sharedmain"
+
 	v1 "k8s.io/client-go/informers/core/v1"
 
 	"github.com/kelseyhightower/envconfig"
@@ -110,11 +112,7 @@ func NewController(ctx context.Context, watcher configmap.Watcher) *controller.I
 
 	dispatcherPodInformer := podinformer.Get(ctx, internalsapi.DispatcherLabelSelectorStr)
 
-	schedulers := map[string]Scheduler{
-		KafkaSourceScheduler:  createKafkaScheduler(ctx, c, kafkainternals.SourceStatefulSetName, dispatcherPodInformer),
-		KafkaTriggerScheduler: createKafkaScheduler(ctx, c, kafkainternals.BrokerStatefulSetName, dispatcherPodInformer),
-		KafkaChannelScheduler: createKafkaScheduler(ctx, c, kafkainternals.ChannelStatefulSetName, dispatcherPodInformer),
-	}
+	schedulers := createSchedulers(ctx, c, dispatcherPodInformer)
 
 	r := &Reconciler{
 		SchedulerFunc:                      func(s string) (Scheduler, bool) { sched, ok := schedulers[strings.ToLower(s)]; return sched, ok },
@@ -318,6 +316,47 @@ func enqueueConsumerGroupFromConsumer(enqueue func(name types.NamespacedName)) f
 			}
 		}
 	}
+}
+
+func createSchedulers(ctx context.Context, config SchedulerConfig, dispatcherPodInformer v1.PodInformer) map[string]Scheduler {
+	logger := logging.FromContext(ctx)
+
+	disabledControllers := sharedmain.GetDisabledControllers()
+
+	disabledControllersSet := make(map[string]bool)
+	for _, c := range disabledControllers {
+		if c != "" { // Skip empty entries
+			disabledControllersSet[c] = true
+		}
+	}
+
+	schedulers := make(map[string]Scheduler)
+
+	// Only add source scheduler if source-controller is not disabled
+	if !disabledControllersSet["source-controller"] {
+		schedulers[KafkaSourceScheduler] = createKafkaScheduler(ctx, config, kafkainternals.SourceStatefulSetName, dispatcherPodInformer)
+		logger.Debug("Added source scheduler")
+	} else {
+		logger.Debug("Source controller is disabled, skipping source scheduler")
+	}
+
+	// Only add trigger scheduler if trigger-controller is not disabled
+	if !disabledControllersSet["trigger-controller"] {
+		schedulers[KafkaTriggerScheduler] = createKafkaScheduler(ctx, config, kafkainternals.BrokerStatefulSetName, dispatcherPodInformer)
+		logger.Debug("Added trigger scheduler")
+	} else {
+		logger.Debug("Trigger controller is disabled, skipping trigger scheduler")
+	}
+
+	// Only add channel scheduler if channel-controller is not disabled
+	if !disabledControllersSet["channel-controller"] {
+		schedulers[KafkaChannelScheduler] = createKafkaScheduler(ctx, config, kafkainternals.ChannelStatefulSetName, dispatcherPodInformer)
+		logger.Debug("Added channel scheduler")
+	} else {
+		logger.Debug("Channel controller is disabled, skipping channel scheduler")
+	}
+
+	return schedulers
 }
 
 func createKafkaScheduler(ctx context.Context, c SchedulerConfig, ssName string, dispatcherPodInformer v1.PodInformer) Scheduler {

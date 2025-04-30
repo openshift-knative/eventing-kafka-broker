@@ -24,6 +24,8 @@ spec:
         - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
         - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
         - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
+        - NODE_BUILDER=registry.access.redhat.com/ubi8/nodejs-20
+        - NODE_RUNTIME=registry.access.redhat.com/ubi8/nodejs-20
         - VERSION=1.36.0
     - name: git-url
       value: '{{source_url}}'
@@ -49,7 +51,8 @@ spec:
               memory: 4Gi
   pipelineRef:
     name: docker-java-build
-  taskRunTemplate: {}
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-kn-ekb-receiver-116
   workspaces:
     - name: git-auth
       secret:
