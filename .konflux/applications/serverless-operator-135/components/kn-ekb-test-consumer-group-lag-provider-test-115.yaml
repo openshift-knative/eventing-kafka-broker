@@ -9,11 +9,6 @@ spec:
   componentName: kn-ekb-test-consumer-group-lag-provider-test-115
   application: serverless-operator-135
    
-  build-nudges-ref:
-    
-    - "serverless-bundle-135"
-    
-  
   source:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git

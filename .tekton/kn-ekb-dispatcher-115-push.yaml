@@ -49,7 +49,8 @@ spec:
               memory: 4Gi
   pipelineRef:
     name: docker-java-build
-  taskRunTemplate: {}
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-kn-ekb-dispatcher-115
   workspaces:
     - name: git-auth
       secret:
