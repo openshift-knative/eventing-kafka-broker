@@ -1,0 +1,8 @@
+diff --git a/.ko.yaml b/.ko.yaml
+index b1075a3c..2f054a22 100644
+--- a/.ko.yaml
++++ b/.ko.yaml
+@@ -1,2 +1,2 @@
+ # Use :nonroot base image for all containers
+-defaultBaseImage: gcr.io/distroless/static:nonroot
++defaultBaseImage: registry.access.redhat.com/ubi8/ubi-minimal:latest
