@@ -72,7 +72,7 @@ spec:
     spec:
       containers:
       - name: event-display
-        image: ko://knative.dev/eventing/cmd/event_display
+        image: quay.io/openshift-knative/knative-eventing-sources-event-display:v0.13.2
 ---
 apiVersion: sources.knative.dev/v1
 kind: SinkBinding
@@ -114,7 +114,7 @@ spec:
     spec:
       containers:
       - name: single-heartbeat
-        image: ko://knative.dev/eventing/cmd/heartbeats
+        image: quay.io/openshift-knative/knative-eventing-sources-heartbeats:v0.13.2
         args:
         - --period=1
         env:
@@ -155,7 +155,7 @@ function wait_for_cloudevent {
 }
 
 function create {
-  app foo$i | ko resolve ${KO_FLAGS} -Bf - | kubectl apply -f -
+  app foo$i | kubectl apply -f -
 }
 
 function run {
