@@ -21,16 +21,14 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/IBM/sarama"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/utils/pointer"
 	"knative.dev/pkg/kmeta"
 	"knative.dev/pkg/logging"
 
-	bindings "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/bindings/v1beta1"
-
+	"knative.dev/eventing-kafka-broker/control-plane/pkg/apis/bindings/v1beta1"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/apis/config"
-	"knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internalskafkaeventing"
 	"knative.dev/eventing-kafka-broker/third_party/pkg/client/clientset/versioned"
 
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/autoscaler"
@@ -44,9 +42,6 @@ import (
 const (
 	// AutoscalerClass is the KEDA autoscaler class.
 	AutoscalerClass = "keda.autoscaling.knative.dev"
-
-	KedaResourceLabel      = internalskafkaeventing.GroupName + "/resource"
-	KedaResourceLabelValue = "true"
 )
 
 func GenerateScaleTarget(cg *kafkainternals.ConsumerGroup) *kedav1alpha1.ScaleTarget {
@@ -99,10 +94,8 @@ func GenerateScaleTriggers(cg *kafkainternals.ConsumerGroup, triggerAuthenticati
 }
 
 func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, secretData map[string][]byte) (*kedav1alpha1.TriggerAuthentication, *corev1.Secret, error) {
-	// Make sure secretData is never nil
-	if secretData == nil {
-		secretData = make(map[string][]byte)
-	}
+
+	secretTargetRefs := make([]kedav1alpha1.AuthSecretTargetRef, 0, 8)
 
 	secret := corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -111,38 +104,28 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, secretData 
 			OwnerReferences: []metav1.OwnerReference{
 				*kmeta.NewControllerRef(cg),
 			},
-			Labels: map[string]string{
-				KedaResourceLabel: KedaResourceLabelValue,
-			},
 		},
 		Data:       secretData,
 		StringData: make(map[string]string),
 	}
 
-	opt, err := security.NewSaramaSecurityOptionFromSecret(&secret)
-	if err != nil {
-		return nil, nil, fmt.Errorf("failed to get security option from secret: %w", err)
-	}
+	saslType := retrieveSaslTypeIfPresent(cg, secret)
 
-	cfg := &sarama.Config{}
-	if err := opt(cfg); err != nil {
-		return nil, nil, fmt.Errorf("failed to get SASL config from secret: %w", err)
-	}
-
-	if cfg.Net.SASL.Enable {
-		switch cfg.Net.SASL.Mechanism {
-		case sarama.SASLTypePlaintext:
-			secret.StringData["sasl"] = "plaintext"
-		case sarama.SASLTypeSCRAMSHA256:
+	if saslType != nil {
+		switch *saslType {
+		case "SCRAM-SHA-256":
 			secret.StringData["sasl"] = "scram_sha256"
-		case sarama.SASLTypeSCRAMSHA512:
+		case "SCRAM-SHA-512":
 			secret.StringData["sasl"] = "scram_sha512"
+		case "PLAIN":
+			secret.StringData["sasl"] = "plaintext"
 		default:
-			return nil, nil, fmt.Errorf("SASL type value %q is not supported", cfg.Net.SASL.Mechanism)
+			return nil, nil, fmt.Errorf("SASL type value %q is not supported", *saslType)
 		}
+	} else {
+		secret.StringData["sasl"] = "plaintext" //default
 	}
 
-	secretTargetRefs := make([]kedav1alpha1.AuthSecretTargetRef, 0, 8)
 	triggerAuth := &kedav1alpha1.TriggerAuthentication{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      cg.Name,
@@ -151,7 +134,7 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, secretData 
 				*kmeta.NewControllerRef(cg),
 			},
 			Labels: map[string]string{
-				KedaResourceLabel: KedaResourceLabelValue,
+				//TODO: may need to add labels like eventing-autoscaler-keda/pkg/reconciler/broker/resources/triggerauthentication.go#L39-L40
 			},
 		},
 		Spec: kedav1alpha1.TriggerAuthenticationSpec{
@@ -186,7 +169,7 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, secretData 
 
 	if cg.Spec.Template.Spec.Auth.SecretSpec != nil && cg.Spec.Template.Spec.Auth.SecretSpec.Ref.Name != "" {
 
-		if cfg.Net.SASL.Enable {
+		if saslType != nil { //SASL enabled
 			sasl := kedav1alpha1.AuthSecretTargetRef{Parameter: "sasl", Name: secret.Name, Key: "sasl"}
 			secretTargetRefs = append(secretTargetRefs, sasl)
 
@@ -223,7 +206,23 @@ func GenerateTriggerAuthentication(cg *kafkainternals.ConsumerGroup, secretData 
 	return triggerAuth, &secret, nil
 }
 
-func addAuthSecretTargetRef(parameter string, secretKeyRef bindings.SecretValueFromSource, secretTargetRefs []kedav1alpha1.AuthSecretTargetRef) []kedav1alpha1.AuthSecretTargetRef {
+func retrieveSaslTypeIfPresent(cg *kafkainternals.ConsumerGroup, secret corev1.Secret) *string {
+	if cg.Spec.Template.Spec.Auth.NetSpec != nil && cg.Spec.Template.Spec.Auth.NetSpec.SASL.Enable && cg.Spec.Template.Spec.Auth.NetSpec.SASL.Type.SecretKeyRef != nil {
+		secretKeyRefKey := cg.Spec.Template.Spec.Auth.NetSpec.SASL.Type.SecretKeyRef.Key
+		if saslTypeValue, ok := secret.Data[secretKeyRefKey]; ok {
+			return pointer.String(string(saslTypeValue))
+		}
+	}
+
+	if cg.Spec.Template.Spec.Auth.SecretSpec != nil && cg.Spec.Template.Spec.Auth.SecretSpec.Ref != nil {
+		if saslTypeValue, ok := secret.Data[security.SaslTypeLegacy]; ok {
+			return pointer.String(string(saslTypeValue))
+		}
+	}
+	return nil
+}
+
+func addAuthSecretTargetRef(parameter string, secretKeyRef v1beta1.SecretValueFromSource, secretTargetRefs []kedav1alpha1.AuthSecretTargetRef) []kedav1alpha1.AuthSecretTargetRef {
 	if secretKeyRef.SecretKeyRef == nil || secretKeyRef.SecretKeyRef.Name == "" || secretKeyRef.SecretKeyRef.Key == "" {
 		return secretTargetRefs
 	}
