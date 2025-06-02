@@ -63,14 +63,6 @@ metadata:
   name: knative-eventing
 EOF
 
-  ./test/kafka/kafka_setup.sh || return $?
-
-  ( # Do not leak sensitive information to logs.
-    set +x
-    create_sasl_secrets || return $?
-    create_tls_secrets || return $?
-  )
-
   KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR="$(pwd)/openshift/release/artifacts"
   export KNATIVE_EVENTING_KAFKA_BROKER_MANIFESTS_DIR
 
@@ -90,6 +82,21 @@ EOF
   git clone --branch "${so_branch}" https://github.com/openshift-knative/serverless-operator.git $operator_dir || git clone --branch main https://github.com/openshift-knative/serverless-operator.git $operator_dir
 
   local failed=0
+  pushd $operator_dir || return $?
+
+  # install cert-manager first, as we need it to configure strimzi (for test/kafka/kafka-certificate.yaml)
+  make install-certmanager
+
+  popd || return $?
+
+  ./test/kafka/kafka_setup.sh || return $?
+
+  ( # Do not leak sensitive information to logs.
+    set +x
+    create_sasl_secrets || return $?
+    create_tls_secrets || return $?
+  )
+
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
   export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-marketplace
