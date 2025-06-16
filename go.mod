@@ -6,6 +6,7 @@ require (
 	github.com/IBM/sarama v1.45.2
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.16.1
 	github.com/cloudevents/sdk-go/v2 v2.16.1
+	github.com/expr-lang/expr v1.17.2
 	github.com/google/go-cmp v0.7.0
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
@@ -64,7 +65,6 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
-	github.com/expr-lang/expr v1.17.2 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
