@@ -52,7 +52,8 @@ spec:
               memory: 4Gi
   pipelineRef:
     name: docker-build
-  taskRunTemplate: {}
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-kn-ekb-kafka-controller-117
   workspaces:
     - name: git-auth
       secret:
