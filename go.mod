@@ -14,9 +14,9 @@ require (
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/kedacore/keda/v2 v2.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/magiconair/properties v1.8.5
+	github.com/magiconair/properties v1.8.10
 	github.com/manifestival/client-go-client v0.6.0
-	github.com/manifestival/manifestival v0.7.1
+	github.com/manifestival/manifestival v0.7.2
 	github.com/openzipkin/zipkin-go v0.4.3
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/rickb777/date v1.14.1
@@ -28,18 +28,18 @@ require (
 	go.uber.org/atomic v1.10.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	google.golang.org/protobuf v1.36.6
-	k8s.io/api v0.32.2
-	k8s.io/apiextensions-apiserver v0.32.1
-	k8s.io/apimachinery v0.32.2
-	k8s.io/apiserver v0.32.1
-	k8s.io/client-go v0.32.2
+	google.golang.org/protobuf v1.36.7
+	k8s.io/api v0.32.7
+	k8s.io/apiextensions-apiserver v0.32.7
+	k8s.io/apimachinery v0.32.7
+	k8s.io/apiserver v0.32.7
+	k8s.io/client-go v0.32.7
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	knative.dev/eventing v0.45.0
 	knative.dev/hack v0.0.0-20250331013814-c577ed9f7775
 	knative.dev/pkg v0.0.0-20250415155312-ed3e2158b883
 	knative.dev/reconciler-test v0.0.0-20250415170512-23f86169156f
-	sigs.k8s.io/controller-runtime v0.19.0
+	sigs.k8s.io/controller-runtime v0.19.7
 	sigs.k8s.io/yaml v1.4.0
 )
 
@@ -134,7 +134,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/code-generator v0.32.2 // indirect
+	k8s.io/code-generator v0.32.7 // indirect
 	k8s.io/gengo v0.0.0-20240404160639-a0386bf69313 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240911193312-2b36238f13e9 // indirect
 	k8s.io/klog v1.0.0 // indirect
