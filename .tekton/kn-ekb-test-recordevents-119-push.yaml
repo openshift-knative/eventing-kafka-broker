@@ -1,0 +1,59 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/openshift-knative/eventing-kafka-broker?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "release-v1.19" 
+  creationTimestamp: null
+  labels:
+    appstudio.openshift.io/application: serverless-operator-139
+    appstudio.openshift.io/component: kn-ekb-test-recordevents-119
+    pipelines.appstudio.openshift.io/type: build
+  name: kn-ekb-test-recordevents-119-on-push
+  namespace: ocp-serverless-tenant
+spec:
+  params:
+    - name: dockerfile
+      value: openshift/ci-operator/knative-test-images/recordevents/Dockerfile
+    - name: build-args
+      value:
+        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.24
+        - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
+        - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
+        - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
+        - NODE_BUILDER=registry.access.redhat.com/ubi8/nodejs-20
+        - NODE_RUNTIME=registry.access.redhat.com/ubi8/nodejs-20
+        - VERSION=1.39.0
+    - name: git-url
+      value: '{{source_url}}'
+    - name: hermetic
+      value: "true"
+    - name: output-image
+      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-139/kn-ekb-test-recordevents:{{revision}}
+    - name: revision
+      value: '{{revision}}'
+    - name: additional-tags
+      value:
+        - $(context.pipelineRun.uid)-{{revision}}
+        - 1.39.0
+        - latest
+  taskRunSpecs:
+    - pipelineTaskName: sast-shell-check
+      stepSpecs:
+        - name: sast-shell-check
+          computeResources:
+            requests:
+              memory: 4Gi
+            limits:
+              memory: 4Gi
+  pipelineRef:
+    name: docker-build
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-kn-ekb-test-recordevents-119
+  workspaces:
+    - name: git-auth
+      secret:
+        secretName: '{{ git_auth_secret }}'
