@@ -48,7 +48,7 @@
     <opentelemetry.version>1.42.1</opentelemetry.version>
     <jackson.version>2.14.1</jackson.version>
     <protobuf.version>3.25.8.redhat-00001</protobuf.version>
-    <bucket4j.version>7.6.0</bucket4j.version>
+    <bucket4j.version>8.0.1</bucket4j.version>
     <slf4j.version>2.0.17</slf4j.version>
     <ch.qos.logback.version>1.5.17</ch.qos.logback.version>
     <net.logstash.logback.encoder.version>8.0</net.logstash.logback.encoder.version>
@@ -57,7 +57,7 @@
     <junit.jupiter.version>5.10.5</junit.jupiter.version>
     <mokito.junit.jupiter.version>5.12.0</mokito.junit.jupiter.version>
     <fabric8.kubernetes.version>7.1.0</fabric8.kubernetes.version>
-    <kafka.version>3.9.0</kafka.version>
+    <kafka.version>4.0.0.redhat-00010</kafka.version>
     <debezium.version>3.0.7.Final</debezium.version>
     <jib.version>3.4.6</jib.version>
     <quarkus.version>3.20.1.SP1-redhat-00001</quarkus.version>
