@@ -24,7 +24,7 @@ spec:
         - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
         - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
         - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
-        - VERSION=1.35.1
+        - VERSION=1.35.2
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
@@ -36,7 +36,7 @@ spec:
     - name: additional-tags
       value:
         - $(context.pipelineRun.uid)-{{revision}}
-        - 1.35.1
+        - 1.35.2
         - latest
   taskRunSpecs:
     - pipelineTaskName: sast-shell-check
