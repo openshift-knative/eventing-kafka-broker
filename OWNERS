@@ -1,13 +1,19 @@
-# Sponsored by the Event Delivery WG
-# At least one WG lead from https://github.com/knative/community/blob/master/working-groups/WORKING-GROUPS.md#event-delivery
-# must be in the "approvers" list.
+# The OWNERS file is used by prow to automatically merge approved PRs.
+
+# DO NOT EDIT! File generated via https://github.com/openshift-knative/hack/tree/main/config.
+
 approvers:
-- technical-oversight-committee
-- knative-release-leads
-- eventing-writers
-- eventing-kafka-broker-approvers
+- aliok
+- Cali0707
+- creydr
+- Kaustubh-pande
+- lberk
+- matzew
+- rudyredhat1
 
 reviewers:
-- eventing-writers
-- eventing-kafka-broker-approvers
-- eventing-kafka-broker-reviewers
+- aliok
+- Cali0707
+- creydr
+- lberk
+- matzew
