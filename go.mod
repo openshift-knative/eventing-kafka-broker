@@ -1,6 +1,6 @@
 module knative.dev/eventing-kafka-broker
 
-go 1.22
+go 1.23
 
 require (
 	github.com/IBM/sarama v1.43.1
@@ -28,7 +28,7 @@ require (
 	go.uber.org/atomic v1.10.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.36.9
 	k8s.io/api v0.29.15
 	k8s.io/apiextensions-apiserver v0.29.15
 	k8s.io/apimachinery v0.29.15
