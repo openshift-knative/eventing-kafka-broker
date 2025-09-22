@@ -41,7 +41,7 @@ require (
 	knative.dev/reconciler-test v0.0.0-20250716152301-806fb6ae0da7
 	sigs.k8s.io/controller-runtime v0.19.0
 	sigs.k8s.io/randfill v1.0.0
-	sigs.k8s.io/yaml v1.5.0
+	sigs.k8s.io/yaml v1.6.0
 )
 
 require (
