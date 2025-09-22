@@ -162,8 +162,6 @@ spec:
             capabilities:
               drop:
               - ALL
-            seccompProfile:
-              type: RuntimeDefault
       volumes:
         - name: kafka-channel-channels-subscriptions
           configMap:
