@@ -15,7 +15,7 @@ require (
 	github.com/kedacore/keda/v2 v2.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/magiconair/properties v1.8.10
-	github.com/manifestival/client-go-client v0.5.0
+	github.com/manifestival/client-go-client v0.6.0
 	github.com/manifestival/manifestival v0.7.2
 	github.com/openzipkin/zipkin-go v0.4.3
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
@@ -39,7 +39,7 @@ require (
 	knative.dev/hack v0.0.0-20250116150306-c142b4835bc5
 	knative.dev/pkg v0.0.0-20250117084104-c43477f0052b
 	knative.dev/reconciler-test v0.0.0-20250117161605-4965c77b4dfa
-	sigs.k8s.io/controller-runtime v0.12.3
+	sigs.k8s.io/controller-runtime v0.15.3
 	sigs.k8s.io/yaml v1.4.0
 )
 
