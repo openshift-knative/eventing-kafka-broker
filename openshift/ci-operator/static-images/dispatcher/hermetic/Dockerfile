@@ -41,7 +41,8 @@ USER 185
 
 LABEL \
       com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel8-container" \
-      name="openshift-serverless-1/eventing-kafka-broker-dispatcher-rhel8" \
+      name="openshift-serverless-1/kn-ekb-dispatcher-rhel8" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8" \
       version=$VERSION \
       release=$VERSION \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
