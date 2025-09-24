@@ -18,6 +18,9 @@ ARG JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
 
 FROM $JAVA_BUILDER
 
+LABEL name="openshift-serverless-1/kn-ekb-receiver-rhel8" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
+
 USER root
 
 WORKDIR /build
