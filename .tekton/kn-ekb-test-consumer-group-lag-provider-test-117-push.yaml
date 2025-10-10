@@ -20,6 +20,7 @@ spec:
       value: openshift/ci-operator/knative-test-images/consumer-group-lag-provider-test/Dockerfile
     - name: build-args
       value:
+        - CLI_ARTIFACTS=registry.redhat.io/openshift4/ose-cli-artifacts-rhel9:v4.16
         - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.23
         - GO_RUNTIME=registry.access.redhat.com/ubi9/ubi-minimal
         - JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
