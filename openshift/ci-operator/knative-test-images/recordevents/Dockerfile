@@ -1,6 +1,6 @@
 # DO NOT EDIT! Generated Dockerfile for vendor/knative.dev/eventing/test/test_images/recordevents.
-ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.24-openshift-4.20
-ARG GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
+ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-9-release-golang-1.24-openshift-4.20
+ARG GO_RUNTIME=registry.access.redhat.com/ubi9/ubi-minimal
 
 FROM $GO_BUILDER as builder
 
@@ -22,14 +22,15 @@ COPY LICENSE /licenses/
 USER 65532
 
 LABEL \
-      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-vendor-knative.dev-eventing-test-test-images-recordevents-rhel8-container" \
-      name="openshift-serverless-1/eventing-kafka-broker-vendor-knative.dev-eventing-test-test-images-recordevents-rhel8" \
+      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-vendor-knative.dev-eventing-test-test-images-recordevents-rhel9-container" \
+      name="openshift-serverless-1/eventing-kafka-broker-vendor-knative.dev-eventing-test-test-images-recordevents-rhel9" \
       version=$VERSION \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
       maintainer="serverless-support@redhat.com" \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Recordevents" \
-      io.openshift.tags="vendor-knative.dev-eventing-test-test-images-recordevents"
+      io.openshift.tags="vendor-knative.dev-eventing-test-test-images-recordevents" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.39::el9"
 
 ENTRYPOINT ["/usr/bin/recordevents"]
