@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 
-ARG JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
-ARG JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
+ARG JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
+ARG JAVA_RUNTIME=registry.access.redhat.com/ubi9/openjdk-21-runtime
 ARG DEPS_IMAGE
 
 FROM $DEPS_IMAGE AS deps
@@ -40,8 +40,8 @@ ARG VERSION=""
 USER 185
 
 LABEL \
-      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel8-container" \
-      name="openshift-serverless-1/eventing-kafka-broker-dispatcher-rhel8" \
+      com.redhat.component="openshift-serverless-1-eventing-kafka-broker-dispatcher-rhel9-container" \
+      name="openshift-serverless-1/kn-ekb-dispatcher-rhel9" \
       version=$VERSION \
       release=$VERSION \
       summary="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
@@ -49,7 +49,8 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Dispatcher" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Dispatcher" \
-      io.openshift.tags=dispatcher
+      io.openshift.tags=dispatcher \
+      cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 COPY --from=builder /app /app
 COPY LICENSE /licenses/
