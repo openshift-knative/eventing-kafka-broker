@@ -30,6 +30,7 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Wathola Fetcher" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Wathola Fetcher" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Vendor Knative.Dev Eventing Test Test Images Wathola Fetcher" \
-      io.openshift.tags="vendor-knative.dev-eventing-test-test-images-wathola-fetcher"
+      io.openshift.tags="vendor-knative.dev-eventing-test-test-images-wathola-fetcher" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
 
 ENTRYPOINT ["/usr/bin/wathola-fetcher"]
