@@ -1,6 +1,6 @@
 # DO NOT EDIT! Generated Dockerfile for vendor/knative.dev/eventing/test/test_images/wathola-sender.
 ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-9-release-golang-1.23-openshift-4.19
-ARG GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
+ARG GO_RUNTIME=registry.access.redhat.com/ubi9/ubi-minimal
 
 FROM $GO_BUILDER as builder
 
