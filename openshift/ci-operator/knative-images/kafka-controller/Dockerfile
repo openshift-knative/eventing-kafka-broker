@@ -30,6 +30,7 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Controller" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Kafka Controller" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Kafka Controller" \
-      io.openshift.tags="kafka-controller"
+      io.openshift.tags="kafka-controller" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.36::el8"
 
 ENTRYPOINT ["/usr/bin/kafka-controller"]
