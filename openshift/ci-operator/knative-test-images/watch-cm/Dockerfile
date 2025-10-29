@@ -31,6 +31,8 @@ LABEL \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Watch Cm" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Watch Cm" \
       io.openshift.tags="watch-cm" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
       cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 ENTRYPOINT ["/usr/bin/watch-cm"]
