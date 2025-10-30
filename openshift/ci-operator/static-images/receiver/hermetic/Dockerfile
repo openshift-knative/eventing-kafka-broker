@@ -16,9 +16,6 @@
 
 ARG JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
 ARG JAVA_RUNTIME=registry.access.redhat.com/ubi9/openjdk-21-runtime
-ARG DEPS_IMAGE
-
-FROM $DEPS_IMAGE AS deps
 
 FROM $JAVA_BUILDER AS builder
 
@@ -26,11 +23,9 @@ USER root
 
 WORKDIR /build
 
-COPY --from=deps /third_party/maven/ /third_party/maven/
-
 COPY /data-plane .
 
-RUN mvn -Dmaven.repo.local=/third_party/maven --offline package -pl=receiver-loom -Drelease -am -DskipTests --no-transfer-progress
+RUN mvn package -pl=receiver-loom -Drelease -am -DskipTests --no-transfer-progress
 
 RUN mkdir /app && cp /build/receiver-loom/target/receiver-loom-1.0-SNAPSHOT.jar /app/app.jar
 
@@ -50,6 +45,7 @@ LABEL \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Receiver" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Receiver" \
       io.openshift.tags=receiver \
+      vendor="Red Hat, Inc." \
       cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 COPY --from=builder /app /app
