@@ -32,7 +32,7 @@ spec:
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
-      value: "true"
+      value: "false"
     - name: image-expires-after
       value: 5d
     - name: output-image
