@@ -38,8 +38,8 @@
     <maven.jacoco.plugin.version>0.8.12</maven.jacoco.plugin.version>
     <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
     <maven.license.plugin.version>2.0.0</maven.license.plugin.version>
-    <mycila.license.plugin.version>4.1</mycila.license.plugin.version>
-    <spotless.plugin.version>2.38.0</spotless.plugin.version>
+    <mycila.license.plugin.version>5.0.0</mycila.license.plugin.version>
+    <spotless.plugin.version>3.0.0</spotless.plugin.version>
 
     <!-- dependencies version -->
     <vertx.version>4.5.13</vertx.version>
@@ -47,17 +47,17 @@
     <micrometer.version>1.14.5</micrometer.version>
     <opentelemetry.version>1.42.1</opentelemetry.version>
     <jackson.version>2.14.1</jackson.version>
-    <protobuf.version>3.25.8.redhat-00001</protobuf.version>
-    <bucket4j.version>7.6.0</bucket4j.version>
+    <protobuf.version>4.32.1.redhat-00002</protobuf.version>
+    <bucket4j.version>8.0.1</bucket4j.version>
     <slf4j.version>2.0.17</slf4j.version>
     <ch.qos.logback.version>1.5.17</ch.qos.logback.version>
-    <net.logstash.logback.encoder.version>8.0</net.logstash.logback.encoder.version>
+    <net.logstash.logback.encoder.version>9.0</net.logstash.logback.encoder.version>
     <assertj.version>3.27.3</assertj.version>
     <awaitility.version>4.2.0</awaitility.version>
     <junit.jupiter.version>5.10.5</junit.jupiter.version>
     <mokito.junit.jupiter.version>5.12.0</mokito.junit.jupiter.version>
     <fabric8.kubernetes.version>7.1.0</fabric8.kubernetes.version>
-    <kafka.version>3.9.0</kafka.version>
+    <kafka.version>4.0.0.redhat-00013</kafka.version>
     <debezium.version>3.0.7.Final</debezium.version>
     <jib.version>3.4.6</jib.version>
     <quarkus.version>3.20.1.SP1-redhat-00001</quarkus.version>
