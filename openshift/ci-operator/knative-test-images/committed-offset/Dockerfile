@@ -30,6 +30,9 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Test Test Images Committed Offset" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Test Test Images Committed Offset" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Test Test Images Committed Offset" \
-      io.openshift.tags="test-test-images-committed-offset"
-
+      io.openshift.tags="test-test-images-committed-offset" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
+      cpe="cpe:/a:redhat:openshift_serverless:1.36::el8"
+      
 ENTRYPOINT ["/usr/bin/committed-offset"]
