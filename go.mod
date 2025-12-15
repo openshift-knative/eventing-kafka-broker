@@ -1,6 +1,6 @@
 module knative.dev/eventing-kafka-broker
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/IBM/sarama v1.43.3
@@ -23,8 +23,8 @@ require (
 	github.com/stretchr/testify v1.11.1
 	github.com/xdg-go/scram v1.1.2
 	go.opencensus.io v0.24.0
-	go.opentelemetry.io/otel v1.38.0
-	go.opentelemetry.io/otel/trace v1.38.0
+	go.opentelemetry.io/otel v1.39.0
+	go.opentelemetry.io/otel/trace v1.39.0
 	go.uber.org/atomic v1.11.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
