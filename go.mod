@@ -1,12 +1,12 @@
 module knative.dev/eventing-kafka-broker
 
-go 1.22
+go 1.23.0
 
 require (
 	github.com/IBM/sarama v1.43.1
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
-	github.com/cloudevents/sdk-go/v2 v2.15.2
-	github.com/google/go-cmp v0.6.0
+	github.com/cloudevents/sdk-go/v2 v2.16.1
+	github.com/google/go-cmp v0.7.0
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/errwrap v1.1.0
@@ -20,7 +20,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.4.3
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/rickb777/date v1.14.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/xdg-go/scram v1.1.2
 	go.opencensus.io v0.24.0
 	go.opentelemetry.io/otel v1.24.0
@@ -119,11 +119,11 @@ require (
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/term v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	golang.org/x/time v0.5.0 // indirect
+	golang.org/x/time v0.12.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
 	google.golang.org/api v0.183.0 // indirect
