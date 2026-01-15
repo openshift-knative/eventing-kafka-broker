@@ -19,10 +19,10 @@
 package v1alpha1
 
 import (
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
-	v1alpha1 "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internalskafkaeventing/v1alpha1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
+	internalskafkaeventingv1alpha1 "knative.dev/eventing-kafka-broker/control-plane/pkg/apis/internalskafkaeventing/v1alpha1"
 )
 
 // ConsumerGroupLister helps list ConsumerGroups.
@@ -30,7 +30,7 @@ import (
 type ConsumerGroupLister interface {
 	// List lists all ConsumerGroups in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ConsumerGroup, err error)
+	List(selector labels.Selector) (ret []*internalskafkaeventingv1alpha1.ConsumerGroup, err error)
 	// ConsumerGroups returns an object that can list and get ConsumerGroups.
 	ConsumerGroups(namespace string) ConsumerGroupNamespaceLister
 	ConsumerGroupListerExpansion
@@ -38,25 +38,17 @@ type ConsumerGroupLister interface {
 
 // consumerGroupLister implements the ConsumerGroupLister interface.
 type consumerGroupLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*internalskafkaeventingv1alpha1.ConsumerGroup]
 }
 
 // NewConsumerGroupLister returns a new ConsumerGroupLister.
 func NewConsumerGroupLister(indexer cache.Indexer) ConsumerGroupLister {
-	return &consumerGroupLister{indexer: indexer}
-}
-
-// List lists all ConsumerGroups in the indexer.
-func (s *consumerGroupLister) List(selector labels.Selector) (ret []*v1alpha1.ConsumerGroup, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ConsumerGroup))
-	})
-	return ret, err
+	return &consumerGroupLister{listers.New[*internalskafkaeventingv1alpha1.ConsumerGroup](indexer, internalskafkaeventingv1alpha1.Resource("consumergroup"))}
 }
 
 // ConsumerGroups returns an object that can list and get ConsumerGroups.
 func (s *consumerGroupLister) ConsumerGroups(namespace string) ConsumerGroupNamespaceLister {
-	return consumerGroupNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return consumerGroupNamespaceLister{listers.NewNamespaced[*internalskafkaeventingv1alpha1.ConsumerGroup](s.ResourceIndexer, namespace)}
 }
 
 // ConsumerGroupNamespaceLister helps list and get ConsumerGroups.
@@ -64,36 +56,15 @@ func (s *consumerGroupLister) ConsumerGroups(namespace string) ConsumerGroupName
 type ConsumerGroupNamespaceLister interface {
 	// List lists all ConsumerGroups in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ConsumerGroup, err error)
+	List(selector labels.Selector) (ret []*internalskafkaeventingv1alpha1.ConsumerGroup, err error)
 	// Get retrieves the ConsumerGroup from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ConsumerGroup, error)
+	Get(name string) (*internalskafkaeventingv1alpha1.ConsumerGroup, error)
 	ConsumerGroupNamespaceListerExpansion
 }
 
 // consumerGroupNamespaceLister implements the ConsumerGroupNamespaceLister
 // interface.
 type consumerGroupNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ConsumerGroups in the indexer for a given namespace.
-func (s consumerGroupNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ConsumerGroup, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ConsumerGroup))
-	})
-	return ret, err
-}
-
-// Get retrieves the ConsumerGroup from the indexer for a given namespace and name.
-func (s consumerGroupNamespaceLister) Get(name string) (*v1alpha1.ConsumerGroup, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("consumergroup"), name)
-	}
-	return obj.(*v1alpha1.ConsumerGroup), nil
+	listers.ResourceIndexer[*internalskafkaeventingv1alpha1.ConsumerGroup]
 }
