@@ -42,7 +42,6 @@ import (
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/consumergroup"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/sink"
 	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/source"
-	"knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/trigger"
 	triggerv2 "knative.dev/eventing-kafka-broker/control-plane/pkg/reconciler/trigger/v2"
 )
 
@@ -102,21 +101,21 @@ func main() {
 			},
 		},
 
-		// Namespaced broker controller
-		injection.NamedControllerConstructor{
-			Name: "namespaced-broker-controller",
-			ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
-				return broker.NewNamespacedController(ctx, watcher, brokerEnv)
-			},
-		},
-
-		// Namespaced trigger controller
-		injection.NamedControllerConstructor{
-			Name: "namespaced-trigger-controller",
-			ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
-				return trigger.NewNamespacedController(ctx, watcher, brokerEnv)
-			},
-		},
+		//// Namespaced broker controller
+		//injection.NamedControllerConstructor{
+		//	Name: "namespaced-broker-controller",
+		//	ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
+		//		return broker.NewNamespacedController(ctx, watcher, brokerEnv)
+		//	},
+		//},
+		//
+		//// Namespaced trigger controller
+		//injection.NamedControllerConstructor{
+		//	Name: "namespaced-trigger-controller",
+		//	ControllerConstructor: func(ctx context.Context, watcher configmap.Watcher) *controller.Impl {
+		//		return trigger.NewNamespacedController(ctx, watcher, brokerEnv)
+		//	},
+		//},
 
 		// Channel controller
 		injection.NamedControllerConstructor{
