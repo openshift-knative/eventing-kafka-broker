@@ -30,6 +30,9 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Heartbeats" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Heartbeats" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Heartbeats" \
-      io.openshift.tags="heartbeats"
-
+      io.openshift.tags="heartbeats" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
+      
 ENTRYPOINT ["/usr/bin/heartbeats"]
