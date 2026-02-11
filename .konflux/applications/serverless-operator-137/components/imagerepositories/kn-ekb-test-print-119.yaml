@@ -1,0 +1,13 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+  annotations:
+    image-controller.appstudio.redhat.com/update-component-image: "true"
+  labels:
+    appstudio.redhat.com/application: serverless-operator-137
+    appstudio.redhat.com/component: kn-ekb-test-print-119
+  name: kn-ekb-test-print-119
+spec:
+  image:
+    name: serverless-operator-137/kn-ekb-test-print
+    visibility: public
