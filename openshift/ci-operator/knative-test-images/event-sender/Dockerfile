@@ -33,6 +33,6 @@ LABEL \
       io.openshift.tags="vendor-knative.dev-eventing-test-test-images-event-sender" \
       vendor="Red Hat, Inc." \
       release=$VERSION \
-      cpe="cpe:/a:redhat:openshift_serverless:1.41::el9"
+      cpe="cpe:/a:redhat:openshift_serverless:1.38::el9"
 
 ENTRYPOINT ["/usr/bin/event-sender"]
