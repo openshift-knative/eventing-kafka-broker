@@ -33,6 +33,6 @@ LABEL \
       io.openshift.tags="event-display" \
       vendor="Red Hat, Inc." \
       release=$VERSION \
-      cpe="cpe:/a:redhat:openshift_serverless:1.40::el9"
+      cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 ENTRYPOINT ["/usr/bin/event_display"]

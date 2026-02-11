@@ -33,6 +33,6 @@ LABEL \
       io.openshift.tags="vendor-knative.dev-eventing-test-test-images-wathola-receiver" \
       vendor="Red Hat, Inc." \
       release=$VERSION \
-      cpe="cpe:/a:redhat:openshift_serverless:1.40::el9"
+      cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 ENTRYPOINT ["/usr/bin/wathola-receiver"]
