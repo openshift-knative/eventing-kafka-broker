@@ -10,7 +10,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-v1.18" 
   creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: serverless-operator-138
+    appstudio.openshift.io/application: serverless-operator-137
     appstudio.openshift.io/component: kn-ekb-test-logs-exporter-118
     pipelines.appstudio.openshift.io/type: build
   name: kn-ekb-test-logs-exporter-118-on-pull-request
@@ -21,13 +21,14 @@ spec:
       value: openshift/ci-operator/knative-test-images/logs-exporter/Dockerfile
     - name: build-args
       value:
-        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_8_golang_1.24
-        - GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
-        - JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
-        - JAVA_RUNTIME=registry.access.redhat.com/ubi8/openjdk-21-runtime
-        - NODE_BUILDER=registry.access.redhat.com/ubi8/nodejs-20
-        - NODE_RUNTIME=registry.access.redhat.com/ubi8/nodejs-20
-        - VERSION=1.38.0
+        - CLI_ARTIFACTS=registry.redhat.io/openshift4/ose-cli-artifacts-rhel9:v4.16
+        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.23
+        - GO_RUNTIME=registry.access.redhat.com/ubi9/ubi-minimal
+        - JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
+        - JAVA_RUNTIME=registry.access.redhat.com/ubi9/openjdk-21-runtime
+        - NODE_BUILDER=registry.access.redhat.com/ubi9/nodejs-20
+        - NODE_RUNTIME=registry.access.redhat.com/ubi9/nodejs-20
+        - VERSION=1.37.1
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
@@ -35,7 +36,7 @@ spec:
     - name: image-expires-after
       value: 5d
     - name: output-image
-      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-138/kn-ekb-test-logs-exporter:on-pr-{{revision}}
+      value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-137/kn-ekb-test-logs-exporter:on-pr-{{revision}}
     - name: build-platforms
       value:
         - linux/x86_64
