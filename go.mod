@@ -18,7 +18,7 @@ require (
 	github.com/manifestival/client-go-client v0.6.0
 	github.com/manifestival/manifestival v0.7.1
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
-	github.com/rickb777/date v1.14.1
+	github.com/rickb777/date v1.22.0
 	github.com/stretchr/testify v1.11.1
 	github.com/xdg-go/scram v1.1.2
 	go.opentelemetry.io/otel v1.39.0
@@ -116,7 +116,7 @@ require (
 	github.com/prometheus/common v0.67.4 // indirect
 	github.com/prometheus/otlptranslator v1.0.0 // indirect
 	github.com/prometheus/procfs v0.19.2 // indirect
-	github.com/rickb777/plural v1.2.2 // indirect
+	github.com/rickb777/plural v1.4.7 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
