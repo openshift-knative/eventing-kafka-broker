@@ -3,10 +3,10 @@ module knative.dev/eventing-kafka-broker
 go 1.24.0
 
 require (
-	github.com/IBM/sarama v1.45.1
+	github.com/IBM/sarama v1.45.2
 	github.com/aws/aws-msk-iam-sasl-signer-go v1.0.4
-	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
-	github.com/cloudevents/sdk-go/v2 v2.16.1
+	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.16.2
+	github.com/cloudevents/sdk-go/v2 v2.16.2
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/errwrap v1.1.0
@@ -17,7 +17,7 @@ require (
 	github.com/magiconair/properties v1.8.5
 	github.com/manifestival/client-go-client v0.6.0
 	github.com/manifestival/manifestival v0.7.1
-	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
+	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9
 	github.com/rickb777/date v1.14.1
 	github.com/stretchr/testify v1.11.1
 	github.com/xdg-go/scram v1.1.2
@@ -87,7 +87,7 @@ require (
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/gobuffalo/flect v1.0.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/snappy v0.0.4 // indirect
+	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/gnostic-models v0.7.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
