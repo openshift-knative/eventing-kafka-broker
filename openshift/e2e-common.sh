@@ -92,7 +92,7 @@ EOF
   local failed=0
   pushd $operator_dir || return $?
   export ON_CLUSTER_BUILDS=true
-  export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-marketplace
+  export DOCKER_REPO_OVERRIDE=image-registry.openshift-image-registry.svc:5000/openshift-serverless-builds
   if [[ ${INSTALL_KEDA} == "true" ]]; then
   	make OPENSHIFT_CI="true" TRACING_BACKEND=zipkin \
 	    generated-files images install-tracing install-kafka-with-keda || failed=$?
