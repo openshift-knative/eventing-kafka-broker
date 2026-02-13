@@ -46,7 +46,7 @@ LABEL \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Receiver" \
       io.openshift.tags=receiver \
       vendor="Red Hat, Inc." \
-      cpe="cpe:/a:redhat:openshift_serverless:1.38::el9"
+      cpe="cpe:/a:redhat:openshift_serverless:0.00::el0"
 
 COPY --from=builder /app /app
 COPY LICENSE /licenses/
