@@ -30,7 +30,7 @@ spec:
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
-      value: "true"
+      value: "false"
     - name: output-image
       value: quay.io/redhat-user-workloads/ocp-serverless-tenant/serverless-operator-136/kn-ekb-dispatcher:{{revision}}
     - name: revision
