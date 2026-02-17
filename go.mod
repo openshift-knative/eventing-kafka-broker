@@ -27,7 +27,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.24.0
 	go.uber.org/atomic v1.10.0
 	go.uber.org/multierr v1.11.0
-	go.uber.org/zap v1.27.0
+	go.uber.org/zap v1.27.1
 	google.golang.org/protobuf v1.35.1
 	k8s.io/api v0.30.14
 	k8s.io/apiextensions-apiserver v0.30.14
