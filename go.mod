@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/IBM/sarama v1.43.3
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
-	github.com/cloudevents/sdk-go/v2 v2.16.1
+	github.com/cloudevents/sdk-go/v2 v2.16.2
 	github.com/google/go-cmp v0.7.0
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
@@ -27,13 +27,13 @@ require (
 	go.opentelemetry.io/otel/trace v1.38.0
 	go.uber.org/atomic v1.11.0
 	go.uber.org/multierr v1.11.0
-	go.uber.org/zap v1.27.0
-	google.golang.org/protobuf v1.36.7
-	k8s.io/api v0.31.12
-	k8s.io/apiextensions-apiserver v0.31.12
-	k8s.io/apimachinery v0.31.12
-	k8s.io/apiserver v0.31.12
-	k8s.io/client-go v0.31.12
+	go.uber.org/zap v1.27.1
+	google.golang.org/protobuf v1.36.11
+	k8s.io/api v0.31.14
+	k8s.io/apiextensions-apiserver v0.31.14
+	k8s.io/apimachinery v0.31.14
+	k8s.io/apiserver v0.31.14
+	k8s.io/client-go v0.31.14
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
 	knative.dev/eventing v0.44.3-0.20250213074151-a017fc0ed071
 	knative.dev/hack v0.0.0-20250116150306-c142b4835bc5
@@ -108,6 +108,7 @@ require (
 	github.com/prometheus/statsd_exporter v0.22.7 // indirect
 	github.com/rickb777/plural v1.4.2 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
+	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -121,7 +122,7 @@ require (
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/oauth2 v0.23.0 // indirect
-	golang.org/x/sync v0.15.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/term v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
@@ -136,7 +137,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/code-generator v0.31.12 // indirect
+	k8s.io/code-generator v0.31.14 // indirect
 	k8s.io/gengo v0.0.0-20240404160639-a0386bf69313 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240228010128-51d4e06bde70 // indirect
 	k8s.io/klog v1.0.0 // indirect
