@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-FROM registry.access.redhat.com/ubi8/openjdk-21 as builder
+FROM registry.access.redhat.com/ubi9/openjdk-21 as builder
 
 WORKDIR /build
 
@@ -40,7 +40,7 @@ RUN mvn package -pl=dispatcher-loom -Drelease -am -DskipTests -Deditorconfig.ski
 RUN mkdir /app && cp /build/dispatcher-loom/target/dispatcher-loom-1.0-SNAPSHOT.jar /app/app.jar
 
 # We use the generated JDK from the "builder" image, so we can just go with the ubi-minimal
-FROM registry.access.redhat.com/ubi8/openjdk-21-runtime as running
+FROM registry.access.redhat.com/ubi9/openjdk-21-runtime as running
 
 USER 185
 

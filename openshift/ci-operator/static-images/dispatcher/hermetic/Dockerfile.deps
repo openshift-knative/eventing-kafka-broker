@@ -14,9 +14,12 @@
 # limitations under the License.
 #
 
-ARG JAVA_BUILDER=registry.access.redhat.com/ubi8/openjdk-21
+ARG JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
 
 FROM $JAVA_BUILDER
+
+LABEL name="openshift-serverless-1/kn-ekb-dispatcher-rhel9" \
+      cpe="cpe:/a:redhat:openshift_serverless:1.37::el9"
 
 USER root
 
