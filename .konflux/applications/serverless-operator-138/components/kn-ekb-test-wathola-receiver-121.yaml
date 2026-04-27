@@ -7,8 +7,7 @@ metadata:
   name: kn-ekb-test-wathola-receiver-121
 spec:
   componentName: kn-ekb-test-wathola-receiver-121
-  application: serverless-operator-138
-   
+  application: serverless-operator-138 
   source:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git
