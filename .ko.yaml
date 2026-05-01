@@ -1,2 +1,2 @@
 # Use :nonroot base image for all containers
-defaultBaseImage: gcr.io/distroless/static:nonroot
+defaultBaseImage: registry.access.redhat.com/ubi8/ubi-minimal:latest
