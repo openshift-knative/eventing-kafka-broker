@@ -81,9 +81,10 @@ var (
 // Base reconciler for broker and trigger reconciler.
 // It contains common logic for both trigger and broker reconciler.
 type Reconciler struct {
-	KubeClient   kubernetes.Interface
-	PodLister    corelisters.PodLister
-	SecretLister corelisters.SecretLister
+	KubeClient      kubernetes.Interface
+	PodLister       corelisters.PodLister
+	SecretLister    corelisters.SecretLister
+	ConfigMapLister corelisters.ConfigMapLister
 
 	Tracker tracker.Interface
 
@@ -133,6 +134,20 @@ type ConfigMapOption func(cm *corev1.ConfigMap)
 func NoopConfigmapOption(cm *corev1.ConfigMap) {}
 
 func (r *Reconciler) GetOrCreateDataPlaneConfigMap(ctx context.Context) (*corev1.ConfigMap, error) {
+	if r.ConfigMapLister != nil {
+		cm, err := r.ConfigMapLister.ConfigMaps(r.DataPlaneConfigMapNamespace).Get(r.ContractConfigMapName)
+		if err == nil {
+			cm = cm.DeepCopy() // don't mutate the lister cache
+			if r.DataPlaneConfigMapTransformer != nil {
+				r.DataPlaneConfigMapTransformer(cm)
+			}
+			return cm, nil
+		}
+		if !apierrors.IsNotFound(err) {
+			return nil, err
+		}
+		// not found in cache — fall through to live GET
+	}
 
 	cm, err := r.KubeClient.CoreV1().
 		ConfigMaps(r.DataPlaneConfigMapNamespace).

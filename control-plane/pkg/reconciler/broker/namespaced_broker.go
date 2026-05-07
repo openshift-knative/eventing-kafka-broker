@@ -68,7 +68,6 @@ type NamespacedReconciler struct {
 	Resolver *resolver.URIResolver
 
 	NamespaceLister          corelisters.NamespaceLister
-	ConfigMapLister          corelisters.ConfigMapLister
 	ServiceAccountLister     corelisters.ServiceAccountLister
 	ServiceLister            corelisters.ServiceLister
 	ClusterRoleBindingLister rbaclisters.ClusterRoleBindingLister
@@ -222,6 +221,7 @@ func (r *NamespacedReconciler) createReconcilerForBrokerInstance(broker *eventin
 			KubeClient:                   r.KubeClient,
 			PodLister:                    r.PodLister,
 			SecretLister:                 r.SecretLister,
+			ConfigMapLister:              r.ConfigMapLister,
 			Tracker:                      r.Tracker,
 			DataPlaneConfigConfigMapName: r.Reconciler.DataPlaneConfigConfigMapName,
 			ContractConfigMapName:        r.Reconciler.ContractConfigMapName,
@@ -239,7 +239,6 @@ func (r *NamespacedReconciler) createReconcilerForBrokerInstance(broker *eventin
 		},
 		Env:                  r.Env,
 		Resolver:             r.Resolver,
-		ConfigMapLister:      r.ConfigMapLister,
 		GetKafkaClusterAdmin: r.GetKafkaClusterAdmin,
 		BootstrapServers:     r.BootstrapServers,
 		Prober:               r.Prober,
