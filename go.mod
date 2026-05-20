@@ -6,7 +6,7 @@ require (
 	github.com/IBM/sarama v1.45.1
 	github.com/aws/aws-msk-iam-sasl-signer-go v1.0.4
 	github.com/cloudevents/sdk-go/protocol/kafka_sarama/v2 v2.15.2
-	github.com/cloudevents/sdk-go/v2 v2.16.1
+	github.com/cloudevents/sdk-go/v2 v2.16.2
 	github.com/google/go-cmp v0.7.0
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/errwrap v1.1.0
@@ -14,9 +14,9 @@ require (
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/kedacore/keda/v2 v2.8.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/magiconair/properties v1.8.5
+	github.com/magiconair/properties v1.8.10
 	github.com/manifestival/client-go-client v0.6.0
-	github.com/manifestival/manifestival v0.7.1
+	github.com/manifestival/manifestival v0.7.2
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
 	github.com/rickb777/date v1.14.1
 	github.com/stretchr/testify v1.11.1
@@ -27,19 +27,19 @@ require (
 	go.uber.org/atomic v1.10.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.1
-	google.golang.org/protobuf v1.36.10
-	k8s.io/api v0.34.3
-	k8s.io/apiextensions-apiserver v0.34.3
-	k8s.io/apimachinery v0.34.3
-	k8s.io/apiserver v0.34.3
-	k8s.io/client-go v0.34.3
-	k8s.io/code-generator v0.34.3
+	google.golang.org/protobuf v1.36.11
+	k8s.io/api v0.34.4
+	k8s.io/apiextensions-apiserver v0.34.4
+	k8s.io/apimachinery v0.34.4
+	k8s.io/apiserver v0.34.4
+	k8s.io/client-go v0.34.4
+	k8s.io/code-generator v0.34.4
 	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397
 	knative.dev/eventing v0.48.0
 	knative.dev/hack v0.0.0-20260120115810-bf6758cba446
 	knative.dev/pkg v0.0.0-20260120122510-4a022ed9999a
 	knative.dev/reconciler-test v0.0.0-20260120140419-4301404c03ce
-	sigs.k8s.io/controller-runtime v0.19.0
+	sigs.k8s.io/controller-runtime v0.19.7
 	sigs.k8s.io/randfill v1.0.0
 	sigs.k8s.io/yaml v1.6.0
 )
