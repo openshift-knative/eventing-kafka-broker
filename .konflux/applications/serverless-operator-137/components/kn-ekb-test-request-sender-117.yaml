@@ -7,8 +7,7 @@ metadata:
   name: kn-ekb-test-request-sender-117
 spec:
   componentName: kn-ekb-test-request-sender-117
-  application: serverless-operator-137
-   
+  application: serverless-operator-137 
   source:
     git:
       url: https://github.com/openshift-knative/eventing-kafka-broker.git
