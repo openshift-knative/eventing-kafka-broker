@@ -1,5 +1,5 @@
 # DO NOT EDIT! Generated Dockerfile for vendor/knative.dev/reconciler-test/cmd/eventshub.
-ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.22-openshift-4.17
+ARG GO_BUILDER=registry.ci.openshift.org/openshift/release:rhel-8-release-golang-1.25-openshift-4.21
 ARG GO_RUNTIME=registry.access.redhat.com/ubi8/ubi-minimal
 
 FROM $GO_BUILDER as builder
@@ -30,6 +30,9 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Eventshub" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Eventshub" \
-      io.openshift.tags="eventshub"
-
+      io.openshift.tags="eventshub" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
+      
 ENTRYPOINT ["/usr/bin/eventshub"]
