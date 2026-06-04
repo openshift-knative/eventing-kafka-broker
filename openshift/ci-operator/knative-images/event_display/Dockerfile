@@ -30,6 +30,9 @@ LABEL \
       description="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Event Display" \
       io.k8s.display-name="Red Hat OpenShift Serverless 1 Eventing Kafka Broker Event Display" \
       io.k8s.description="Red Hat OpenShift Serverless Eventing Kafka Broker Event Display" \
-      io.openshift.tags="event-display"
-
+      io.openshift.tags="event-display" \
+      vendor="Red Hat, Inc." \
+      release=$VERSION \
+      cpe="cpe:/a:redhat:openshift_serverless:1.35::el8"
+      
 ENTRYPOINT ["/usr/bin/event_display"]
