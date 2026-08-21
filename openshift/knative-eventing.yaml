@@ -1,0 +1,29 @@
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeEventing
+metadata:
+  name: knative-eventing
+  namespace: knative-eventing
+spec:
+  defaultBrokerClass: Kafka
+  config:
+    tracing:
+      backend: zipkin
+      debug: "true"
+      enable: "true"
+      sample-rate: "1.0"
+      zipkin-endpoint: "http://zipkin.knative-eventing.svc.cluster.local:9411/api/v2/spans"
+    config-features:
+      kreference-group: "disabled"
+      delivery-retryafter: "disabled"
+      delivery-timeout: "enabled"
+      kreference-mapping: "disabled"
+      strict-subscriber: "disabled"
+      new-trigger-filters: "enabled"
+      eventtype-auto-create: "enabled"
+    config-br-defaults:
+      default-br-config: |
+        clusterDefault:
+          apiVersion: v1
+          kind: ConfigMap
+          name: kafka-broker-config
+          namespace: knative-eventing

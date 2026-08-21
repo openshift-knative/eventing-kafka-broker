@@ -1,0 +1,28 @@
+diff --git a/data-plane/config/source/500-dispatcher.yaml b/data-plane/config/source/500-dispatcher.yaml
+index 2aa7a9ebd..29be6c357 100644
+--- a/data-plane/config/source/500-dispatcher.yaml
++++ b/data-plane/config/source/500-dispatcher.yaml
+@@ -125,9 +125,6 @@ spec:
+               cpu: 1000m
+               # 600Mi for virtual replicas + 100Mi overhead
+               memory: 700Mi
+-            limits:
+-              cpu: 2000m
+-              memory: 1000Mi
+ 
+           livenessProbe:
+             failureThreshold: 3
+diff --git a/data-plane/config/broker/500-dispatcher.yaml b/data-plane/config/broker/500-dispatcher.yaml
+index ea12c2820..9540f412a 100644
+--- a/data-plane/config/broker/500-dispatcher.yaml
++++ b/data-plane/config/broker/500-dispatcher.yaml
+@@ -128,9 +128,6 @@ spec:
+               cpu: 1000m
+               # 600Mi for virtual replicas + 100Mi overhead
+               memory: 700Mi
+-            limits:
+-              cpu: 2000m
+-              memory: 1000Mi
+ 
+           livenessProbe:
+             failureThreshold: 3
