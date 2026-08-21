@@ -2012,6 +2012,68 @@ func TestFinalizeKind(t *testing.T) {
 					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
 				},
 			},
+			WantErr: true,
+			WantEvents: []string{
+				Eventf(
+					corev1.EventTypeWarning,
+					"InternalError",
+					"failed to reconcile consumers: waiting for 1 consumer(s) to be finalized",
+				),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: func() runtime.Object {
+						cg := NewDeletedConsumeGroup(
+							ConsumerGroupReplicas(1),
+							ConsumerGroupOwnerRef(SourceAsOwnerReference()),
+							ConsumerGroupConsumerSpec(NewConsumerSpec(
+								ConsumerConfigs(
+									ConsumerBootstrapServersConfig(ChannelBootstrapServers),
+									ConsumerGroupIDConfig("my.group.id"),
+								),
+								ConsumerAuth(&kafkainternals.Auth{
+									NetSpec: &bindings.KafkaNetSpec{
+										SASL: bindings.KafkaSASLSpec{
+											Enable: true,
+											User: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "user",
+												},
+											},
+											Password: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "password",
+												},
+											},
+											Type: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "type",
+												},
+											},
+										},
+										TLS: bindings.KafkaTLSSpec{
+											Enable: true,
+										},
+									},
+								}),
+							)),
+						)
+
+						_ = cg.MarkReconcileConsumersFailed("FinalizeConsumers", fmt.Errorf("waiting for 1 consumer(s) to be finalized"))
+
+						return cg
+					}(),
+				},
+			},
 			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
 		},
 		{
@@ -2092,6 +2154,68 @@ func TestFinalizeKind(t *testing.T) {
 					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
 				},
 			},
+			WantErr: true,
+			WantEvents: []string{
+				Eventf(
+					corev1.EventTypeWarning,
+					"InternalError",
+					"failed to reconcile consumers: waiting for 1 consumer(s) to be finalized",
+				),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: func() runtime.Object {
+						cg := NewDeletedConsumeGroup(
+							ConsumerGroupReplicas(1),
+							ConsumerGroupOwnerRef(SourceAsOwnerReference()),
+							ConsumerGroupConsumerSpec(NewConsumerSpec(
+								ConsumerConfigs(
+									ConsumerBootstrapServersConfig(ChannelBootstrapServers),
+									ConsumerGroupIDConfig("my.group.id"),
+								),
+								ConsumerAuth(&kafkainternals.Auth{
+									NetSpec: &bindings.KafkaNetSpec{
+										SASL: bindings.KafkaSASLSpec{
+											Enable: true,
+											User: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "user",
+												},
+											},
+											Password: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "password",
+												},
+											},
+											Type: bindings.SecretValueFromSource{
+												SecretKeyRef: &corev1.SecretKeySelector{
+													LocalObjectReference: corev1.LocalObjectReference{
+														Name: SecretName,
+													},
+													Key: "type",
+												},
+											},
+										},
+										TLS: bindings.KafkaTLSSpec{
+											Enable: true,
+										},
+									},
+								}),
+							)),
+						)
+
+						_ = cg.MarkReconcileConsumersFailed("FinalizeConsumers", fmt.Errorf("waiting for 1 consumer(s) to be finalized"))
+
+						return cg
+					}(),
+				},
+			},
 			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
 		},
 		{
@@ -2138,6 +2262,33 @@ func TestFinalizeKind(t *testing.T) {
 					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
 				},
 			},
+			WantErr: true,
+			WantEvents: []string{
+				Eventf(
+					corev1.EventTypeWarning,
+					"InternalError",
+					"failed to reconcile consumers: waiting for 1 consumer(s) to be finalized",
+				),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: func() runtime.Object {
+						cg := NewDeletedConsumeGroup(
+							ConsumerGroupOwnerRef(SourceAsOwnerReference()),
+							ConsumerGroupConsumerSpec(NewConsumerSpec(
+								ConsumerConfigs(
+									ConsumerBootstrapServersConfig(ChannelBootstrapServers),
+									ConsumerGroupIDConfig("my.group.id"),
+								),
+							)),
+						)
+
+						_ = cg.MarkReconcileConsumersFailed("FinalizeConsumers", fmt.Errorf("waiting for 1 consumer(s) to be finalized"))
+
+						return cg
+					}(),
+				},
+			},
 			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
 		},
 		{
@@ -2172,19 +2323,6 @@ func TestFinalizeKind(t *testing.T) {
 				}),
 				kafkatesting.ErrorOnDeleteConsumerGroupTestKey: sarama.ErrUnknownTopicOrPartition,
 			},
-			WantDeletes: []clientgotesting.DeleteActionImpl{
-				{
-					ActionImpl: clientgotesting.ActionImpl{
-						Namespace: ConsumerGroupNamespace,
-						Resource: schema.GroupVersionResource{
-							Group:    kafkainternals.SchemeGroupVersion.Group,
-							Version:  kafkainternals.SchemeGroupVersion.Version,
-							Resource: "consumers",
-						},
-					},
-					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
-				},
-			},
 			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
 		},
 		{
@@ -2218,19 +2356,6 @@ func TestFinalizeKind(t *testing.T) {
 					return nil, nil
 				}),
 				kafkatesting.ErrorOnDeleteConsumerGroupTestKey: sarama.ErrGroupIDNotFound,
-			},
-			WantDeletes: []clientgotesting.DeleteActionImpl{
-				{
-					ActionImpl: clientgotesting.ActionImpl{
-						Namespace: ConsumerGroupNamespace,
-						Resource: schema.GroupVersionResource{
-							Group:    kafkainternals.SchemeGroupVersion.Group,
-							Version:  kafkainternals.SchemeGroupVersion.Version,
-							Resource: "consumers",
-						},
-					},
-					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
-				},
 			},
 			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
 		},
@@ -2267,19 +2392,6 @@ func TestFinalizeKind(t *testing.T) {
 				}),
 				kafkatesting.ErrorOnDeleteConsumerGroupTestKey: sarama.ErrClusterAuthorizationFailed,
 			},
-			WantDeletes: []clientgotesting.DeleteActionImpl{
-				{
-					ActionImpl: clientgotesting.ActionImpl{
-						Namespace: ConsumerGroupNamespace,
-						Resource: schema.GroupVersionResource{
-							Group:    kafkainternals.SchemeGroupVersion.Group,
-							Version:  kafkainternals.SchemeGroupVersion.Version,
-							Resource: "consumers",
-						},
-					},
-					Name: fmt.Sprintf("%s-%d", ConsumerNamePrefix, 1),
-				},
-			},
 			WantEvents: []string{
 				Eventf(
 					corev1.EventTypeWarning,
@@ -2301,6 +2413,55 @@ func TestFinalizeKind(t *testing.T) {
 						)
 
 						_ = cg.MarkDeleteOffsetFailed("DeleteConsumerGroupOffset", fmt.Errorf("unable to delete the consumer group my.group.id: kafka server: The client is not authorized to send this request type (retry num 1)"))
+
+						return cg
+					}(),
+				},
+			},
+			SkipNamespaceValidation: true, // WantCreates compare the source namespace with configmap namespace, so skip it
+		},
+		{
+			Name: "Finalize error - failed consumer group deletion with " + sarama.ErrNonEmptyGroup.Error(),
+			Objects: []runtime.Object{
+				NewDeletedConsumeGroup(
+					ConsumerGroupOwnerRef(SourceAsOwnerReference()),
+					ConsumerGroupConsumerSpec(NewConsumerSpec(
+						ConsumerConfigs(
+							ConsumerBootstrapServersConfig(ChannelBootstrapServers),
+							ConsumerGroupIDConfig("my.group.id"),
+						),
+					)),
+				),
+			},
+			WantErr: true,
+			Key:     testKey,
+			OtherTestData: map[string]interface{}{
+				testSchedulerKey: SchedulerFunc(func(_ context.Context, vpod scheduler.VPod) ([]eventingduckv1alpha1.Placement, error) {
+					return nil, nil
+				}),
+				kafkatesting.ErrorOnDeleteConsumerGroupTestKey: sarama.ErrNonEmptyGroup,
+			},
+			WantEvents: []string{
+				Eventf(
+					corev1.EventTypeWarning,
+					"InternalError",
+					"failed to delete consumer group offset: unable to delete the consumer group my.group.id: "+sarama.ErrNonEmptyGroup.Error(),
+				),
+			},
+			WantStatusUpdates: []clientgotesting.UpdateActionImpl{
+				{
+					Object: func() runtime.Object {
+						cg := NewDeletedConsumeGroup(
+							ConsumerGroupOwnerRef(SourceAsOwnerReference()),
+							ConsumerGroupConsumerSpec(NewConsumerSpec(
+								ConsumerConfigs(
+									ConsumerBootstrapServersConfig(ChannelBootstrapServers),
+									ConsumerGroupIDConfig("my.group.id"),
+								),
+							)),
+						)
+
+						_ = cg.MarkDeleteOffsetFailed("DeleteConsumerGroupOffset", fmt.Errorf("unable to delete the consumer group my.group.id: %w", sarama.ErrNonEmptyGroup))
 
 						return cg
 					}(),
