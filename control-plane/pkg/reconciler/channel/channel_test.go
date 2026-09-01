@@ -2334,6 +2334,7 @@ func TestReconcileKind(t *testing.T) {
 				KubeClient:                  kubeclient.Get(ctx),
 				PodLister:                   listers.GetPodLister(),
 				SecretLister:                listers.GetSecretLister(),
+				ConfigMapLister:             listers.GetConfigMapLister(),
 				DataPlaneConfigMapNamespace: env.DataPlaneConfigMapNamespace,
 				ContractConfigMapName:       env.ContractConfigMapName,
 				ContractConfigMapFormat:     env.ContractConfigMapFormat,
@@ -2355,7 +2356,6 @@ func TestReconcileKind(t *testing.T) {
 					T: t,
 				}, nil
 			},
-			ConfigMapLister:     listers.GetConfigMapLister(),
 			ServiceLister:       listers.GetServiceLister(),
 			SubscriptionLister:  listers.GetSubscriptionLister(),
 			ConsumerGroupLister: listers.GetConsumerGroupLister(),

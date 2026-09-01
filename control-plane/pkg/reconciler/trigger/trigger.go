@@ -65,7 +65,6 @@ type Reconciler struct {
 	*FlagsHolder
 
 	BrokerLister         eventinglisters.BrokerLister
-	ConfigMapLister      corelisters.ConfigMapLister
 	ServiceAccountLister corelisters.ServiceAccountLister
 	EventingClient       eventingclientset.Interface
 	Resolver             *resolver.URIResolver

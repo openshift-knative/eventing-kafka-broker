@@ -111,7 +111,6 @@ type Reconciler struct {
 	// mock the function used during the reconciliation loop.
 	GetKafkaClusterAdmin clientpool.GetKafkaClusterAdminFunc
 
-	ConfigMapLister    corelisters.ConfigMapLister
 	ServiceLister      corelisters.ServiceLister
 	SubscriptionLister messaginglisters.SubscriptionLister
 	EventPolicyLister  eventingv1alpha1listers.EventPolicyLister

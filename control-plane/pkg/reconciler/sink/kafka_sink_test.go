@@ -1969,13 +1969,13 @@ func useTable(t *testing.T, table TableTest, env *config.Env) {
 				KubeClient:                  kubeclient.Get(ctx),
 				PodLister:                   listers.GetPodLister(),
 				SecretLister:                listers.GetSecretLister(),
+				ConfigMapLister:             listers.GetConfigMapLister(),
 				DataPlaneConfigMapNamespace: env.DataPlaneConfigMapNamespace,
 				ContractConfigMapName:       env.ContractConfigMapName,
 				ContractConfigMapFormat:     env.ContractConfigMapFormat,
 				DataPlaneNamespace:          env.SystemNamespace,
 				ReceiverLabel:               base.SinkReceiverLabel,
 			},
-			ConfigMapLister:   listers.GetConfigMapLister(),
 			EventPolicyLister: listers.GetEventPolicyLister(),
 			GetKafkaClusterAdmin: func(_ context.Context, _ []string, _ *corev1.Secret) (sarama.ClusterAdmin, error) {
 				return &kafkatesting.MockKafkaClusterAdmin{
