@@ -16,7 +16,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/magiconair/properties v1.8.5
 	github.com/manifestival/client-go-client v0.6.0
-	github.com/manifestival/manifestival v0.7.1
+	github.com/manifestival/manifestival v0.7.2
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9
 	github.com/rickb777/date v1.14.1
 	github.com/stretchr/testify v1.11.1
@@ -28,18 +28,18 @@ require (
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.28.0
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
-	k8s.io/api v0.35.7
-	k8s.io/apiextensions-apiserver v0.35.7
-	k8s.io/apimachinery v0.35.7
-	k8s.io/apiserver v0.35.7
-	k8s.io/client-go v0.35.7
-	k8s.io/code-generator v0.35.7
+	k8s.io/api v0.35.8
+	k8s.io/apiextensions-apiserver v0.35.8
+	k8s.io/apimachinery v0.35.8
+	k8s.io/apiserver v0.35.8
+	k8s.io/client-go v0.35.8
+	k8s.io/code-generator v0.35.8
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
 	knative.dev/eventing v0.50.0
 	knative.dev/hack v0.0.0-20260428014158-b2a37f1b6e7b
 	knative.dev/pkg v0.0.0-20260727151759-521cb33b33dd
 	knative.dev/reconciler-test v0.0.0-20260727164000-4a4407a5fe88
-	sigs.k8s.io/controller-runtime v0.19.0
+	sigs.k8s.io/controller-runtime v0.19.7
 	sigs.k8s.io/randfill v1.0.0
 	sigs.k8s.io/yaml v1.6.0
 )
