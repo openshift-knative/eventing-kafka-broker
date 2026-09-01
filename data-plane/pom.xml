@@ -126,16 +126,6 @@
       <url>https://maven.repository.redhat.com/ga</url>
     </repository>
 
-    <repository>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <id>sonatype</id>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
   </repositories>
 
   <dependencyManagement>
@@ -564,97 +554,97 @@
         </executions>
       </plugin>
       <!-- Aggregate third party licenses in THIRD-PARTY.txt -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>${maven.license.plugin.version}</version>
-        <executions>
-          <execution>
-            <id>aggregate-download-licenses</id>
-            <goals>
-              <goal>aggregate-download-licenses</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>aggregate-add-third-party</id>
-            <goals>
-              <goal>aggregate-add-third-party</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${maven.multiModuleProjectDirectory}</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!--
-      Use this Plugin for headers due to https://github.com/mojohaus/license-maven-plugin/issues/112 and bad format.
+<!--      <plugin>-->
+<!--        <groupId>org.codehaus.mojo</groupId>-->
+<!--        <artifactId>license-maven-plugin</artifactId>-->
+<!--        <version>${maven.license.plugin.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>aggregate-download-licenses</id>-->
+<!--            <goals>-->
+<!--              <goal>aggregate-download-licenses</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--          <execution>-->
+<!--            <id>aggregate-add-third-party</id>-->
+<!--            <goals>-->
+<!--              <goal>aggregate-add-third-party</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <outputDirectory>${maven.multiModuleProjectDirectory}</outputDirectory>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+<!--      &lt;!&ndash;-->
+<!--      Use this Plugin for headers due to https://github.com/mojohaus/license-maven-plugin/issues/112 and bad format.-->
 
-      To add header to all files run: `./mvnw com.mycila:license-maven-plugin:format`
+<!--      To add header to all files run: `./mvnw com.mycila:license-maven-plugin:format`-->
 
-      -->
-      <plugin>
-        <groupId>com.mycila</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>${mycila.license.plugin.version}</version>
-        <configuration>
-          <licenseSets>
-            <licenseSet>
-              <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
-              <includes>
-                <include>src/**/*.java</include>
-              </includes>
-              <excludes>
-                <exclude>**/DataPlaneContract.java</exclude>
-              </excludes>
-            </licenseSet>
-          </licenseSets>
-          <properties>
-            <owner>Knative Authors</owner>
-            <email>knative-dev@googlegroups.com</email>
-            <year>2018</year>
-          </properties>
-        </configuration>
-        <executions>
-          <execution>
-            <id>check-license</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <phase>verify</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.antlr</groupId>
-        <artifactId>antlr4-maven-plugin</artifactId>
-        <version>${antlr.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.plugin.version}</version>
-        <configuration>
-          <formats>
-            <format>
-              <includes>
-                <include>*.md</include>
-                <include>.gitignore</include>
-              </includes>
-              <trimTrailingWhitespace/>
-              <endWithNewline/>
-              <indent>
-                <tabs>true</tabs>
-                <spacesPerTab>4</spacesPerTab>
-              </indent>
-            </format>
-          </formats>
-          <java>
-            <palantirJavaFormat>
-              <version>${palantirJavaFormat.version}</version>
-            </palantirJavaFormat>
-          </java>
-        </configuration>
-      </plugin>
+<!--      &ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>com.mycila</groupId>-->
+<!--        <artifactId>license-maven-plugin</artifactId>-->
+<!--        <version>${mycila.license.plugin.version}</version>-->
+<!--        <configuration>-->
+<!--          <licenseSets>-->
+<!--            <licenseSet>-->
+<!--              <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>-->
+<!--              <includes>-->
+<!--                <include>src/**/*.java</include>-->
+<!--              </includes>-->
+<!--              <excludes>-->
+<!--                <exclude>**/DataPlaneContract.java</exclude>-->
+<!--              </excludes>-->
+<!--            </licenseSet>-->
+<!--          </licenseSets>-->
+<!--          <properties>-->
+<!--            <owner>Knative Authors</owner>-->
+<!--            <email>knative-dev@googlegroups.com</email>-->
+<!--            <year>2018</year>-->
+<!--          </properties>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>check-license</id>-->
+<!--            <goals>-->
+<!--              <goal>check</goal>-->
+<!--            </goals>-->
+<!--            <phase>verify</phase>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+<!--      <plugin>-->
+<!--        <groupId>org.antlr</groupId>-->
+<!--        <artifactId>antlr4-maven-plugin</artifactId>-->
+<!--        <version>${antlr.version}</version>-->
+<!--      </plugin>-->
+<!--      <plugin>-->
+<!--        <groupId>com.diffplug.spotless</groupId>-->
+<!--        <artifactId>spotless-maven-plugin</artifactId>-->
+<!--        <version>${spotless.plugin.version}</version>-->
+<!--        <configuration>-->
+<!--          <formats>-->
+<!--            <format>-->
+<!--              <includes>-->
+<!--                <include>*.md</include>-->
+<!--                <include>.gitignore</include>-->
+<!--              </includes>-->
+<!--              <trimTrailingWhitespace/>-->
+<!--              <endWithNewline/>-->
+<!--              <indent>-->
+<!--                <tabs>true</tabs>-->
+<!--                <spacesPerTab>4</spacesPerTab>-->
+<!--              </indent>-->
+<!--            </format>-->
+<!--          </formats>-->
+<!--          <java>-->
+<!--            <palantirJavaFormat>-->
+<!--              <version>${palantirJavaFormat.version}</version>-->
+<!--            </palantirJavaFormat>-->
+<!--          </java>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 </project>

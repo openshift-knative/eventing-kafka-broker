@@ -25,7 +25,7 @@ WORKDIR /build
 
 COPY /data-plane .
 
-RUN mvn package -pl=receiver-loom -Drelease -am -DskipTests --no-transfer-progress
+RUN mvn package -pl=receiver-loom -Drelease -am -DskipTests -Dmaven.test.skip=false --no-transfer-progress
 
 RUN mkdir /app && cp /build/receiver-loom/target/receiver-loom-1.0-SNAPSHOT.jar /app/app.jar
 
