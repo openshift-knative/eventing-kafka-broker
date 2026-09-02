@@ -22,7 +22,7 @@ spec:
     - name: build-args
       value:
         - CLI_ARTIFACTS=registry.redhat.io/openshift4/ose-cli-artifacts-rhel9:v4.16
-        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.25
+        - GO_BUILDER=brew.registry.redhat.io/rh-osbs/openshift-golang-builder:rhel_9_golang_1.26
         - GO_RUNTIME=registry.access.redhat.com/ubi9/ubi-minimal
         - JAVA_BUILDER=registry.access.redhat.com/ubi9/openjdk-21
         - JAVA_RUNTIME=registry.access.redhat.com/ubi9/openjdk-21-runtime
@@ -32,7 +32,7 @@ spec:
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
-      value: "true"
+      value: "false"
     - name: image-expires-after
       value: 5d
     - name: output-image
@@ -42,8 +42,6 @@ spec:
         - linux/x86_64
     - name: revision
       value: '{{revision}}'
-    - name: prefetch-input
-      value: '[{"type": "x-maven", "path": "data-plane"},{"type": "x-maven", "path": "data-plane/contract"},{"type": "x-maven", "path": "data-plane/core"},{"type": "x-maven", "path": "data-plane/receiver"},{"type": "x-maven", "path": "data-plane/receiver-loom"},{"type": "x-maven", "path": "data-plane/dispatcher"},{"type": "x-maven", "path": "data-plane/dispatcher-loom"}]'
   taskRunSpecs:
     - pipelineTaskName: sast-shell-check
       stepSpecs:
