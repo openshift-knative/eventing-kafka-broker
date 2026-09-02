@@ -11,40 +11,13 @@
     "checksum": "",
     "boms": [
       {
-        "groupId": "com.fasterxml.jackson",
-        "artifactId": "jackson-bom",
-        "version": "2.14.1",
-        "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.14.1/jackson-bom-2.14.1.pom",
-        "repositoryId": "google-maven-central",
-        "checksumAlgorithm": "SHA-256",
-        "checksum": "78fdf99e5050fc485f4117dab8cccbfb6fa6c68385eb5f38a09b655371d4a6cc",
-        "parent": {
-          "groupId": "com.fasterxml.jackson",
-          "artifactId": "jackson-parent",
-          "version": "2.14",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.14/jackson-parent-2.14.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "0906add855ae39f92357d63f485889b08fca4c43a5fe433522d75344e0757b19",
-          "parent": {
-            "groupId": "com.fasterxml",
-            "artifactId": "oss-parent",
-            "version": "48",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/48/oss-parent-48.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "11bba22d8631816e09b623a200747453d6491a66eac8f5c089c73da2b749014f"
-          }
-        }
-      },
-      {
         "groupId": "com.redhat.quarkus.platform",
         "artifactId": "quarkus-bom",
-        "version": "3.20.4.SP1-redhat-00001",
-        "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.20.4.SP1-redhat-00001/quarkus-bom-3.20.4.SP1-redhat-00001.pom",
+        "version": "3.33.3.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.3.redhat-00001/quarkus-bom-3.33.3.redhat-00001.pom",
         "repositoryId": "redhat",
         "checksumAlgorithm": "SHA-256",
-        "checksum": "d9826e7cac3462f6a3e6ed37f3066e5046b4b4fb581b4110af0b2f6986cbed23"
+        "checksum": "f9a9cafe5e563084bf63297f16b64598076ea6bc68be021c3f6572ebb17ad94e"
       },
       {
         "groupId": "io.micrometer",
@@ -58,11 +31,11 @@
       {
         "groupId": "io.opentelemetry",
         "artifactId": "opentelemetry-bom",
-        "version": "1.42.1",
-        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.42.1/opentelemetry-bom-1.42.1.pom",
+        "version": "1.62.0",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
         "repositoryId": "google-maven-central",
         "checksumAlgorithm": "SHA-256",
-        "checksum": "e95306fb7aa896aa292de47131539c16c1f91dfcb99001da06c401251cbe6905"
+        "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
       }
     ]
   },
@@ -22509,7 +22482,7 @@
       "allowEnvironmentalValidationFailure": false,
       "includeEnvironment": true,
       "reduced": false,
-      "mavenLockfileVersion": "5.18.1",
+      "mavenLockfileVersion": "5.18.3",
       "checksumMode": "local",
       "checksumAlgorithm": "SHA-256",
       "includeBoms": true,
@@ -22523,40 +22496,13 @@
   },
   "boms": [
     {
-      "groupId": "com.fasterxml.jackson",
-      "artifactId": "jackson-bom",
-      "version": "2.14.1",
-      "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.14.1/jackson-bom-2.14.1.pom",
-      "repositoryId": "google-maven-central",
-      "checksumAlgorithm": "SHA-256",
-      "checksum": "78fdf99e5050fc485f4117dab8cccbfb6fa6c68385eb5f38a09b655371d4a6cc",
-      "parent": {
-        "groupId": "com.fasterxml.jackson",
-        "artifactId": "jackson-parent",
-        "version": "2.14",
-        "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.14/jackson-parent-2.14.pom",
-        "repositoryId": "google-maven-central",
-        "checksumAlgorithm": "SHA-256",
-        "checksum": "0906add855ae39f92357d63f485889b08fca4c43a5fe433522d75344e0757b19",
-        "parent": {
-          "groupId": "com.fasterxml",
-          "artifactId": "oss-parent",
-          "version": "48",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/48/oss-parent-48.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "11bba22d8631816e09b623a200747453d6491a66eac8f5c089c73da2b749014f"
-        }
-      }
-    },
-    {
       "groupId": "com.redhat.quarkus.platform",
       "artifactId": "quarkus-bom",
-      "version": "3.20.4.SP1-redhat-00001",
-      "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.20.4.SP1-redhat-00001/quarkus-bom-3.20.4.SP1-redhat-00001.pom",
+      "version": "3.33.3.redhat-00001",
+      "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.3.redhat-00001/quarkus-bom-3.33.3.redhat-00001.pom",
       "repositoryId": "redhat",
       "checksumAlgorithm": "SHA-256",
-      "checksum": "d9826e7cac3462f6a3e6ed37f3066e5046b4b4fb581b4110af0b2f6986cbed23"
+      "checksum": "f9a9cafe5e563084bf63297f16b64598076ea6bc68be021c3f6572ebb17ad94e"
     },
     {
       "groupId": "io.micrometer",
@@ -22570,11 +22516,11 @@
     {
       "groupId": "io.opentelemetry",
       "artifactId": "opentelemetry-bom",
-      "version": "1.42.1",
-      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.42.1/opentelemetry-bom-1.42.1.pom",
+      "version": "1.62.0",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
       "repositoryId": "google-maven-central",
       "checksumAlgorithm": "SHA-256",
-      "checksum": "e95306fb7aa896aa292de47131539c16c1f91dfcb99001da06c401251cbe6905"
+      "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
     }
   ]
 }
