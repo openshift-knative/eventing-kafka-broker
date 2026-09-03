@@ -42,17 +42,20 @@
     <spotless.plugin.version>2.38.0</spotless.plugin.version>
 
     <!-- dependencies version -->
-    <vertx.version>4.5.13</vertx.version>
+    <!-- jackson and vertx-core are managed by the Quarkus BOM; vertx.version only pins
+         the vertx modules the BOM import does not manage here (vertx-opentelemetry,
+         vertx-junit5) and must match the BOM's vertx version -->
+    <vertx.version>4.5.31</vertx.version>
     <cloudevents.sdk.version>4.0.1</cloudevents.sdk.version>
     <micrometer.version>1.14.5</micrometer.version>
-    <opentelemetry.version>1.42.1</opentelemetry.version>
-    <jackson.version>2.14.1</jackson.version>
+    <!-- Pinned above the Quarkus BOM's OpenTelemetry version to address CVE-2026-45292 -->
+    <opentelemetry.version>1.62.0</opentelemetry.version>
     <protobuf.version>3.25.8.redhat-00001</protobuf.version>
     <bucket4j.version>7.6.0</bucket4j.version>
     <slf4j.version>2.0.17</slf4j.version>
     <ch.qos.logback.version>1.5.17</ch.qos.logback.version>
     <net.logstash.logback.encoder.version>8.0</net.logstash.logback.encoder.version>
-    <assertj.version>3.27.3</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <awaitility.version>4.2.0</awaitility.version>
     <junit.jupiter.version>5.10.5</junit.jupiter.version>
     <mokito.junit.jupiter.version>5.12.0</mokito.junit.jupiter.version>
@@ -60,7 +63,7 @@
     <kafka.version>3.9.0</kafka.version>
     <debezium.version>3.0.7.Final</debezium.version>
     <jib.version>3.4.6</jib.version>
-    <quarkus.version>3.20.4.SP1-redhat-00001</quarkus.version>
+    <quarkus.version>3.33.3.redhat-00001</quarkus.version>
     <antlr.version>4.9.2
     </antlr.version> <!-- Overwritting quarkus's antlr version. Reminder: antlr4-maven-plugin,antlr4-runtime, antlr4 need to have the same version -->
     <palantirJavaFormat.version>2.38.0</palantirJavaFormat.version>
@@ -130,7 +133,19 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- Vertx -->
+      <!--
+        OpenTelemetry BOM must be imported before the Quarkus BOM: the Quarkus
+        BOM manages OpenTelemetry at an older version and, in Maven, the first
+        imported BOM wins. Pinned to ${opentelemetry.version} for CVE-2026-45292.
+      -->
+      <dependency>
+        <groupId>io.opentelemetry</groupId>
+        <artifactId>opentelemetry-bom</artifactId>
+        <version>${opentelemetry.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <dependency>
         <groupId>com.redhat.quarkus.platform</groupId>
         <artifactId>quarkus-bom</artifactId>
@@ -173,14 +188,6 @@
         <groupId>io.micrometer</groupId>
         <artifactId>micrometer-bom</artifactId>
         <version>${micrometer.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-bom</artifactId>
-        <version>${opentelemetry.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -251,15 +258,7 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- Jackson -->
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${jackson.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
+      <!-- Jackson is managed by the Quarkus BOM -->
       <dependency>
         <groupId>org.bitbucket.b_c</groupId>
         <artifactId>jose4j</artifactId>
