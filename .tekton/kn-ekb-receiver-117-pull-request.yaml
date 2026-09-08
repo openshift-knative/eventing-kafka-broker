@@ -43,7 +43,7 @@ spec:
     - name: revision
       value: '{{revision}}'
     - name: prefetch-input
-      value: '[{"type": "x-maven", "path": "data-plane"},{"type": "x-maven", "path": "data-plane/contract"},{"type": "x-maven", "path": "data-plane/core"},{"type": "x-maven", "path": "data-plane/receiver"},{"type": "x-maven", "path": "data-plane/receiver-loom"}]'
+      value: '[{"path":"data-plane","type":"x-maven"},{"path":"data-plane/contract","type":"x-maven"},{"path":"data-plane/core","type":"x-maven"},{"path":"data-plane/receiver","type":"x-maven"},{"path":"data-plane/receiver-loom","type":"x-maven"}]'
   taskRunSpecs:
     - pipelineTaskName: sast-shell-check
       stepSpecs:
