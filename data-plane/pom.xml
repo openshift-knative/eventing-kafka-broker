@@ -35,7 +35,7 @@
     <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
     <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
     <maven.shade.plugin.version>3.5.1</maven.shade.plugin.version>
-    <maven.jacoco.plugin.version>0.8.12</maven.jacoco.plugin.version>
+    <maven.jacoco.plugin.version>0.8.15</maven.jacoco.plugin.version>
     <maven.enforcer.plugin.version>3.5.0</maven.enforcer.plugin.version>
     <maven.license.plugin.version>2.0.0</maven.license.plugin.version>
     <mycila.license.plugin.version>4.1</mycila.license.plugin.version>
@@ -45,14 +45,14 @@
     <!-- jackson and vertx-core are managed by the Quarkus BOM; vertx.version only pins
          the vertx modules the BOM import does not manage here (vertx-opentelemetry,
          vertx-junit5) and must match the BOM's vertx version -->
-    <vertx.version>4.5.31</vertx.version>
+    <vertx.version>4.5.33</vertx.version>
     <cloudevents.sdk.version>4.0.1</cloudevents.sdk.version>
     <micrometer.version>1.14.5</micrometer.version>
     <!-- Pinned above the Quarkus BOM's OpenTelemetry version to address CVE-2026-45292 -->
     <opentelemetry.version>1.62.0</opentelemetry.version>
     <protobuf.version>3.25.8.redhat-00001</protobuf.version>
     <bucket4j.version>7.6.0</bucket4j.version>
-    <slf4j.version>2.0.17</slf4j.version>
+    <slf4j.version>2.0.19</slf4j.version>
     <ch.qos.logback.version>1.5.17</ch.qos.logback.version>
     <net.logstash.logback.encoder.version>8.0</net.logstash.logback.encoder.version>
     <assertj.version>3.27.7</assertj.version>
@@ -444,13 +444,13 @@
       <dependency>
         <groupId>org.scala-lang</groupId>
         <artifactId>scala-library</artifactId>
-        <version>2.13.15.redhat-00001</version>
+        <version>2.13.17.redhat-00001</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.scala-lang</groupId>
         <artifactId>scala-reflect</artifactId>
-        <version>2.13.15.redhat-00001</version>
+        <version>2.13.17.redhat-00001</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
