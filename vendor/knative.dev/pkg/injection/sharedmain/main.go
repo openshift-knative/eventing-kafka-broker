@@ -146,6 +146,16 @@ var (
 	WebhookMainWithConfig  = MainWithConfig
 )
 
+//type DisabledControllersKey struct{}
+
+// Store the most recently parsed disabled controllers
+var currentDisabledControllers []string
+
+// GetDisabledControllers returns the list of currently disabled controllers
+func GetDisabledControllers() []string {
+	return currentDisabledControllers
+}
+
 // MainNamed runs the generic main flow for controllers and webhooks.
 //
 // In addition to the MainWithConfig flow, it defines a `disabled-controllers` flag that allows disabling controllers
@@ -155,6 +165,10 @@ func MainNamed(ctx context.Context, component string, ctors ...injection.NamedCo
 
 	// HACK: This parses flags, so the above should be set once this runs.
 	cfg := injection.ParseAndGetRESTConfigOrDie()
+
+	// Split the disabled controllers string and store them
+	disabledControllersList := strings.Split(*disabledControllers, ",")
+	currentDisabledControllers = disabledControllersList
 
 	enabledCtors := enabledControllers(strings.Split(*disabledControllers, ","), ctors)
 	MainWithConfig(ctx, component, cfg, toControllerConstructors(enabledCtors)...)
