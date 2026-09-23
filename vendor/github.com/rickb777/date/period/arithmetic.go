@@ -39,8 +39,13 @@ func (period Period) AddTo(t time.Time) (time.Time, bool) {
 	wholeDays := (period.days % 10) == 0
 
 	if wholeYears && wholeMonths && wholeDays {
-		// in this case, time.AddDate provides an exact solution
+		// in this case, time.AddDate(...).Add(...) provides an exact solution
 		stE3 := totalSecondsE3(period)
+		if period.years == 0 && period.months == 0 && period.days == 0 {
+			// AddDate (below) normalises its result, so we don't call it unless needed
+			return t.Add(stE3 * time.Millisecond), true
+		}
+
 		t1 := t.AddDate(int(period.years/10), int(period.months/10), int(period.days/10))
 		return t1.Add(stE3 * time.Millisecond), true
 	}
@@ -82,12 +87,12 @@ func (period Period) ScaleWithOverflowCheck(factor float32) (Period, error) {
 		return p2.Normalise(pr1 && pr2), nil
 	}
 
-	y := int(float32(ap.years) * factor)
-	m := int(float32(ap.months) * factor)
-	d := int(float32(ap.days) * factor)
-	hh := int(float32(ap.hours) * factor)
-	mm := int(float32(ap.minutes) * factor)
-	ss := int(float32(ap.seconds) * factor)
+	y := int64(float32(ap.years) * factor)
+	m := int64(float32(ap.months) * factor)
+	d := int64(float32(ap.days) * factor)
+	hh := int64(float32(ap.hours) * factor)
+	mm := int64(float32(ap.minutes) * factor)
+	ss := int64(float32(ap.seconds) * factor)
 
 	p64 := &period64{years: y, months: m, days: d, hours: hh, minutes: mm, seconds: ss, neg: neg}
 	return p64.normalise64(true).toPeriod()
