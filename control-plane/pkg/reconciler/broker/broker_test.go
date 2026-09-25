@@ -3297,6 +3297,7 @@ func useTable(t *testing.T, table TableTest, env *config.Env) {
 				KubeClient:                  kubeclient.Get(ctx),
 				PodLister:                   listers.GetPodLister(),
 				SecretLister:                listers.GetSecretLister(),
+				ConfigMapLister:             listers.GetConfigMapLister(),
 				DataPlaneConfigMapNamespace: env.DataPlaneConfigMapNamespace,
 				ContractConfigMapName:       env.ContractConfigMapName,
 				ContractConfigMapFormat:     env.ContractConfigMapFormat,
@@ -3304,7 +3305,6 @@ func useTable(t *testing.T, table TableTest, env *config.Env) {
 				DispatcherLabel:             base.BrokerDispatcherLabel,
 				ReceiverLabel:               base.BrokerReceiverLabel,
 			},
-			ConfigMapLister: listers.GetConfigMapLister(),
 			GetKafkaClusterAdmin: func(_ context.Context, _ []string, _ *corev1.Secret) (sarama.ClusterAdmin, error) {
 				return &kafkatesting.MockKafkaClusterAdmin{
 					ExpectedTopicName:                      expectedTopicName,

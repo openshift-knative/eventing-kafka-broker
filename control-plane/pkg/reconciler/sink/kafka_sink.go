@@ -33,7 +33,6 @@ import (
 	"github.com/IBM/sarama"
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/types"
-	corelisters "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/util/retry"
 	"knative.dev/pkg/controller"
 	pointer "knative.dev/pkg/ptr"
@@ -71,7 +70,6 @@ type Reconciler struct {
 
 	Resolver *resolver.URIResolver
 
-	ConfigMapLister   corelisters.ConfigMapLister
 	EventPolicyLister eventingv1alpha1listers.EventPolicyLister
 
 	// GetKafkaClusterAdmin creates new sarama ClusterAdmin. It's convenient to add this as Reconciler field so that we can
