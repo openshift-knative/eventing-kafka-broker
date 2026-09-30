@@ -780,6 +780,7 @@ func (r *Reconciler) ensureContractConfigMapExists(ctx context.Context, p *corev
 
 	b := base.Reconciler{
 		KubeClient:                    r.KubeClient,
+		ConfigMapLister:               r.ConfigMapLister,
 		DataPlaneConfigMapNamespace:   r.SystemNamespace,
 		ContractConfigMapName:         name,
 		DataPlaneNamespace:            r.SystemNamespace,

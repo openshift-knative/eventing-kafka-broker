@@ -39,7 +39,6 @@ type NamespacedReconciler struct {
 	*FlagsHolder
 
 	BrokerLister         eventinglisters.BrokerLister
-	ConfigMapLister      corelisters.ConfigMapLister
 	ServiceAccountLister corelisters.ServiceAccountLister
 	EventingClient       eventingclientset.Interface
 	Resolver             *resolver.URIResolver
@@ -70,6 +69,7 @@ func (r *NamespacedReconciler) createReconcilerForTriggerInstance(trigger *event
 			KubeClient:                   r.KubeClient,
 			PodLister:                    r.PodLister,
 			SecretLister:                 r.SecretLister,
+			ConfigMapLister:              r.ConfigMapLister,
 			Tracker:                      r.Tracker,
 			ContractConfigMapName:        r.ContractConfigMapName,
 			ContractConfigMapFormat:      r.ContractConfigMapFormat,
@@ -85,7 +85,6 @@ func (r *NamespacedReconciler) createReconcilerForTriggerInstance(trigger *event
 			Flags: r.Flags,
 		},
 		BrokerLister:         r.BrokerLister,
-		ConfigMapLister:      r.ConfigMapLister,
 		ServiceAccountLister: r.ServiceAccountLister,
 		EventingClient:       r.EventingClient,
 		Resolver:             r.Resolver,
