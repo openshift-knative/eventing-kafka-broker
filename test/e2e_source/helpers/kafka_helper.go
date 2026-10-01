@@ -84,7 +84,7 @@ func MustPublishKafkaMessage(client *testlib.Client, bootstrapServer string, top
 
 	client.Tracker.Add(corev1.SchemeGroupVersion.Group, corev1.SchemeGroupVersion.Version, "configmap", client.Namespace, cgName)
 
-	args := []string{"-P", "-T", "-b", bootstrapServer, "-t", topic}
+	args := []string{"-P", "-T", "-b", bootstrapServer, "-t", topic, "-X", "transactional.id=bs" + topic}
 	if key != "" {
 		args = append(args, "-K=")
 	}

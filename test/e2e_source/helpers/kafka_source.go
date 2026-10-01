@@ -19,6 +19,10 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"github.com/stretchr/testify/require"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apiserver/pkg/storage/names"
+	"knative.dev/eventing-kafka-broker/test/pkg/kafka"
 	"strings"
 	"testing"
 
@@ -34,9 +38,10 @@ import (
 )
 
 const (
-	KafkaBootstrapUrlPlain = "my-cluster-kafka-bootstrap.kafka.svc:9092"
-	KafkaClusterName       = "my-cluster"
-	KafkaClusterNamespace  = "kafka"
+	KafkaBootstrapUrlPlain   = "my-cluster-kafka-bootstrap.kafka.svc:9092"
+	KafkaClusterName         = "my-cluster"
+	KafkaClusterNamespace    = "kafka"
+	verifyCommittedOffsetJob = "verify-committed"
 )
 
 // SourceTestScope returns true if we should proceed with given
@@ -172,4 +177,14 @@ func testKafkaSource(t *testing.T,
 	MustPublishKafkaMessage(client, KafkaBootstrapUrlPlain, kafkaTopicName, messageKey, messageHeaders, messagePayload)
 
 	eventTracker.AssertExact(1, recordevents.MatchEvent(matcherGen(cloudEventsSourceName, cloudEventsEventType)))
+
+	err := kafka.VerifyCommittedOffset(client.Kube, client.Tracker, types.NamespacedName{
+		Namespace: client.Namespace,
+		Name:      names.SimpleNameGenerator.GenerateName(verifyCommittedOffsetJob + "-" + kafkaTopicName),
+	}, &kafka.AdminConfig{
+		BootstrapServers: bootStrapServer,
+		Topic:            kafkaTopicName,
+		Group:            consumerGroup,
+	})
+	require.Nil(t, err, "Failed to verify committed offset")
 }
