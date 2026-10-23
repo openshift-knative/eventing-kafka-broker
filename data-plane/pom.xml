@@ -45,7 +45,7 @@
     <!-- jackson and vertx-core are managed by the Quarkus BOM; vertx.version only pins
          the vertx modules the BOM import does not manage here (vertx-opentelemetry,
          vertx-junit5) and must match the BOM's vertx version -->
-    <vertx.version>4.5.31</vertx.version>
+    <vertx.version>4.5.34</vertx.version>
     <cloudevents.sdk.version>4.0.1</cloudevents.sdk.version>
     <micrometer.version>1.14.5</micrometer.version>
     <!-- Pinned above the Quarkus BOM's OpenTelemetry version to address CVE-2026-45292 -->
@@ -63,7 +63,7 @@
     <kafka.version>3.9.0</kafka.version>
     <debezium.version>3.0.7.Final</debezium.version>
     <jib.version>3.4.6</jib.version>
-    <quarkus.version>3.33.3.redhat-00001</quarkus.version>
+    <quarkus.version>3.33.4.redhat-00003</quarkus.version>
     <antlr.version>4.9.2
     </antlr.version> <!-- Overwritting quarkus's antlr version. Reminder: antlr4-maven-plugin,antlr4-runtime, antlr4 need to have the same version -->
     <palantirJavaFormat.version>2.38.0</palantirJavaFormat.version>
@@ -244,13 +244,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <dependency>
-        <artifactId>mockwebserver</artifactId>
-        <groupId>com.squareup.okhttp3</groupId>
-        <version>4.12.0</version>
-        <scope>test</scope>
-      </dependency>
-
       <dependency>
         <artifactId>mockwebserver</artifactId>
         <groupId>com.squareup.okhttp3</groupId>
