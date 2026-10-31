@@ -108,18 +108,22 @@ spec:
       VMs
     name: privileged-nested
     type: string
-  - name: source-date-epoch
+  - default: ""
+    description: Sets the image created time and the SOURCE_DATE_EPOCH build argument.
+      On its own, it does not change file timestamps inside the layers (set rewrite-timestamp
+      to "true" for that). Leave empty to keep the actual build time.
+    name: source-date-epoch
     type: string
-    default: ''
-    description: Sets the image created time and the SOURCE_DATE_EPOCH build argument. On its own, it does not change file timestamps inside the layers (set rewrite-timestamp to "true" for that). Leave empty to keep the actual build time.
-  - name: rewrite-timestamp
+  - default: "false"
+    description: When "true", clamp file modification times in the image layers to
+      at most source-date-epoch. Does nothing unless source-date-epoch is set.
+    name: rewrite-timestamp
     type: string
-    default: 'false'
-    description: When "true", clamp file modification times in the image layers to at most source-date-epoch. Does nothing unless source-date-epoch is set.
-  - name: omit-history
+  - default: "false"
+    description: When "true", omit the build history (history timestamps, layer metadata,
+      etc.) from the resulting image.
+    name: omit-history
     type: string
-    default: 'false'
-    description: When "true", omit the build history (history timestamps, layer metadata, etc.) from the resulting image.
   results:
   - description: ""
     name: IMAGE_URL
@@ -134,6 +138,34 @@ spec:
     name: CHAINS-GIT_COMMIT
     value: $(tasks.clone-repository.results.commit)
   tasks:
+  - matrix:
+      params:
+      - name: image-platform
+        value:
+        - $(params.build-platforms)
+    name: roxctl-scan
+    params:
+    - name: image-digest
+      value: $(tasks.build-image-index.results.IMAGE_DIGEST)
+    - name: image-url
+      value: $(tasks.build-image-index.results.IMAGE_URL)
+    runAfter:
+    - build-image-index
+    taskRef:
+      params:
+      - name: name
+        value: roxctl-scan
+      - name: bundle
+        value: quay.io/konflux-ci/tekton-catalog/task-roxctl-scan:0.1@sha256:97e2b2cdca9110fdc8a93ba585a1a1a743f989f2fd85f4073f6e5ea9ad2ce828
+      - name: kind
+        value: task
+      resolver: bundles
+    timeout: 20m
+    when:
+    - input: $(params.skip-checks)
+      operator: in
+      values:
+      - "false"
   - name: sast-snyk-check
     params:
     - name: ARGS
@@ -286,18 +318,18 @@ spec:
       value: $(tasks.init.results.http-proxy)
     - name: NO_PROXY
       value: $(tasks.init.results.no-proxy)
-    - name: SOURCE_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
-    - name: IMAGE_APPEND_PLATFORM
-      value: "true"
     - name: SOURCE_DATE_EPOCH
       value: $(params.source-date-epoch)
     - name: REWRITE_TIMESTAMP
       value: $(params.rewrite-timestamp)
     - name: OMIT_HISTORY
       value: $(params.omit-history)
+    - name: SOURCE_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+    - name: CACHI2_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
+    - name: IMAGE_APPEND_PLATFORM
+      value: "true"
     runAfter:
     - prefetch-dependencies
     taskRef:
@@ -371,33 +403,6 @@ spec:
         value: deprecated-image-check
       - name: bundle
         value: quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.5@sha256:0ccc688a77e9b7b0b8973c132a1e840844137e77f887be4a0bec8893b0776872
-      - name: kind
-        value: task
-      resolver: bundles
-    when:
-    - input: $(params.skip-checks)
-      operator: in
-      values:
-      - "false"
-  - matrix:
-      params:
-      - name: image-platform
-        value:
-        - $(params.build-platforms)
-    name: roxctl-scan
-    params:
-    - name: image-digest
-      value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-    - name: image-url
-      value: $(tasks.build-image-index.results.IMAGE_URL)
-    runAfter:
-    - build-image-index
-    taskRef:
-      params:
-      - name: name
-        value: roxctl-scan
-      - name: bundle
-        value: quay.io/konflux-ci/tekton-catalog/task-roxctl-scan:0.1@sha256:97e2b2cdca9110fdc8a93ba585a1a1a743f989f2fd85f4073f6e5ea9ad2ce828
       - name: kind
         value: task
       resolver: bundles
