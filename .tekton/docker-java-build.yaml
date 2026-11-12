@@ -13,27 +13,6 @@ spec:
     _Uses `buildah` to create a multi-platform container image leveraging [trusted artifacts](https://konflux-ci.dev/architecture/ADR/0036-trusted-artifacts.html). It also optionally creates a source image and runs some build-time tests. This pipeline requires that the [multi platform controller](https://github.com/konflux-ci/multi-platform-controller) is deployed and configured on your Konflux instance. Information is shared between tasks using OCI artifacts instead of PVCs. EC will pass the [`trusted_task.trusted`](https://conforma.dev/docs/policy/packages/release_trusted_task.html#trusted_task__trusted) policy as long as all data used to build the artifact is generated from trusted tasks.
     This pipeline is pushed as a Tekton bundle to [quay.io](https://quay.io/repository/konflux-ci/tekton-catalog/pipeline-docker-build-multi-platform-oci-ta?tab=tags)_
   params:
-  - default:
-    - linux/x86_64
-    - linux/arm64
-    - linux/ppc64le
-    - linux/s390x
-    description: List of platforms to build the container images on. The available
-      set of values is determined by the configuration of the multi-platform-controller.
-    name: build-platforms
-    type: array
-  - default: --all-projects --org=3e1a4cca-ebfb-495f-b64c-3cc960d566b4 --exclude=test*,vendor,third_party
-    description: Append arguments to Snyk code command.
-    name: snyk-args
-    type: string
-  - default: "true"
-    description: Build a source image.
-    name: build-source-image
-    type: string
-  - default: "false"
-    description: 'Enable in-development package managers. WARNING: the behavior may
-      change at any time without notice. Use at your own risk.'
-    name: prefetch-input-dev-package-managers
   - default: []
     description: Additional image tags
     name: additional-tags
@@ -75,6 +54,10 @@ spec:
       2d, 3w for hours, days, and weeks, respectively.
     name: image-expires-after
     type: string
+  - default: "false"
+    description: Build a source image.
+    name: build-source-image
+    type: string
   - default: "true"
     description: Add built image into an OCI image index
     name: build-image-index
@@ -108,18 +91,28 @@ spec:
       VMs
     name: privileged-nested
     type: string
-  - name: source-date-epoch
+  - default: ""
+    description: Sets the image created time and the SOURCE_DATE_EPOCH build argument.
+      On its own, it does not change file timestamps inside the layers (set rewrite-timestamp
+      to "true" for that). Leave empty to keep the actual build time.
+    name: source-date-epoch
     type: string
-    default: ''
-    description: Sets the image created time and the SOURCE_DATE_EPOCH build argument. On its own, it does not change file timestamps inside the layers (set rewrite-timestamp to "true" for that). Leave empty to keep the actual build time.
-  - name: rewrite-timestamp
+  - default: "false"
+    description: When "true", clamp file modification times in the image layers to
+      at most source-date-epoch. Does nothing unless source-date-epoch is set.
+    name: rewrite-timestamp
     type: string
-    default: 'false'
-    description: When "true", clamp file modification times in the image layers to at most source-date-epoch. Does nothing unless source-date-epoch is set.
-  - name: omit-history
+  - default: "false"
+    description: When "true", omit the build history (history timestamps, layer metadata,
+      etc.) from the resulting image.
+    name: omit-history
     type: string
-    default: 'false'
-    description: When "true", omit the build history (history timestamps, layer metadata, etc.) from the resulting image.
+  - default:
+    - linux/x86_64
+    description: List of platforms to build the container images on. The available
+      set of values is determined by the configuration of the multi-platform-controller.
+    name: build-platforms
+    type: array
   results:
   - description: ""
     name: IMAGE_URL
@@ -134,66 +127,6 @@ spec:
     name: CHAINS-GIT_COMMIT
     value: $(tasks.clone-repository.results.commit)
   tasks:
-  - name: sast-snyk-check
-    params:
-    - name: ARGS
-      value: $(params.snyk-args)
-    - name: image-digest
-      value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-    - name: image-url
-      value: $(tasks.build-image-index.results.IMAGE_URL)
-    - name: TARGET_DIRS
-      value: $(params.sast-target-dirs)
-    - name: SOURCE_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
-    runAfter:
-    - build-image-index
-    taskRef:
-      params:
-      - name: name
-        value: sast-snyk-check-oci-ta
-      - name: bundle
-        value: quay.io/konflux-ci/tekton-catalog/task-sast-snyk-check-oci-ta:0.5@sha256:17b9587eba53fabaab35061275306bfe1f99661d55e14e22f62321fa7cb5ff3e
-      - name: kind
-        value: task
-      resolver: bundles
-    when:
-    - input: $(params.skip-checks)
-      operator: in
-      values:
-      - "false"
-  - name: prefetch-dependencies
-    params:
-    - name: dev-package-managers
-      value: $(params.prefetch-input-dev-package-managers)
-    - name: input
-      value: $(params.prefetch-input)
-    - name: enable-package-registry-proxy
-      value: $(params.enable-package-registry-proxy)
-    - name: SOURCE_ARTIFACT
-      value: $(tasks.clone-repository.results.SOURCE_ARTIFACT)
-    - name: ociStorage
-      value: $(params.output-image).prefetch
-    - name: ociArtifactExpiresAfter
-      value: $(params.image-expires-after)
-    runAfter:
-    - clone-repository
-    taskRef:
-      params:
-      - name: name
-        value: prefetch-dependencies-oci-ta
-      - name: bundle
-        value: quay.io/konflux-ci/tekton-catalog/task-prefetch-dependencies-oci-ta:0.10.3@sha256:0c386f2c26b46b978280c5c54caac26bcd524975f8f7cc06bb080ba00eae3ad4
-      - name: kind
-        value: task
-      resolver: bundles
-    workspaces:
-    - name: git-basic-auth
-      workspace: git-auth
-    - name: netrc
-      workspace: netrc
   - name: apply-tags
     params:
     - name: ADDITIONAL_TAGS
@@ -250,6 +183,34 @@ spec:
     workspaces:
     - name: basic-auth
       workspace: git-auth
+  - name: prefetch-dependencies
+    params:
+    - name: input
+      value: $(params.prefetch-input)
+    - name: enable-package-registry-proxy
+      value: $(params.enable-package-registry-proxy)
+    - name: SOURCE_ARTIFACT
+      value: $(tasks.clone-repository.results.SOURCE_ARTIFACT)
+    - name: ociStorage
+      value: $(params.output-image).prefetch
+    - name: ociArtifactExpiresAfter
+      value: $(params.image-expires-after)
+    runAfter:
+    - clone-repository
+    taskRef:
+      params:
+      - name: name
+        value: prefetch-dependencies-oci-ta
+      - name: bundle
+        value: quay.io/konflux-ci/tekton-catalog/task-prefetch-dependencies-oci-ta:0.10.3@sha256:0c386f2c26b46b978280c5c54caac26bcd524975f8f7cc06bb080ba00eae3ad4
+      - name: kind
+        value: task
+      resolver: bundles
+    workspaces:
+    - name: git-basic-auth
+      workspace: git-auth
+    - name: netrc
+      workspace: netrc
   - matrix:
       params:
       - name: PLATFORM
@@ -274,8 +235,6 @@ spec:
     - name: BUILD_ARGS
       value:
       - $(params.build-args[*])
-    - name: BUILD_ARGS_FILE
-      value: $(params.build-args-file)
     - name: PRIVILEGED_NESTED
       value: $(params.privileged-nested)
     - name: SOURCE_URL
@@ -286,18 +245,21 @@ spec:
       value: $(tasks.init.results.http-proxy)
     - name: NO_PROXY
       value: $(tasks.init.results.no-proxy)
-    - name: SOURCE_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
-    - name: IMAGE_APPEND_PLATFORM
-      value: "true"
     - name: SOURCE_DATE_EPOCH
       value: $(params.source-date-epoch)
     - name: REWRITE_TIMESTAMP
       value: $(params.rewrite-timestamp)
     - name: OMIT_HISTORY
       value: $(params.omit-history)
+    - name: SOURCE_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+    - name: IMAGE_APPEND_PLATFORM
+      value: "true"
+    - name: BUILD_ARGS_FILES
+      value:
+      - $(params.build-args-file)
+    - name: PREFETCH_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.PREFETCH_ARTIFACT)
     runAfter:
     - prefetch-dependencies
     taskRef:
@@ -339,8 +301,8 @@ spec:
       value: $(tasks.build-image-index.results.IMAGE_DIGEST)
     - name: SOURCE_ARTIFACT
       value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
+    - name: PREFETCH_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.PREFETCH_ARTIFACT)
     runAfter:
     - build-image-index
     taskRef:
@@ -431,6 +393,32 @@ spec:
       operator: in
       values:
       - "false"
+  - name: sast-snyk-check
+    params:
+    - name: image-digest
+      value: $(tasks.build-image-index.results.IMAGE_DIGEST)
+    - name: image-url
+      value: $(tasks.build-image-index.results.IMAGE_URL)
+    - name: TARGET_DIRS
+      value: $(params.sast-target-dirs)
+    - name: SOURCE_ARTIFACT
+      value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+    runAfter:
+    - build-image-index
+    taskRef:
+      params:
+      - name: name
+        value: sast-snyk-check-oci-ta
+      - name: bundle
+        value: quay.io/konflux-ci/tekton-catalog/task-sast-snyk-check-oci-ta:0.5@sha256:17b9587eba53fabaab35061275306bfe1f99661d55e14e22f62321fa7cb5ff3e
+      - name: kind
+        value: task
+      resolver: bundles
+    when:
+    - input: $(params.skip-checks)
+      operator: in
+      values:
+      - "false"
   - matrix:
       params:
       - name: image-arch
@@ -468,8 +456,6 @@ spec:
       value: $(params.sast-target-dirs)
     - name: SOURCE_ARTIFACT
       value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
     runAfter:
     - build-image-index
     taskRef:
@@ -496,8 +482,6 @@ spec:
       value: $(params.sast-target-dirs)
     - name: SOURCE_ARTIFACT
       value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-    - name: CACHI2_ARTIFACT
-      value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
     runAfter:
     - build-image-index
     taskRef:
