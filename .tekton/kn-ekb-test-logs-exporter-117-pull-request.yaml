@@ -28,10 +28,12 @@ spec:
         - JAVA_RUNTIME=registry.access.redhat.com/ubi9/openjdk-21-runtime
         - NODE_BUILDER=registry.access.redhat.com/ubi9/nodejs-24
         - NODE_RUNTIME=registry.access.redhat.com/ubi9/nodejs-24
-        - VERSION=1.37.3
+        - VERSION=1.37.4
     - name: git-url
       value: '{{source_url}}'
     - name: hermetic
+      value: "true"
+    - name: build-source-image
       value: "true"
     - name: image-expires-after
       value: 5d
