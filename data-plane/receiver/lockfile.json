@@ -9,1017 +9,778 @@
     "relativePath": "pom.xml",
     "checksumAlgorithm": "SHA-256",
     "checksum": "",
-    "parent": {
-      "groupId": "dev.knative.eventing.kafka.broker",
-      "artifactId": "data-plane",
-      "version": "1.0-SNAPSHOT",
-      "relativePath": "../pom.xml",
-      "checksumAlgorithm": "SHA-256",
-      "checksum": "",
-      "boms": [
-        {
-          "groupId": "com.redhat.quarkus.platform",
-          "artifactId": "quarkus-bom",
-          "version": "3.33.4.SP3-redhat-00001",
-          "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
-          "repositoryId": "redhat",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
-        },
-        {
-          "groupId": "io.micrometer",
-          "artifactId": "micrometer-bom",
-          "version": "1.14.5",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-bom",
-          "version": "1.62.0",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
-        }
-      ]
-    }
+    "boms": [
+      {
+        "groupId": "com.redhat.quarkus.platform",
+        "artifactId": "quarkus-bom",
+        "version": "3.33.4.SP3-redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
+      },
+      {
+        "groupId": "io.micrometer",
+        "artifactId": "micrometer-bom",
+        "version": "1.14.5",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
+      },
+      {
+        "groupId": "io.opentelemetry",
+        "artifactId": "opentelemetry-bom",
+        "version": "1.62.0",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
+      }
+    ]
   },
   "lockFileVersion": 1,
   "dependencies": [
     {
-      "groupId": "dev.knative.eventing.kafka.broker",
-      "artifactId": "core",
-      "version": "1.0-SNAPSHOT",
-      "classifier": "tests",
-      "type": "test-jar",
+      "groupId": "ch.qos.logback",
+      "artifactId": "logback-classic",
+      "version": "1.5.17",
       "checksumAlgorithm": "SHA-256",
-      "checksum": "",
+      "checksum": "e7bd342d91e50a15f1e16f80a526ce7dffc418daf73cd2094db4f802c0204880",
       "scope": "test",
-      "resolved": "",
-      "repositoryId": "",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-classic/1.5.17/logback-classic-1.5.17.jar",
+      "repositoryId": "google-maven-central",
       "parentPom": {
-        "groupId": "dev.knative.eventing.kafka.broker",
-        "artifactId": "data-plane",
-        "version": "1.0-SNAPSHOT",
-        "relativePath": "../pom.xml",
+        "groupId": "ch.qos.logback",
+        "artifactId": "logback-parent",
+        "version": "1.5.17",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-parent/1.5.17/logback-parent-1.5.17.pom",
+        "repositoryId": "google-maven-central",
         "checksumAlgorithm": "SHA-256",
-        "checksum": "",
-        "boms": [
-          {
-            "groupId": "com.redhat.quarkus.platform",
-            "artifactId": "quarkus-bom",
-            "version": "3.33.4.SP3-redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
+        "checksum": "9a7c8bfb3c4a17697ce8ead3a23a3ccacbdc723a6142417df0aaeba8c1ed067a"
+      },
+      "selectedVersion": "1.5.17",
+      "included": false,
+      "id": "ch.qos.logback:logback-classic:1.5.17",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "ch.qos.logback",
+      "artifactId": "logback-core",
+      "version": "1.5.17",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "2fbd5f0272b1a3546e5740a588e735e071acd0cd0226e048f711946a30eac337",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-core/1.5.17/logback-core-1.5.17.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "ch.qos.logback",
+        "artifactId": "logback-parent",
+        "version": "1.5.17",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-parent/1.5.17/logback-parent-1.5.17.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "9a7c8bfb3c4a17697ce8ead3a23a3ccacbdc723a6142417df0aaeba8c1ed067a"
+      },
+      "selectedVersion": "1.5.17",
+      "included": false,
+      "id": "ch.qos.logback:logback-core:1.5.17",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-core",
+      "version": "2.21.8.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "00ccf80d0e51bc55a0e5d3b09b993cd0b169b998d02f08db3111ee038eb54fe6",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/core/jackson-core/2.21.8.redhat-00001/jackson-core-2.21.8.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "com.fasterxml.jackson",
+        "artifactId": "jackson-base",
+        "version": "2.21.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-base/2.21.8.redhat-00001/jackson-base-2.21.8.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "611415d8839bf60ea5d9373c527784c2f460902b99cf1d36f2600880350e21be",
+        "parent": {
+          "groupId": "com.fasterxml.jackson",
+          "artifactId": "jackson-bom",
+          "version": "2.21.8.redhat-00001",
+          "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-bom/2.21.8.redhat-00001/jackson-bom-2.21.8.redhat-00001.pom",
+          "repositoryId": "redhat",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "791d326d6ba1448fb17048e892631e1925dd32f6b45985860128c728a095c00c",
+          "parent": {
+            "groupId": "com.fasterxml.jackson",
+            "artifactId": "jackson-parent",
+            "version": "2.21.0.redhat-00011",
+            "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-parent/2.21.0.redhat-00011/jackson-parent-2.21.0.redhat-00011.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
-          },
+            "checksum": "81a3e7431ad24f4a44e4b4d26212eee0f053073a040a228e5ebbd5ad605cb2ad",
+            "parent": {
+              "groupId": "com.fasterxml",
+              "artifactId": "oss-parent",
+              "version": "75.0.0.redhat-00004",
+              "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/oss-parent/75.0.0.redhat-00004/oss-parent-75.0.0.redhat-00004.pom",
+              "repositoryId": "redhat",
+              "checksumAlgorithm": "SHA-256",
+              "checksum": "64b4330f2ffd5fae8642dd76083e705bb2d06ce1b028b1877ccb5da8af8fb0ea"
+            }
+          }
+        },
+        "boms": [
           {
-            "groupId": "io.micrometer",
-            "artifactId": "micrometer-bom",
-            "version": "1.14.5",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
+            "groupId": "org.junit",
+            "artifactId": "junit-bom",
+            "version": "5.14.1",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.1/junit-bom-5.14.1.pom",
             "repositoryId": "google-maven-central",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
-          },
-          {
-            "groupId": "io.opentelemetry",
-            "artifactId": "opentelemetry-bom",
-            "version": "1.62.0",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
+            "checksum": "01b01dfa366550b40ac5760548a7d728b6109d17c451e83864d1e5e0ce862c94"
           }
         ]
       },
-      "selectedVersion": "1.0-SNAPSHOT",
-      "included": true,
-      "id": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-      "children": [
-        {
-          "groupId": "ch.qos.logback",
-          "artifactId": "logback-classic",
-          "version": "1.5.17",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "e7bd342d91e50a15f1e16f80a526ce7dffc418daf73cd2094db4f802c0204880",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-classic/1.5.17/logback-classic-1.5.17.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "ch.qos.logback",
-            "artifactId": "logback-parent",
-            "version": "1.5.17",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-parent/1.5.17/logback-parent-1.5.17.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "9a7c8bfb3c4a17697ce8ead3a23a3ccacbdc723a6142417df0aaeba8c1ed067a"
-          },
-          "selectedVersion": "1.5.17",
-          "included": false,
-          "id": "ch.qos.logback:logback-classic:1.5.17",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "ch.qos.logback",
-          "artifactId": "logback-core",
-          "version": "1.5.17",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "2fbd5f0272b1a3546e5740a588e735e071acd0cd0226e048f711946a30eac337",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-core/1.5.17/logback-core-1.5.17.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "ch.qos.logback",
-            "artifactId": "logback-parent",
-            "version": "1.5.17",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/ch/qos/logback/logback-parent/1.5.17/logback-parent-1.5.17.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "9a7c8bfb3c4a17697ce8ead3a23a3ccacbdc723a6142417df0aaeba8c1ed067a"
-          },
-          "selectedVersion": "1.5.17",
-          "included": false,
-          "id": "ch.qos.logback:logback-core:1.5.17",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "com.fasterxml.jackson.core",
-          "artifactId": "jackson-core",
+      "selectedVersion": "2.21.8.redhat-00001",
+      "included": false,
+      "id": "com.fasterxml.jackson.core:jackson-core:2.21.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-databind",
+      "version": "2.21.8.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "6588e4cd83a5961dfaf002db70b6f1a2f742f9be7a836a0a510b2af15f471eb2",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/core/jackson-databind/2.21.8.redhat-00001/jackson-databind-2.21.8.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "com.fasterxml.jackson",
+        "artifactId": "jackson-base",
+        "version": "2.21.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-base/2.21.8.redhat-00001/jackson-base-2.21.8.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "611415d8839bf60ea5d9373c527784c2f460902b99cf1d36f2600880350e21be",
+        "parent": {
+          "groupId": "com.fasterxml.jackson",
+          "artifactId": "jackson-bom",
           "version": "2.21.8.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "00ccf80d0e51bc55a0e5d3b09b993cd0b169b998d02f08db3111ee038eb54fe6",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/core/jackson-core/2.21.8.redhat-00001/jackson-core-2.21.8.redhat-00001.jar",
+          "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-bom/2.21.8.redhat-00001/jackson-bom-2.21.8.redhat-00001.pom",
           "repositoryId": "redhat",
-          "parentPom": {
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "791d326d6ba1448fb17048e892631e1925dd32f6b45985860128c728a095c00c",
+          "parent": {
             "groupId": "com.fasterxml.jackson",
-            "artifactId": "jackson-base",
-            "version": "2.21.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-base/2.21.8.redhat-00001/jackson-base-2.21.8.redhat-00001.pom",
+            "artifactId": "jackson-parent",
+            "version": "2.21.0.redhat-00011",
+            "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-parent/2.21.0.redhat-00011/jackson-parent-2.21.0.redhat-00011.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "611415d8839bf60ea5d9373c527784c2f460902b99cf1d36f2600880350e21be",
+            "checksum": "81a3e7431ad24f4a44e4b4d26212eee0f053073a040a228e5ebbd5ad605cb2ad",
             "parent": {
-              "groupId": "com.fasterxml.jackson",
-              "artifactId": "jackson-bom",
-              "version": "2.21.8.redhat-00001",
-              "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-bom/2.21.8.redhat-00001/jackson-bom-2.21.8.redhat-00001.pom",
+              "groupId": "com.fasterxml",
+              "artifactId": "oss-parent",
+              "version": "75.0.0.redhat-00004",
+              "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/oss-parent/75.0.0.redhat-00004/oss-parent-75.0.0.redhat-00004.pom",
               "repositoryId": "redhat",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "791d326d6ba1448fb17048e892631e1925dd32f6b45985860128c728a095c00c",
-              "parent": {
-                "groupId": "com.fasterxml.jackson",
-                "artifactId": "jackson-parent",
-                "version": "2.21.0.redhat-00011",
-                "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-parent/2.21.0.redhat-00011/jackson-parent-2.21.0.redhat-00011.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "81a3e7431ad24f4a44e4b4d26212eee0f053073a040a228e5ebbd5ad605cb2ad",
-                "parent": {
-                  "groupId": "com.fasterxml",
-                  "artifactId": "oss-parent",
-                  "version": "75.0.0.redhat-00004",
-                  "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/oss-parent/75.0.0.redhat-00004/oss-parent-75.0.0.redhat-00004.pom",
-                  "repositoryId": "redhat",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "64b4330f2ffd5fae8642dd76083e705bb2d06ce1b028b1877ccb5da8af8fb0ea"
-                }
-              }
-            },
-            "boms": [
-              {
-                "groupId": "org.junit",
-                "artifactId": "junit-bom",
-                "version": "5.14.1",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.1/junit-bom-5.14.1.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "01b01dfa366550b40ac5760548a7d728b6109d17c451e83864d1e5e0ce862c94"
-              }
-            ]
-          },
-          "selectedVersion": "2.21.8.redhat-00001",
-          "included": false,
-          "id": "com.fasterxml.jackson.core:jackson-core:2.21.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
+              "checksum": "64b4330f2ffd5fae8642dd76083e705bb2d06ce1b028b1877ccb5da8af8fb0ea"
+            }
+          }
         },
-        {
-          "groupId": "com.fasterxml.jackson.core",
-          "artifactId": "jackson-databind",
-          "version": "2.21.8.redhat-00001",
+        "boms": [
+          {
+            "groupId": "org.junit",
+            "artifactId": "junit-bom",
+            "version": "5.14.1",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.1/junit-bom-5.14.1.pom",
+            "repositoryId": "google-maven-central",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "01b01dfa366550b40ac5760548a7d728b6109d17c451e83864d1e5e0ce862c94"
+          }
+        ]
+      },
+      "selectedVersion": "2.21.8.redhat-00001",
+      "included": false,
+      "id": "com.fasterxml.jackson.core:jackson-databind:2.21.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "com.google.protobuf",
+      "artifactId": "protobuf-java",
+      "version": "3.25.8.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "c7a7d111c9a648ab6ea62882321a49188cf7cf4679f8b3396e8d9298ec4a20f7",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java/3.25.8.redhat-00001/protobuf-java-3.25.8.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "com.google.protobuf",
+        "artifactId": "protobuf-parent",
+        "version": "3.25.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
+        "boms": [
+          {
+            "groupId": "com.google.protobuf",
+            "artifactId": "protobuf-bom",
+            "version": "3.25.8.redhat-00001",
+            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
+            "repositoryId": "redhat",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
+          }
+        ]
+      },
+      "selectedVersion": "3.25.8.redhat-00001",
+      "included": false,
+      "id": "com.google.protobuf:protobuf-java:3.25.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "com.google.protobuf",
+      "artifactId": "protobuf-java-util",
+      "version": "3.25.8.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "13f1293aa8c50978f3d8229c9494c60d990620fe473487e164623ab9da9b0775",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java-util/3.25.8.redhat-00001/protobuf-java-util-3.25.8.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "com.google.protobuf",
+        "artifactId": "protobuf-parent",
+        "version": "3.25.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
+        "boms": [
+          {
+            "groupId": "com.google.protobuf",
+            "artifactId": "protobuf-bom",
+            "version": "3.25.8.redhat-00001",
+            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
+            "repositoryId": "redhat",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
+          }
+        ]
+      },
+      "selectedVersion": "3.25.8.redhat-00001",
+      "included": false,
+      "id": "com.google.protobuf:protobuf-java-util:3.25.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "commons-codec",
+      "artifactId": "commons-codec",
+      "version": "1.21.0.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "d8d6fc538c0d298d6f38f940013b5d34208a2e449fc403961e71069b23c12a8f",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/commons-codec/commons-codec/1.21.0.redhat-00001/commons-codec-1.21.0.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "org.apache.commons",
+        "artifactId": "commons-parent",
+        "version": "96",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/commons/commons-parent/96/commons-parent-96.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "2cd3289b44efa53052d9cdaf3f05544833a520a682f9c7ffd403a00bbb157f9a",
+        "parent": {
+          "groupId": "org.apache",
+          "artifactId": "apache",
+          "version": "37",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/apache/37/apache-37.pom",
+          "repositoryId": "google-maven-central",
           "checksumAlgorithm": "SHA-256",
-          "checksum": "6588e4cd83a5961dfaf002db70b6f1a2f742f9be7a836a0a510b2af15f471eb2",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/core/jackson-databind/2.21.8.redhat-00001/jackson-databind-2.21.8.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
+          "checksum": "524ec4787aff73af6b3a9fafa154c7f1881b648299b663fdbfcadda1286f2353"
+        },
+        "boms": [
+          {
+            "groupId": "org.junit",
+            "artifactId": "junit-bom",
+            "version": "5.14.2",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.2/junit-bom-5.14.2.pom",
+            "repositoryId": "google-maven-central",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "ed2dcc7855bd460bccc93a1bf0c962e63b566ff7d8f1ded0f1f2593ba8183aaf"
+          }
+        ]
+      },
+      "selectedVersion": "1.21.0.redhat-00001",
+      "included": false,
+      "id": "commons-codec:commons-codec:1.21.0.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.cloudevents",
+      "artifactId": "cloudevents-http-vertx",
+      "version": "4.0.1",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "b6f8beb2e22d8ef2ae5d8a1452fd9b200268c3a50b1613626479b8c768f3b253",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-http-vertx/4.0.1/cloudevents-http-vertx-4.0.1.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.cloudevents",
+        "artifactId": "cloudevents-parent",
+        "version": "4.0.1",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
+      },
+      "selectedVersion": "4.0.1",
+      "included": false,
+      "id": "io.cloudevents:cloudevents-http-vertx:4.0.1",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.cloudevents",
+      "artifactId": "cloudevents-json-jackson",
+      "version": "4.0.1",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "0b63817b29ed6e04c401928acf701470fd5d16c447e54d78cc2801800820617f",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-json-jackson/4.0.1/cloudevents-json-jackson-4.0.1.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.cloudevents",
+        "artifactId": "cloudevents-parent",
+        "version": "4.0.1",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
+      },
+      "selectedVersion": "4.0.1",
+      "included": false,
+      "id": "io.cloudevents:cloudevents-json-jackson:4.0.1",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": [
+        {
+          "groupId": "com.fasterxml.jackson",
+          "artifactId": "jackson-bom",
+          "version": "2.15.2",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.15.2/jackson-bom-2.15.2.pom",
+          "repositoryId": "google-maven-central",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "1ead630255c488c51b5e0ab560c76c2371ad26ae36dadf0929c526572ea5b38b",
+          "parent": {
             "groupId": "com.fasterxml.jackson",
-            "artifactId": "jackson-base",
-            "version": "2.21.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-base/2.21.8.redhat-00001/jackson-base-2.21.8.redhat-00001.pom",
-            "repositoryId": "redhat",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "611415d8839bf60ea5d9373c527784c2f460902b99cf1d36f2600880350e21be",
-            "parent": {
-              "groupId": "com.fasterxml.jackson",
-              "artifactId": "jackson-bom",
-              "version": "2.21.8.redhat-00001",
-              "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-bom/2.21.8.redhat-00001/jackson-bom-2.21.8.redhat-00001.pom",
-              "repositoryId": "redhat",
-              "checksumAlgorithm": "SHA-256",
-              "checksum": "791d326d6ba1448fb17048e892631e1925dd32f6b45985860128c728a095c00c",
-              "parent": {
-                "groupId": "com.fasterxml.jackson",
-                "artifactId": "jackson-parent",
-                "version": "2.21.0.redhat-00011",
-                "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/jackson/jackson-parent/2.21.0.redhat-00011/jackson-parent-2.21.0.redhat-00011.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "81a3e7431ad24f4a44e4b4d26212eee0f053073a040a228e5ebbd5ad605cb2ad",
-                "parent": {
-                  "groupId": "com.fasterxml",
-                  "artifactId": "oss-parent",
-                  "version": "75.0.0.redhat-00004",
-                  "resolved": "https://maven.repository.redhat.com/ga/com/fasterxml/oss-parent/75.0.0.redhat-00004/oss-parent-75.0.0.redhat-00004.pom",
-                  "repositoryId": "redhat",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "64b4330f2ffd5fae8642dd76083e705bb2d06ce1b028b1877ccb5da8af8fb0ea"
-                }
-              }
-            },
-            "boms": [
-              {
-                "groupId": "org.junit",
-                "artifactId": "junit-bom",
-                "version": "5.14.1",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.1/junit-bom-5.14.1.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "01b01dfa366550b40ac5760548a7d728b6109d17c451e83864d1e5e0ce862c94"
-              }
-            ]
-          },
-          "selectedVersion": "2.21.8.redhat-00001",
-          "included": false,
-          "id": "com.fasterxml.jackson.core:jackson-databind:2.21.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "com.google.protobuf",
-          "artifactId": "protobuf-java",
-          "version": "3.25.8.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "c7a7d111c9a648ab6ea62882321a49188cf7cf4679f8b3396e8d9298ec4a20f7",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java/3.25.8.redhat-00001/protobuf-java-3.25.8.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
-            "groupId": "com.google.protobuf",
-            "artifactId": "protobuf-parent",
-            "version": "3.25.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
-            "repositoryId": "redhat",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
-            "boms": [
-              {
-                "groupId": "com.google.protobuf",
-                "artifactId": "protobuf-bom",
-                "version": "3.25.8.redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
-              }
-            ]
-          },
-          "selectedVersion": "3.25.8.redhat-00001",
-          "included": false,
-          "id": "com.google.protobuf:protobuf-java:3.25.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "com.google.protobuf",
-          "artifactId": "protobuf-java-util",
-          "version": "3.25.8.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "13f1293aa8c50978f3d8229c9494c60d990620fe473487e164623ab9da9b0775",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java-util/3.25.8.redhat-00001/protobuf-java-util-3.25.8.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
-            "groupId": "com.google.protobuf",
-            "artifactId": "protobuf-parent",
-            "version": "3.25.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
-            "repositoryId": "redhat",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
-            "boms": [
-              {
-                "groupId": "com.google.protobuf",
-                "artifactId": "protobuf-bom",
-                "version": "3.25.8.redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
-              }
-            ]
-          },
-          "selectedVersion": "3.25.8.redhat-00001",
-          "included": false,
-          "id": "com.google.protobuf:protobuf-java-util:3.25.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "commons-codec",
-          "artifactId": "commons-codec",
-          "version": "1.21.0.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "d8d6fc538c0d298d6f38f940013b5d34208a2e449fc403961e71069b23c12a8f",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/commons-codec/commons-codec/1.21.0.redhat-00001/commons-codec-1.21.0.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
-            "groupId": "org.apache.commons",
-            "artifactId": "commons-parent",
-            "version": "96",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/commons/commons-parent/96/commons-parent-96.pom",
+            "artifactId": "jackson-parent",
+            "version": "2.15",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.15/jackson-parent-2.15.pom",
             "repositoryId": "google-maven-central",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "2cd3289b44efa53052d9cdaf3f05544833a520a682f9c7ffd403a00bbb157f9a",
+            "checksum": "6cdf97bc66f389f63e36850d2f552d1216688f8e5a58727d3f6a98edf8675cde",
             "parent": {
-              "groupId": "org.apache",
-              "artifactId": "apache",
-              "version": "37",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/apache/37/apache-37.pom",
+              "groupId": "com.fasterxml",
+              "artifactId": "oss-parent",
+              "version": "50",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/50/oss-parent-50.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "524ec4787aff73af6b3a9fafa154c7f1881b648299b663fdbfcadda1286f2353"
-            },
-            "boms": [
-              {
-                "groupId": "org.junit",
-                "artifactId": "junit-bom",
-                "version": "5.14.2",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/org/junit/junit-bom/5.14.2/junit-bom-5.14.2.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "ed2dcc7855bd460bccc93a1bf0c962e63b566ff7d8f1ded0f1f2593ba8183aaf"
-              }
-            ]
-          },
-          "selectedVersion": "1.21.0.redhat-00001",
-          "included": false,
-          "id": "commons-codec:commons-codec:1.21.0.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "dev.knative.eventing.kafka.broker",
-          "artifactId": "contract",
-          "version": "1.0-SNAPSHOT",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "",
-          "scope": "test",
-          "resolved": "",
-          "repositoryId": "",
-          "parentPom": {
-            "groupId": "dev.knative.eventing.kafka.broker",
-            "artifactId": "data-plane",
-            "version": "1.0-SNAPSHOT",
-            "relativePath": "../pom.xml",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "",
-            "boms": [
-              {
-                "groupId": "com.redhat.quarkus.platform",
-                "artifactId": "quarkus-bom",
-                "version": "3.33.4.SP3-redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
-              },
-              {
-                "groupId": "io.micrometer",
-                "artifactId": "micrometer-bom",
-                "version": "1.14.5",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
-              },
-              {
-                "groupId": "io.opentelemetry",
-                "artifactId": "opentelemetry-bom",
-                "version": "1.62.0",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
-              }
-            ]
-          },
-          "selectedVersion": "1.0-SNAPSHOT",
-          "included": false,
-          "id": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.cloudevents",
-          "artifactId": "cloudevents-http-vertx",
-          "version": "4.0.1",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "b6f8beb2e22d8ef2ae5d8a1452fd9b200268c3a50b1613626479b8c768f3b253",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-http-vertx/4.0.1/cloudevents-http-vertx-4.0.1.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.cloudevents",
-            "artifactId": "cloudevents-parent",
-            "version": "4.0.1",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+              "checksum": "f5da55dd7b88fb170c46801d17774a652fb2f4581fb5b1d0a5fc86aa182b8577"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "groupId": "io.cloudevents",
+      "artifactId": "cloudevents-kafka",
+      "version": "4.0.1",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "278d5de9ec8a193f83d524ae3557b1cb65c4e5e6c3f6c6544f48a1d1995dcb53",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-kafka/4.0.1/cloudevents-kafka-4.0.1.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.cloudevents",
+        "artifactId": "cloudevents-parent",
+        "version": "4.0.1",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
+      },
+      "selectedVersion": "4.0.1",
+      "included": false,
+      "id": "io.cloudevents:cloudevents-kafka:4.0.1",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.cloudevents",
+      "artifactId": "cloudevents-sql",
+      "version": "4.0.1",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "fda7afa3166bdee3094224647e9e550b4a948f46e5b087f12502eec9b18e0490",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-sql/4.0.1/cloudevents-sql-4.0.1.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.cloudevents",
+        "artifactId": "cloudevents-parent",
+        "version": "4.0.1",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
+      },
+      "selectedVersion": "4.0.1",
+      "included": false,
+      "id": "io.cloudevents:cloudevents-sql:4.0.1",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.fabric8",
+      "artifactId": "kubernetes-client",
+      "version": "7.1.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "8ffb3c213a305d029f1e74be6ab6671b6118b7b1682d4e715c5bc333c93b0d75",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client/7.1.0/kubernetes-client-7.1.0.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.fabric8",
+        "artifactId": "kubernetes-client-project",
+        "version": "7.1.0",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client-project/7.1.0/kubernetes-client-project-7.1.0.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "ba55ce38ddadb281d97e7f3110d4264bc2d241c186abd3109d78d80fbe6d5034",
+        "boms": [
+          {
+            "groupId": "com.fasterxml.jackson",
+            "artifactId": "jackson-bom",
+            "version": "2.18.2",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.2/jackson-bom-2.18.2.pom",
             "repositoryId": "google-maven-central",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
-          },
-          "selectedVersion": "4.0.1",
-          "included": false,
-          "id": "io.cloudevents:cloudevents-http-vertx:4.0.1",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.cloudevents",
-          "artifactId": "cloudevents-json-jackson",
-          "version": "4.0.1",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "0b63817b29ed6e04c401928acf701470fd5d16c447e54d78cc2801800820617f",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-json-jackson/4.0.1/cloudevents-json-jackson-4.0.1.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.cloudevents",
-            "artifactId": "cloudevents-parent",
-            "version": "4.0.1",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
-          },
-          "selectedVersion": "4.0.1",
-          "included": false,
-          "id": "io.cloudevents:cloudevents-json-jackson:4.0.1",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": [
-            {
+            "checksum": "5247cdc301725d3f67f7ef049037289d5af709d6972bcf4b17096e4548d2956b",
+            "parent": {
               "groupId": "com.fasterxml.jackson",
-              "artifactId": "jackson-bom",
-              "version": "2.15.2",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.15.2/jackson-bom-2.15.2.pom",
+              "artifactId": "jackson-parent",
+              "version": "2.18.1",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "1ead630255c488c51b5e0ab560c76c2371ad26ae36dadf0929c526572ea5b38b",
+              "checksum": "d0822fac1a0226844b8ad445c920c49a4f619169d09b1010a7dfeed19910998c",
               "parent": {
-                "groupId": "com.fasterxml.jackson",
-                "artifactId": "jackson-parent",
-                "version": "2.15",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.15/jackson-parent-2.15.pom",
+                "groupId": "com.fasterxml",
+                "artifactId": "oss-parent",
+                "version": "61",
+                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom",
                 "repositoryId": "google-maven-central",
                 "checksumAlgorithm": "SHA-256",
-                "checksum": "6cdf97bc66f389f63e36850d2f552d1216688f8e5a58727d3f6a98edf8675cde",
-                "parent": {
-                  "groupId": "com.fasterxml",
-                  "artifactId": "oss-parent",
-                  "version": "50",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/50/oss-parent-50.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "f5da55dd7b88fb170c46801d17774a652fb2f4581fb5b1d0a5fc86aa182b8577"
-                }
+                "checksum": "3649513cf597e9186da0855986a8c543e12bdbd805edeef9c124db56dd036544"
               }
             }
-          ]
-        },
-        {
-          "groupId": "io.cloudevents",
-          "artifactId": "cloudevents-kafka",
-          "version": "4.0.1",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "278d5de9ec8a193f83d524ae3557b1cb65c4e5e6c3f6c6544f48a1d1995dcb53",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-kafka/4.0.1/cloudevents-kafka-4.0.1.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.cloudevents",
-            "artifactId": "cloudevents-parent",
-            "version": "4.0.1",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
+          }
+        ]
+      },
+      "selectedVersion": "7.1.0",
+      "included": false,
+      "id": "io.fabric8:kubernetes-client:7.1.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.fabric8",
+      "artifactId": "kubernetes-httpclient-jdk",
+      "version": "7.1.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "06e1261a85733dbda93a07dcd87ee5651a090095e3b13bed486083405dac261b",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-httpclient-jdk/7.1.0/kubernetes-httpclient-jdk-7.1.0.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.fabric8",
+        "artifactId": "kubernetes-client-project",
+        "version": "7.1.0",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client-project/7.1.0/kubernetes-client-project-7.1.0.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "ba55ce38ddadb281d97e7f3110d4264bc2d241c186abd3109d78d80fbe6d5034",
+        "boms": [
+          {
+            "groupId": "com.fasterxml.jackson",
+            "artifactId": "jackson-bom",
+            "version": "2.18.2",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.2/jackson-bom-2.18.2.pom",
             "repositoryId": "google-maven-central",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
-          },
-          "selectedVersion": "4.0.1",
-          "included": false,
-          "id": "io.cloudevents:cloudevents-kafka:4.0.1",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.cloudevents",
-          "artifactId": "cloudevents-sql",
-          "version": "4.0.1",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "fda7afa3166bdee3094224647e9e550b4a948f46e5b087f12502eec9b18e0490",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-sql/4.0.1/cloudevents-sql-4.0.1.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.cloudevents",
-            "artifactId": "cloudevents-parent",
-            "version": "4.0.1",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/cloudevents/cloudevents-parent/4.0.1/cloudevents-parent-4.0.1.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "c02a6e660b76beb097446c92fbd0ab8a98f08ebde4ef6463d8d6068cab530ce4"
-          },
-          "selectedVersion": "4.0.1",
-          "included": false,
-          "id": "io.cloudevents:cloudevents-sql:4.0.1",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.fabric8",
-          "artifactId": "kubernetes-client",
-          "version": "7.1.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "8ffb3c213a305d029f1e74be6ab6671b6118b7b1682d4e715c5bc333c93b0d75",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client/7.1.0/kubernetes-client-7.1.0.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.fabric8",
-            "artifactId": "kubernetes-client-project",
-            "version": "7.1.0",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client-project/7.1.0/kubernetes-client-project-7.1.0.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "ba55ce38ddadb281d97e7f3110d4264bc2d241c186abd3109d78d80fbe6d5034",
-            "boms": [
-              {
-                "groupId": "com.fasterxml.jackson",
-                "artifactId": "jackson-bom",
-                "version": "2.18.2",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.2/jackson-bom-2.18.2.pom",
+            "checksum": "5247cdc301725d3f67f7ef049037289d5af709d6972bcf4b17096e4548d2956b",
+            "parent": {
+              "groupId": "com.fasterxml.jackson",
+              "artifactId": "jackson-parent",
+              "version": "2.18.1",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom",
+              "repositoryId": "google-maven-central",
+              "checksumAlgorithm": "SHA-256",
+              "checksum": "d0822fac1a0226844b8ad445c920c49a4f619169d09b1010a7dfeed19910998c",
+              "parent": {
+                "groupId": "com.fasterxml",
+                "artifactId": "oss-parent",
+                "version": "61",
+                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom",
                 "repositoryId": "google-maven-central",
                 "checksumAlgorithm": "SHA-256",
-                "checksum": "5247cdc301725d3f67f7ef049037289d5af709d6972bcf4b17096e4548d2956b",
-                "parent": {
-                  "groupId": "com.fasterxml.jackson",
-                  "artifactId": "jackson-parent",
-                  "version": "2.18.1",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "d0822fac1a0226844b8ad445c920c49a4f619169d09b1010a7dfeed19910998c",
-                  "parent": {
-                    "groupId": "com.fasterxml",
-                    "artifactId": "oss-parent",
-                    "version": "61",
-                    "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom",
-                    "repositoryId": "google-maven-central",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "3649513cf597e9186da0855986a8c543e12bdbd805edeef9c124db56dd036544"
-                  }
-                }
+                "checksum": "3649513cf597e9186da0855986a8c543e12bdbd805edeef9c124db56dd036544"
               }
-            ]
-          },
-          "selectedVersion": "7.1.0",
-          "included": false,
-          "id": "io.fabric8:kubernetes-client:7.1.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.fabric8",
-          "artifactId": "kubernetes-httpclient-jdk",
-          "version": "7.1.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "06e1261a85733dbda93a07dcd87ee5651a090095e3b13bed486083405dac261b",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-httpclient-jdk/7.1.0/kubernetes-httpclient-jdk-7.1.0.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.fabric8",
-            "artifactId": "kubernetes-client-project",
-            "version": "7.1.0",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/fabric8/kubernetes-client-project/7.1.0/kubernetes-client-project-7.1.0.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "ba55ce38ddadb281d97e7f3110d4264bc2d241c186abd3109d78d80fbe6d5034",
-            "boms": [
-              {
-                "groupId": "com.fasterxml.jackson",
-                "artifactId": "jackson-bom",
-                "version": "2.18.2",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.18.2/jackson-bom-2.18.2.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "5247cdc301725d3f67f7ef049037289d5af709d6972bcf4b17096e4548d2956b",
-                "parent": {
-                  "groupId": "com.fasterxml.jackson",
-                  "artifactId": "jackson-parent",
-                  "version": "2.18.1",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "d0822fac1a0226844b8ad445c920c49a4f619169d09b1010a7dfeed19910998c",
-                  "parent": {
-                    "groupId": "com.fasterxml",
-                    "artifactId": "oss-parent",
-                    "version": "61",
-                    "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom",
-                    "repositoryId": "google-maven-central",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "3649513cf597e9186da0855986a8c543e12bdbd805edeef9c124db56dd036544"
-                  }
-                }
-              }
-            ]
-          },
-          "selectedVersion": "7.1.0",
-          "included": false,
-          "id": "io.fabric8:kubernetes-httpclient-jdk:7.1.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.micrometer",
-          "artifactId": "micrometer-registry-prometheus-simpleclient",
-          "version": "1.16.7.redhat-00002",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "02bfbbe5df1a609a03a73161476a707d0cc6ff5f073526fb2b12c279426edef8",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/io/micrometer/micrometer-registry-prometheus-simpleclient/1.16.7.redhat-00002/micrometer-registry-prometheus-simpleclient-1.16.7.redhat-00002.jar",
-          "repositoryId": "redhat",
-          "selectedVersion": "1.16.7.redhat-00002",
-          "included": false,
-          "id": "io.micrometer:micrometer-registry-prometheus-simpleclient:1.16.7.redhat-00002",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-api",
-          "version": "1.62.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "d58143928c049233653e6bf1282ff8a767ebdd5e6a82b3f336158c30e40b431d",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-api/1.62.0/opentelemetry-api-1.62.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "1.62.0",
-          "included": false,
-          "id": "io.opentelemetry:opentelemetry-api:1.62.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-exporter-logging",
-          "version": "1.62.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "2fa59f0b8b7e6ffbde3dbbafac995fb5191ff00c634bd193aa00093ef2601063",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-exporter-logging/1.62.0/opentelemetry-exporter-logging-1.62.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "1.62.0",
-          "included": false,
-          "id": "io.opentelemetry:opentelemetry-exporter-logging:1.62.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-exporter-zipkin",
-          "version": "1.62.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "faf6a0b9f77c6cdc32ff596d4cb502d19b4fa457a011a69d84a825878ada08f2",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-exporter-zipkin/1.62.0/opentelemetry-exporter-zipkin-1.62.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "1.62.0",
-          "included": false,
-          "id": "io.opentelemetry:opentelemetry-exporter-zipkin:1.62.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-extension-trace-propagators",
-          "version": "1.62.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "d301b26215e8f18553b62759d2c17493f321b8c74d9782841446ab8d2d716b9f",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-extension-trace-propagators/1.62.0/opentelemetry-extension-trace-propagators-1.62.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "1.62.0",
-          "included": false,
-          "id": "io.opentelemetry:opentelemetry-extension-trace-propagators:1.62.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-sdk",
-          "version": "1.62.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "99d421ea0e5a1ca8e45cb67f1d5db7f0e8a718dd55eeb86c1323597e1f10aed3",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-sdk/1.62.0/opentelemetry-sdk-1.62.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "1.62.0",
-          "included": false,
-          "id": "io.opentelemetry:opentelemetry-sdk:1.62.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
+            }
+          }
+        ]
+      },
+      "selectedVersion": "7.1.0",
+      "included": false,
+      "id": "io.fabric8:kubernetes-httpclient-jdk:7.1.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.micrometer",
+      "artifactId": "micrometer-registry-prometheus-simpleclient",
+      "version": "1.16.7.redhat-00002",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "02bfbbe5df1a609a03a73161476a707d0cc6ff5f073526fb2b12c279426edef8",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/io/micrometer/micrometer-registry-prometheus-simpleclient/1.16.7.redhat-00002/micrometer-registry-prometheus-simpleclient-1.16.7.redhat-00002.jar",
+      "repositoryId": "redhat",
+      "selectedVersion": "1.16.7.redhat-00002",
+      "included": false,
+      "id": "io.micrometer:micrometer-registry-prometheus-simpleclient:1.16.7.redhat-00002",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.opentelemetry",
+      "artifactId": "opentelemetry-api",
+      "version": "1.62.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "d58143928c049233653e6bf1282ff8a767ebdd5e6a82b3f336158c30e40b431d",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-api/1.62.0/opentelemetry-api-1.62.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "1.62.0",
+      "included": false,
+      "id": "io.opentelemetry:opentelemetry-api:1.62.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.opentelemetry",
+      "artifactId": "opentelemetry-exporter-logging",
+      "version": "1.62.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "2fa59f0b8b7e6ffbde3dbbafac995fb5191ff00c634bd193aa00093ef2601063",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-exporter-logging/1.62.0/opentelemetry-exporter-logging-1.62.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "1.62.0",
+      "included": false,
+      "id": "io.opentelemetry:opentelemetry-exporter-logging:1.62.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.opentelemetry",
+      "artifactId": "opentelemetry-exporter-zipkin",
+      "version": "1.62.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "faf6a0b9f77c6cdc32ff596d4cb502d19b4fa457a011a69d84a825878ada08f2",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-exporter-zipkin/1.62.0/opentelemetry-exporter-zipkin-1.62.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "1.62.0",
+      "included": false,
+      "id": "io.opentelemetry:opentelemetry-exporter-zipkin:1.62.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.opentelemetry",
+      "artifactId": "opentelemetry-extension-trace-propagators",
+      "version": "1.62.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "d301b26215e8f18553b62759d2c17493f321b8c74d9782841446ab8d2d716b9f",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-extension-trace-propagators/1.62.0/opentelemetry-extension-trace-propagators-1.62.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "1.62.0",
+      "included": false,
+      "id": "io.opentelemetry:opentelemetry-extension-trace-propagators:1.62.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.opentelemetry",
+      "artifactId": "opentelemetry-sdk",
+      "version": "1.62.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "99d421ea0e5a1ca8e45cb67f1d5db7f0e8a718dd55eeb86c1323597e1f10aed3",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-sdk/1.62.0/opentelemetry-sdk-1.62.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "1.62.0",
+      "included": false,
+      "id": "io.opentelemetry:opentelemetry-sdk:1.62.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.quarkus",
+      "artifactId": "quarkus-vertx",
+      "version": "3.33.4.redhat-00005",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "10834233752201573cd302315ad6b5743b97e9a5b044be054458a5b588505a92",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-vertx/3.33.4.redhat-00005/quarkus-vertx-3.33.4.redhat-00005.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "io.quarkus",
+        "artifactId": "quarkus-vertx-parent",
+        "version": "3.33.4.redhat-00005",
+        "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-vertx-parent/3.33.4.redhat-00005/quarkus-vertx-parent-3.33.4.redhat-00005.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "ac3ef501badf3757069d76495cbef220da8846797463d9d5ac686134268969ea",
+        "parent": {
           "groupId": "io.quarkus",
-          "artifactId": "quarkus-vertx",
+          "artifactId": "quarkus-extensions-parent",
           "version": "3.33.4.redhat-00005",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "10834233752201573cd302315ad6b5743b97e9a5b044be054458a5b588505a92",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-vertx/3.33.4.redhat-00005/quarkus-vertx-3.33.4.redhat-00005.jar",
+          "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-extensions-parent/3.33.4.redhat-00005/quarkus-extensions-parent-3.33.4.redhat-00005.pom",
           "repositoryId": "redhat",
-          "parentPom": {
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "f04e02ca7c74d3ad79de7377f1ab00c25e28a9bce21b4f90c698298d6a89212b",
+          "parent": {
             "groupId": "io.quarkus",
-            "artifactId": "quarkus-vertx-parent",
+            "artifactId": "quarkus-build-parent",
             "version": "3.33.4.redhat-00005",
-            "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-vertx-parent/3.33.4.redhat-00005/quarkus-vertx-parent-3.33.4.redhat-00005.pom",
+            "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-build-parent/3.33.4.redhat-00005/quarkus-build-parent-3.33.4.redhat-00005.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "ac3ef501badf3757069d76495cbef220da8846797463d9d5ac686134268969ea",
+            "checksum": "a54c102511cf07f90ec24fd406d8025a948440a89f006896141de5e2a9dca180",
             "parent": {
               "groupId": "io.quarkus",
-              "artifactId": "quarkus-extensions-parent",
+              "artifactId": "quarkus-project",
               "version": "3.33.4.redhat-00005",
-              "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-extensions-parent/3.33.4.redhat-00005/quarkus-extensions-parent-3.33.4.redhat-00005.pom",
+              "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-project/3.33.4.redhat-00005/quarkus-project-3.33.4.redhat-00005.pom",
               "repositoryId": "redhat",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "f04e02ca7c74d3ad79de7377f1ab00c25e28a9bce21b4f90c698298d6a89212b",
+              "checksum": "c76419a27879d7ddec1659a2e062708657dda44a5323f3c2002450517ff77009",
               "parent": {
                 "groupId": "io.quarkus",
-                "artifactId": "quarkus-build-parent",
+                "artifactId": "quarkus-parent",
                 "version": "3.33.4.redhat-00005",
-                "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-build-parent/3.33.4.redhat-00005/quarkus-build-parent-3.33.4.redhat-00005.pom",
+                "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-parent/3.33.4.redhat-00005/quarkus-parent-3.33.4.redhat-00005.pom",
                 "repositoryId": "redhat",
                 "checksumAlgorithm": "SHA-256",
-                "checksum": "a54c102511cf07f90ec24fd406d8025a948440a89f006896141de5e2a9dca180",
-                "parent": {
-                  "groupId": "io.quarkus",
-                  "artifactId": "quarkus-project",
-                  "version": "3.33.4.redhat-00005",
-                  "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-project/3.33.4.redhat-00005/quarkus-project-3.33.4.redhat-00005.pom",
-                  "repositoryId": "redhat",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "c76419a27879d7ddec1659a2e062708657dda44a5323f3c2002450517ff77009",
-                  "parent": {
-                    "groupId": "io.quarkus",
-                    "artifactId": "quarkus-parent",
-                    "version": "3.33.4.redhat-00005",
-                    "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-parent/3.33.4.redhat-00005/quarkus-parent-3.33.4.redhat-00005.pom",
-                    "repositoryId": "redhat",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "627c3eba9245d5395635f015e4956debf6168f429377b6feec538ff569ede608"
-                  }
-                },
-                "boms": [
-                  {
-                    "groupId": "io.quarkus",
-                    "artifactId": "quarkus-bom",
-                    "version": "3.33.4.redhat-00005",
-                    "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-bom/3.33.4.redhat-00005/quarkus-bom-3.33.4.redhat-00005.pom",
-                    "repositoryId": "redhat",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "f869d4727738fe979813289e0d92831ebed6fe638e5859a8d5af9090ef95f7c6"
-                  }
-                ]
+                "checksum": "627c3eba9245d5395635f015e4956debf6168f429377b6feec538ff569ede608"
               }
-            }
-          },
-          "selectedVersion": "3.33.4.redhat-00005",
-          "included": false,
-          "id": "io.quarkus:quarkus-vertx:3.33.4.redhat-00005",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
+            },
+            "boms": [
+              {
+                "groupId": "io.quarkus",
+                "artifactId": "quarkus-bom",
+                "version": "3.33.4.redhat-00005",
+                "resolved": "https://maven.repository.redhat.com/ga/io/quarkus/quarkus-bom/3.33.4.redhat-00005/quarkus-bom-3.33.4.redhat-00005.pom",
+                "repositoryId": "redhat",
+                "checksumAlgorithm": "SHA-256",
+                "checksum": "f869d4727738fe979813289e0d92831ebed6fe638e5859a8d5af9090ef95f7c6"
+              }
+            ]
+          }
+        }
+      },
+      "selectedVersion": "3.33.4.redhat-00005",
+      "included": false,
+      "id": "io.quarkus:quarkus-vertx:3.33.4.redhat-00005",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.smallrye.reactive",
+      "artifactId": "smallrye-mutiny-vertx-web-client",
+      "version": "3.23.1.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "409c1e803d65d7e158a617918dc90ae003926edc588b646b464ef2203893d6b2",
+      "scope": "test",
+      "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/smallrye-mutiny-vertx-web-client/3.23.1.redhat-00001/smallrye-mutiny-vertx-web-client-3.23.1.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "io.smallrye.reactive",
+        "artifactId": "vertx-mutiny-clients",
+        "version": "3.23.1.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/vertx-mutiny-clients/3.23.1.redhat-00001/vertx-mutiny-clients-3.23.1.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "88645da7aa69ef8e498853a46d64d5b7b703b0613ad9eb27f26acdc93f883ec0",
+        "parent": {
           "groupId": "io.smallrye.reactive",
-          "artifactId": "smallrye-mutiny-vertx-web-client",
+          "artifactId": "smallrye-mutiny-vertx-bindings-projects",
           "version": "3.23.1.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "409c1e803d65d7e158a617918dc90ae003926edc588b646b464ef2203893d6b2",
-          "scope": "test",
-          "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/smallrye-mutiny-vertx-web-client/3.23.1.redhat-00001/smallrye-mutiny-vertx-web-client-3.23.1.redhat-00001.jar",
+          "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/smallrye-mutiny-vertx-bindings-projects/3.23.1.redhat-00001/smallrye-mutiny-vertx-bindings-projects-3.23.1.redhat-00001.pom",
           "repositoryId": "redhat",
-          "parentPom": {
-            "groupId": "io.smallrye.reactive",
-            "artifactId": "vertx-mutiny-clients",
-            "version": "3.23.1.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/vertx-mutiny-clients/3.23.1.redhat-00001/vertx-mutiny-clients-3.23.1.redhat-00001.pom",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "1b2706d53f6089c9ac9385b379ab93ddfa415ee8ba12137f0eb32ab305cd7363",
+          "parent": {
+            "groupId": "io.smallrye",
+            "artifactId": "smallrye-build-parent",
+            "version": "51.0.0.redhat-00001",
+            "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/smallrye-build-parent/51.0.0.redhat-00001/smallrye-build-parent-51.0.0.redhat-00001.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "88645da7aa69ef8e498853a46d64d5b7b703b0613ad9eb27f26acdc93f883ec0",
-            "parent": {
-              "groupId": "io.smallrye.reactive",
-              "artifactId": "smallrye-mutiny-vertx-bindings-projects",
-              "version": "3.23.1.redhat-00001",
-              "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/reactive/smallrye-mutiny-vertx-bindings-projects/3.23.1.redhat-00001/smallrye-mutiny-vertx-bindings-projects-3.23.1.redhat-00001.pom",
-              "repositoryId": "redhat",
-              "checksumAlgorithm": "SHA-256",
-              "checksum": "1b2706d53f6089c9ac9385b379ab93ddfa415ee8ba12137f0eb32ab305cd7363",
-              "parent": {
-                "groupId": "io.smallrye",
-                "artifactId": "smallrye-build-parent",
-                "version": "51.0.0.redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/io/smallrye/smallrye-build-parent/51.0.0.redhat-00001/smallrye-build-parent-51.0.0.redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "41b61773bff19a0a74d6b01b60798751fc6d1f3d9a8386bc99c07cab0affa4d5"
-              },
-              "boms": [
-                {
-                  "groupId": "io.vertx",
-                  "artifactId": "vertx-dependencies",
-                  "version": "4.5.34",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.34/vertx-dependencies-4.5.34.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "e812c70e693a9556647694ec8e98205ad66cebf831705036d0c267cfa4a2630f",
-                  "parent": {
-                    "groupId": "io.vertx",
-                    "artifactId": "vertx-parent",
-                    "version": "23",
-                    "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
-                    "repositoryId": "google-maven-central",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
-                  },
-                  "boms": [
-                    {
-                      "groupId": "com.fasterxml.jackson",
-                      "artifactId": "jackson-bom",
-                      "version": "2.21.6",
-                      "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.6/jackson-bom-2.21.6.pom",
-                      "repositoryId": "google-maven-central",
-                      "checksumAlgorithm": "SHA-256",
-                      "checksum": "19cc2ca65ea8f623e035e1023ab9de8627fe5f578fafdaff491060fb4cf0b5ab",
-                      "parent": {
-                        "groupId": "com.fasterxml.jackson",
-                        "artifactId": "jackson-parent",
-                        "version": "2.21",
-                        "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.21/jackson-parent-2.21.pom",
-                        "repositoryId": "google-maven-central",
-                        "checksumAlgorithm": "SHA-256",
-                        "checksum": "3851df627faeb46887b956104630b74a8bbb5f7de22e974cf15982e20e0373de",
-                        "parent": {
-                          "groupId": "com.fasterxml",
-                          "artifactId": "oss-parent",
-                          "version": "75",
-                          "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/75/oss-parent-75.pom",
-                          "repositoryId": "google-maven-central",
-                          "checksumAlgorithm": "SHA-256",
-                          "checksum": "fcbbf1c18c9047e6917d384f2064e21b42a58fc85fb0523a9e2e015eff7c619d"
-                        }
-                      }
-                    },
-                    {
-                      "groupId": "io.netty",
-                      "artifactId": "netty-bom",
-                      "version": "4.1.138.Final",
-                      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.138.Final/netty-bom-4.1.138.Final.pom",
-                      "repositoryId": "google-maven-central",
-                      "checksumAlgorithm": "SHA-256",
-                      "checksum": "f415dd0e34e8896dd3b57894f3d53b0437a3a4ea74d8b70fd8b8f39e310d197b",
-                      "parent": {
-                        "groupId": "org.sonatype.oss",
-                        "artifactId": "oss-parent",
-                        "version": "7",
-                        "resolved": "https://maven.repository.redhat.com/ga/org/sonatype/oss/oss-parent/7/oss-parent-7.pom",
-                        "repositoryId": "redhat",
-                        "checksumAlgorithm": "SHA-256",
-                        "checksum": "b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "groupId": "org.testcontainers",
-                  "artifactId": "testcontainers-bom",
-                  "version": "1.21.4",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/org/testcontainers/testcontainers-bom/1.21.4/testcontainers-bom-1.21.4.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "1173c1797fcc33a79dbe3feb69740b3c53803cd2e4601ea809974bd9e1d9d43e"
-                }
-              ]
-            }
+            "checksum": "41b61773bff19a0a74d6b01b60798751fc6d1f3d9a8386bc99c07cab0affa4d5"
           },
-          "selectedVersion": "3.23.1.redhat-00001",
-          "included": false,
-          "id": "io.smallrye.reactive:smallrye-mutiny-vertx-web-client:3.23.1.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "io.vertx",
-          "artifactId": "vertx-micrometer-metrics",
-          "version": "4.5.35",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "b9681c6637a017cc829d018d7921297d987f092f840be9b89d5cb44c899595e2",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-micrometer-metrics/4.5.35/vertx-micrometer-metrics-4.5.35.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.vertx",
-            "artifactId": "vertx-ext-parent",
-            "version": "43",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext-parent/43/vertx-ext-parent-43.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "76f1b2a99407b63b6dc23f9b786ca6633c4944afa1dbc8e3e5ce177939cf79f0",
-            "parent": {
-              "groupId": "io.vertx",
-              "artifactId": "vertx-ext",
-              "version": "43",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext/43/vertx-ext-43.pom",
-              "repositoryId": "google-maven-central",
-              "checksumAlgorithm": "SHA-256",
-              "checksum": "ae7d381625f0c457f97b40535344b8034385632581ea1fe0799bbcb785ca4434",
-              "parent": {
-                "groupId": "io.vertx",
-                "artifactId": "vertx-parent",
-                "version": "23",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
-              }
-            }
-          },
-          "selectedVersion": "4.5.35",
-          "included": false,
-          "id": "io.vertx:vertx-micrometer-metrics:4.5.35",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
           "boms": [
             {
               "groupId": "io.vertx",
               "artifactId": "vertx-dependencies",
-              "version": "4.5.35",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.35/vertx-dependencies-4.5.35.pom",
+              "version": "4.5.34",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.34/vertx-dependencies-4.5.34.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "20943a011d9319dfcda2d0930247e4896aa2754b5c02003adb4df724207a170d",
+              "checksum": "e812c70e693a9556647694ec8e98205ad66cebf831705036d0c267cfa4a2630f",
               "parent": {
                 "groupId": "io.vertx",
                 "artifactId": "vertx-parent",
@@ -1033,11 +794,11 @@
                 {
                   "groupId": "com.fasterxml.jackson",
                   "artifactId": "jackson-bom",
-                  "version": "2.21.7",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.7/jackson-bom-2.21.7.pom",
+                  "version": "2.21.6",
+                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.6/jackson-bom-2.21.6.pom",
                   "repositoryId": "google-maven-central",
                   "checksumAlgorithm": "SHA-256",
-                  "checksum": "ecf645e79390beae614e8f83e42bd3e91a166831c37a3e783f37e67e41939495",
+                  "checksum": "19cc2ca65ea8f623e035e1023ab9de8627fe5f578fafdaff491060fb4cf0b5ab",
                   "parent": {
                     "groupId": "com.fasterxml.jackson",
                     "artifactId": "jackson-parent",
@@ -1060,11 +821,11 @@
                 {
                   "groupId": "io.netty",
                   "artifactId": "netty-bom",
-                  "version": "4.1.139.Final",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.139.Final/netty-bom-4.1.139.Final.pom",
+                  "version": "4.1.138.Final",
+                  "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.138.Final/netty-bom-4.1.138.Final.pom",
                   "repositoryId": "google-maven-central",
                   "checksumAlgorithm": "SHA-256",
-                  "checksum": "986031c01daf8183bfb3f54eafca1cd1f0026cc182bcdc18e98f812f0d543735",
+                  "checksum": "f415dd0e34e8896dd3b57894f3d53b0437a3a4ea74d8b70fd8b8f39e310d197b",
                   "parent": {
                     "groupId": "org.sonatype.oss",
                     "artifactId": "oss-parent",
@@ -1076,221 +837,344 @@
                   }
                 }
               ]
-            }
-          ]
-        },
-        {
-          "groupId": "io.vertx",
-          "artifactId": "vertx-opentelemetry",
-          "version": "4.5.34",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "6012c27eb8969a90e7fdd18371458c964f31210f786f6976257fe44c3b9ec5d8",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-opentelemetry/4.5.34/vertx-opentelemetry-4.5.34.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "io.vertx",
-            "artifactId": "vertx-tracing-parent",
-            "version": "4.5.34",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-tracing-parent/4.5.34/vertx-tracing-parent-4.5.34.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "e8674e33b2125206cb9d46ca5106f1facca9c6fe6cd38863bd9e5142bb4c1d6b",
-            "parent": {
-              "groupId": "io.vertx",
-              "artifactId": "vertx-ext-parent",
-              "version": "43",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext-parent/43/vertx-ext-parent-43.pom",
+            },
+            {
+              "groupId": "org.testcontainers",
+              "artifactId": "testcontainers-bom",
+              "version": "1.21.4",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/org/testcontainers/testcontainers-bom/1.21.4/testcontainers-bom-1.21.4.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "76f1b2a99407b63b6dc23f9b786ca6633c4944afa1dbc8e3e5ce177939cf79f0",
+              "checksum": "1173c1797fcc33a79dbe3feb69740b3c53803cd2e4601ea809974bd9e1d9d43e"
+            }
+          ]
+        }
+      },
+      "selectedVersion": "3.23.1.redhat-00001",
+      "included": false,
+      "id": "io.smallrye.reactive:smallrye-mutiny-vertx-web-client:3.23.1.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "io.vertx",
+      "artifactId": "vertx-micrometer-metrics",
+      "version": "4.5.35",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "b9681c6637a017cc829d018d7921297d987f092f840be9b89d5cb44c899595e2",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-micrometer-metrics/4.5.35/vertx-micrometer-metrics-4.5.35.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.vertx",
+        "artifactId": "vertx-ext-parent",
+        "version": "43",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext-parent/43/vertx-ext-parent-43.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "76f1b2a99407b63b6dc23f9b786ca6633c4944afa1dbc8e3e5ce177939cf79f0",
+        "parent": {
+          "groupId": "io.vertx",
+          "artifactId": "vertx-ext",
+          "version": "43",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext/43/vertx-ext-43.pom",
+          "repositoryId": "google-maven-central",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "ae7d381625f0c457f97b40535344b8034385632581ea1fe0799bbcb785ca4434",
+          "parent": {
+            "groupId": "io.vertx",
+            "artifactId": "vertx-parent",
+            "version": "23",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
+            "repositoryId": "google-maven-central",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
+          }
+        }
+      },
+      "selectedVersion": "4.5.35",
+      "included": false,
+      "id": "io.vertx:vertx-micrometer-metrics:4.5.35",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": [
+        {
+          "groupId": "io.vertx",
+          "artifactId": "vertx-dependencies",
+          "version": "4.5.35",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.35/vertx-dependencies-4.5.35.pom",
+          "repositoryId": "google-maven-central",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "20943a011d9319dfcda2d0930247e4896aa2754b5c02003adb4df724207a170d",
+          "parent": {
+            "groupId": "io.vertx",
+            "artifactId": "vertx-parent",
+            "version": "23",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
+            "repositoryId": "google-maven-central",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
+          },
+          "boms": [
+            {
+              "groupId": "com.fasterxml.jackson",
+              "artifactId": "jackson-bom",
+              "version": "2.21.7",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.7/jackson-bom-2.21.7.pom",
+              "repositoryId": "google-maven-central",
+              "checksumAlgorithm": "SHA-256",
+              "checksum": "ecf645e79390beae614e8f83e42bd3e91a166831c37a3e783f37e67e41939495",
               "parent": {
-                "groupId": "io.vertx",
-                "artifactId": "vertx-ext",
-                "version": "43",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext/43/vertx-ext-43.pom",
+                "groupId": "com.fasterxml.jackson",
+                "artifactId": "jackson-parent",
+                "version": "2.21",
+                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.21/jackson-parent-2.21.pom",
                 "repositoryId": "google-maven-central",
                 "checksumAlgorithm": "SHA-256",
-                "checksum": "ae7d381625f0c457f97b40535344b8034385632581ea1fe0799bbcb785ca4434",
+                "checksum": "3851df627faeb46887b956104630b74a8bbb5f7de22e974cf15982e20e0373de",
                 "parent": {
-                  "groupId": "io.vertx",
-                  "artifactId": "vertx-parent",
-                  "version": "23",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
+                  "groupId": "com.fasterxml",
+                  "artifactId": "oss-parent",
+                  "version": "75",
+                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/75/oss-parent-75.pom",
                   "repositoryId": "google-maven-central",
                   "checksumAlgorithm": "SHA-256",
-                  "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
+                  "checksum": "fcbbf1c18c9047e6917d384f2064e21b42a58fc85fb0523a9e2e015eff7c619d"
                 }
               }
             },
-            "boms": [
-              {
-                "groupId": "io.vertx",
-                "artifactId": "vertx-dependencies",
-                "version": "4.5.34",
-                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.34/vertx-dependencies-4.5.34.pom",
-                "repositoryId": "google-maven-central",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e812c70e693a9556647694ec8e98205ad66cebf831705036d0c267cfa4a2630f",
-                "parent": {
-                  "groupId": "io.vertx",
-                  "artifactId": "vertx-parent",
-                  "version": "23",
-                  "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
-                  "repositoryId": "google-maven-central",
-                  "checksumAlgorithm": "SHA-256",
-                  "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
-                },
-                "boms": [
-                  {
-                    "groupId": "com.fasterxml.jackson",
-                    "artifactId": "jackson-bom",
-                    "version": "2.21.6",
-                    "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.6/jackson-bom-2.21.6.pom",
-                    "repositoryId": "google-maven-central",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "19cc2ca65ea8f623e035e1023ab9de8627fe5f578fafdaff491060fb4cf0b5ab",
-                    "parent": {
-                      "groupId": "com.fasterxml.jackson",
-                      "artifactId": "jackson-parent",
-                      "version": "2.21",
-                      "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.21/jackson-parent-2.21.pom",
-                      "repositoryId": "google-maven-central",
-                      "checksumAlgorithm": "SHA-256",
-                      "checksum": "3851df627faeb46887b956104630b74a8bbb5f7de22e974cf15982e20e0373de",
-                      "parent": {
-                        "groupId": "com.fasterxml",
-                        "artifactId": "oss-parent",
-                        "version": "75",
-                        "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/75/oss-parent-75.pom",
-                        "repositoryId": "google-maven-central",
-                        "checksumAlgorithm": "SHA-256",
-                        "checksum": "fcbbf1c18c9047e6917d384f2064e21b42a58fc85fb0523a9e2e015eff7c619d"
-                      }
-                    }
-                  },
-                  {
-                    "groupId": "io.netty",
-                    "artifactId": "netty-bom",
-                    "version": "4.1.138.Final",
-                    "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.138.Final/netty-bom-4.1.138.Final.pom",
-                    "repositoryId": "google-maven-central",
-                    "checksumAlgorithm": "SHA-256",
-                    "checksum": "f415dd0e34e8896dd3b57894f3d53b0437a3a4ea74d8b70fd8b8f39e310d197b",
-                    "parent": {
-                      "groupId": "org.sonatype.oss",
-                      "artifactId": "oss-parent",
-                      "version": "7",
-                      "resolved": "https://maven.repository.redhat.com/ga/org/sonatype/oss/oss-parent/7/oss-parent-7.pom",
-                      "repositoryId": "redhat",
-                      "checksumAlgorithm": "SHA-256",
-                      "checksum": "b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "selectedVersion": "4.5.34",
-          "included": false,
-          "id": "io.vertx:vertx-opentelemetry:4.5.34",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": [
             {
-              "groupId": "io.opentelemetry",
-              "artifactId": "opentelemetry-bom",
-              "version": "1.18.0",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.18.0/opentelemetry-bom-1.18.0.pom",
+              "groupId": "io.netty",
+              "artifactId": "netty-bom",
+              "version": "4.1.139.Final",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.139.Final/netty-bom-4.1.139.Final.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "d9d73b84f133ee39524754949c533b243e8d65b7e4562fbf092a061d7de84d43"
+              "checksum": "986031c01daf8183bfb3f54eafca1cd1f0026cc182bcdc18e98f812f0d543735",
+              "parent": {
+                "groupId": "org.sonatype.oss",
+                "artifactId": "oss-parent",
+                "version": "7",
+                "resolved": "https://maven.repository.redhat.com/ga/org/sonatype/oss/oss-parent/7/oss-parent-7.pom",
+                "repositoryId": "redhat",
+                "checksumAlgorithm": "SHA-256",
+                "checksum": "b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454"
+              }
             }
           ]
-        },
-        {
-          "groupId": "net.logstash.logback",
-          "artifactId": "logstash-logback-encoder",
-          "version": "8.0",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "81fcbde1b5a7d673d6c0d0d4f1e0f79b676f948e6b92b912e9e0b75097458bd3",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/net/logstash/logback/logstash-logback-encoder/8.0/logstash-logback-encoder-8.0.jar",
+        }
+      ]
+    },
+    {
+      "groupId": "io.vertx",
+      "artifactId": "vertx-opentelemetry",
+      "version": "4.5.34",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "6012c27eb8969a90e7fdd18371458c964f31210f786f6976257fe44c3b9ec5d8",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-opentelemetry/4.5.34/vertx-opentelemetry-4.5.34.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "io.vertx",
+        "artifactId": "vertx-tracing-parent",
+        "version": "4.5.34",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-tracing-parent/4.5.34/vertx-tracing-parent-4.5.34.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "e8674e33b2125206cb9d46ca5106f1facca9c6fe6cd38863bd9e5142bb4c1d6b",
+        "parent": {
+          "groupId": "io.vertx",
+          "artifactId": "vertx-ext-parent",
+          "version": "43",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext-parent/43/vertx-ext-parent-43.pom",
           "repositoryId": "google-maven-central",
-          "selectedVersion": "8.0",
-          "included": false,
-          "id": "net.logstash.logback:logstash-logback-encoder:8.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "org.apache.kafka",
-          "artifactId": "kafka-clients",
-          "version": "3.9.0",
           "checksumAlgorithm": "SHA-256",
-          "checksum": "15c1e137f2c2c94398e27abc4060a03b6bde10bf9fac15e8f70c02320b202f18",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/kafka/kafka-clients/3.9.0/kafka-clients-3.9.0.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "3.9.0",
-          "included": false,
-          "id": "org.apache.kafka:kafka-clients:3.9.0",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "org.bitbucket.b_c",
-          "artifactId": "jose4j",
-          "version": "0.9.6",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "7314af50cde9c99e8eaf43eee617a23edcc6bb43036221064355094999d837ef",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/org/bitbucket/b_c/jose4j/0.9.6/jose4j-0.9.6.jar",
-          "repositoryId": "google-maven-central",
-          "selectedVersion": "0.9.6",
-          "included": false,
-          "id": "org.bitbucket.b_c:jose4j:0.9.6",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "org.slf4j",
-          "artifactId": "slf4j-api",
-          "version": "2.0.17",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
-          "scope": "test",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar",
-          "repositoryId": "google-maven-central",
-          "parentPom": {
-            "groupId": "org.slf4j",
-            "artifactId": "slf4j-parent",
-            "version": "2.0.17",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-parent/2.0.17/slf4j-parent-2.0.17.pom",
+          "checksum": "76f1b2a99407b63b6dc23f9b786ca6633c4944afa1dbc8e3e5ce177939cf79f0",
+          "parent": {
+            "groupId": "io.vertx",
+            "artifactId": "vertx-ext",
+            "version": "43",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-ext/43/vertx-ext-43.pom",
             "repositoryId": "google-maven-central",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "95cd71e852dfdb29126e58b7b939d57ec2b2e6024391852e0b545dee082bbf3b",
+            "checksum": "ae7d381625f0c457f97b40535344b8034385632581ea1fe0799bbcb785ca4434",
             "parent": {
-              "groupId": "org.slf4j",
-              "artifactId": "slf4j-bom",
-              "version": "2.0.17",
-              "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-bom/2.0.17/slf4j-bom-2.0.17.pom",
+              "groupId": "io.vertx",
+              "artifactId": "vertx-parent",
+              "version": "23",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
               "repositoryId": "google-maven-central",
               "checksumAlgorithm": "SHA-256",
-              "checksum": "f78d27b642b4b886eb839fc102b5cd9fe7f30f37599ffe68185be4e1609031e9"
+              "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
             }
-          },
-          "selectedVersion": "2.0.17",
-          "included": false,
-          "id": "org.slf4j:slf4j-api:2.0.17",
-          "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
+          }
+        },
+        "boms": [
+          {
+            "groupId": "io.vertx",
+            "artifactId": "vertx-dependencies",
+            "version": "4.5.34",
+            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-dependencies/4.5.34/vertx-dependencies-4.5.34.pom",
+            "repositoryId": "google-maven-central",
+            "checksumAlgorithm": "SHA-256",
+            "checksum": "e812c70e693a9556647694ec8e98205ad66cebf831705036d0c267cfa4a2630f",
+            "parent": {
+              "groupId": "io.vertx",
+              "artifactId": "vertx-parent",
+              "version": "23",
+              "resolved": "https://maven-central.storage.googleapis.com/maven2/io/vertx/vertx-parent/23/vertx-parent-23.pom",
+              "repositoryId": "google-maven-central",
+              "checksumAlgorithm": "SHA-256",
+              "checksum": "e2a9133f984911ef10ca46e626942b2dff2c7a81671db57cbec0fa48ffebcd90"
+            },
+            "boms": [
+              {
+                "groupId": "com.fasterxml.jackson",
+                "artifactId": "jackson-bom",
+                "version": "2.21.6",
+                "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-bom/2.21.6/jackson-bom-2.21.6.pom",
+                "repositoryId": "google-maven-central",
+                "checksumAlgorithm": "SHA-256",
+                "checksum": "19cc2ca65ea8f623e035e1023ab9de8627fe5f578fafdaff491060fb4cf0b5ab",
+                "parent": {
+                  "groupId": "com.fasterxml.jackson",
+                  "artifactId": "jackson-parent",
+                  "version": "2.21",
+                  "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/jackson/jackson-parent/2.21/jackson-parent-2.21.pom",
+                  "repositoryId": "google-maven-central",
+                  "checksumAlgorithm": "SHA-256",
+                  "checksum": "3851df627faeb46887b956104630b74a8bbb5f7de22e974cf15982e20e0373de",
+                  "parent": {
+                    "groupId": "com.fasterxml",
+                    "artifactId": "oss-parent",
+                    "version": "75",
+                    "resolved": "https://maven-central.storage.googleapis.com/maven2/com/fasterxml/oss-parent/75/oss-parent-75.pom",
+                    "repositoryId": "google-maven-central",
+                    "checksumAlgorithm": "SHA-256",
+                    "checksum": "fcbbf1c18c9047e6917d384f2064e21b42a58fc85fb0523a9e2e015eff7c619d"
+                  }
+                }
+              },
+              {
+                "groupId": "io.netty",
+                "artifactId": "netty-bom",
+                "version": "4.1.138.Final",
+                "resolved": "https://maven-central.storage.googleapis.com/maven2/io/netty/netty-bom/4.1.138.Final/netty-bom-4.1.138.Final.pom",
+                "repositoryId": "google-maven-central",
+                "checksumAlgorithm": "SHA-256",
+                "checksum": "f415dd0e34e8896dd3b57894f3d53b0437a3a4ea74d8b70fd8b8f39e310d197b",
+                "parent": {
+                  "groupId": "org.sonatype.oss",
+                  "artifactId": "oss-parent",
+                  "version": "7",
+                  "resolved": "https://maven.repository.redhat.com/ga/org/sonatype/oss/oss-parent/7/oss-parent-7.pom",
+                  "repositoryId": "redhat",
+                  "checksumAlgorithm": "SHA-256",
+                  "checksum": "b51f8867c92b6a722499557fc3a1fdea77bdf9ef574722fe90ce436a29559454"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "selectedVersion": "4.5.34",
+      "included": false,
+      "id": "io.vertx:vertx-opentelemetry:4.5.34",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": [
+        {
+          "groupId": "io.opentelemetry",
+          "artifactId": "opentelemetry-bom",
+          "version": "1.18.0",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.18.0/opentelemetry-bom-1.18.0.pom",
+          "repositoryId": "google-maven-central",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "d9d73b84f133ee39524754949c533b243e8d65b7e4562fbf092a061d7de84d43"
         }
-      ],
+      ]
+    },
+    {
+      "groupId": "net.logstash.logback",
+      "artifactId": "logstash-logback-encoder",
+      "version": "8.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "81fcbde1b5a7d673d6c0d0d4f1e0f79b676f948e6b92b912e9e0b75097458bd3",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/net/logstash/logback/logstash-logback-encoder/8.0/logstash-logback-encoder-8.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "8.0",
+      "included": false,
+      "id": "net.logstash.logback:logstash-logback-encoder:8.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "org.apache.kafka",
+      "artifactId": "kafka-clients",
+      "version": "3.9.0",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "15c1e137f2c2c94398e27abc4060a03b6bde10bf9fac15e8f70c02320b202f18",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/org/apache/kafka/kafka-clients/3.9.0/kafka-clients-3.9.0.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "3.9.0",
+      "included": false,
+      "id": "org.apache.kafka:kafka-clients:3.9.0",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "org.bitbucket.b_c",
+      "artifactId": "jose4j",
+      "version": "0.9.6",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "7314af50cde9c99e8eaf43eee617a23edcc6bb43036221064355094999d837ef",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/org/bitbucket/b_c/jose4j/0.9.6/jose4j-0.9.6.jar",
+      "repositoryId": "google-maven-central",
+      "selectedVersion": "0.9.6",
+      "included": false,
+      "id": "org.bitbucket.b_c:jose4j:0.9.6",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "org.slf4j",
+      "artifactId": "slf4j-api",
+      "version": "2.0.17",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
+      "scope": "test",
+      "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar",
+      "repositoryId": "google-maven-central",
+      "parentPom": {
+        "groupId": "org.slf4j",
+        "artifactId": "slf4j-parent",
+        "version": "2.0.17",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-parent/2.0.17/slf4j-parent-2.0.17.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "95cd71e852dfdb29126e58b7b939d57ec2b2e6024391852e0b545dee082bbf3b",
+        "parent": {
+          "groupId": "org.slf4j",
+          "artifactId": "slf4j-bom",
+          "version": "2.0.17",
+          "resolved": "https://maven-central.storage.googleapis.com/maven2/org/slf4j/slf4j-bom/2.0.17/slf4j-bom-2.0.17.pom",
+          "repositoryId": "google-maven-central",
+          "checksumAlgorithm": "SHA-256",
+          "checksum": "f78d27b642b4b886eb839fc102b5cd9fe7f30f37599ffe68185be4e1609031e9"
+        }
+      },
+      "selectedVersion": "2.0.17",
+      "included": false,
+      "id": "org.slf4j:slf4j-api:2.0.17",
+      "parent": "dev.knative.eventing.kafka.broker:core:1.0-SNAPSHOT",
+      "children": [],
       "boms": []
     },
     {

@@ -9,43 +9,35 @@
     "relativePath": "pom.xml",
     "checksumAlgorithm": "SHA-256",
     "checksum": "",
-    "parent": {
-      "groupId": "dev.knative.eventing.kafka.broker",
-      "artifactId": "data-plane",
-      "version": "1.0-SNAPSHOT",
-      "relativePath": "../pom.xml",
-      "checksumAlgorithm": "SHA-256",
-      "checksum": "",
-      "boms": [
-        {
-          "groupId": "com.redhat.quarkus.platform",
-          "artifactId": "quarkus-bom",
-          "version": "3.33.4.SP3-redhat-00001",
-          "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
-          "repositoryId": "redhat",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
-        },
-        {
-          "groupId": "io.micrometer",
-          "artifactId": "micrometer-bom",
-          "version": "1.14.5",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
-        },
-        {
-          "groupId": "io.opentelemetry",
-          "artifactId": "opentelemetry-bom",
-          "version": "1.62.0",
-          "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
-          "repositoryId": "google-maven-central",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
-        }
-      ]
-    }
+    "boms": [
+      {
+        "groupId": "com.redhat.quarkus.platform",
+        "artifactId": "quarkus-bom",
+        "version": "3.33.4.SP3-redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
+      },
+      {
+        "groupId": "io.micrometer",
+        "artifactId": "micrometer-bom",
+        "version": "1.14.5",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
+      },
+      {
+        "groupId": "io.opentelemetry",
+        "artifactId": "opentelemetry-bom",
+        "version": "1.62.0",
+        "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
+        "repositoryId": "google-maven-central",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
+      }
+    ]
   },
   "lockFileVersion": 1,
   "dependencies": [
@@ -1041,128 +1033,75 @@
       "boms": []
     },
     {
-      "groupId": "dev.knative.eventing.kafka.broker",
-      "artifactId": "contract",
-      "version": "1.0-SNAPSHOT",
+      "groupId": "com.google.protobuf",
+      "artifactId": "protobuf-java",
+      "version": "3.25.8.redhat-00001",
       "checksumAlgorithm": "SHA-256",
-      "checksum": "",
+      "checksum": "c7a7d111c9a648ab6ea62882321a49188cf7cf4679f8b3396e8d9298ec4a20f7",
       "scope": "compile",
-      "resolved": "",
-      "repositoryId": "",
+      "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java/3.25.8.redhat-00001/protobuf-java-3.25.8.redhat-00001.jar",
+      "repositoryId": "redhat",
       "parentPom": {
-        "groupId": "dev.knative.eventing.kafka.broker",
-        "artifactId": "data-plane",
-        "version": "1.0-SNAPSHOT",
-        "relativePath": "../pom.xml",
+        "groupId": "com.google.protobuf",
+        "artifactId": "protobuf-parent",
+        "version": "3.25.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
+        "repositoryId": "redhat",
         "checksumAlgorithm": "SHA-256",
-        "checksum": "",
+        "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
         "boms": [
           {
-            "groupId": "com.redhat.quarkus.platform",
-            "artifactId": "quarkus-bom",
-            "version": "3.33.4.SP3-redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/redhat/quarkus/platform/quarkus-bom/3.33.4.SP3-redhat-00001/quarkus-bom-3.33.4.SP3-redhat-00001.pom",
+            "groupId": "com.google.protobuf",
+            "artifactId": "protobuf-bom",
+            "version": "3.25.8.redhat-00001",
+            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "f4bd38afe5c75c1f8896049d6df5867ccf7c56b81a44c3ea2212e2bcfc84e9ef"
-          },
-          {
-            "groupId": "io.micrometer",
-            "artifactId": "micrometer-bom",
-            "version": "1.14.5",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/micrometer/micrometer-bom/1.14.5/micrometer-bom-1.14.5.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "a5a2dd7a0d5b687f7d4b3152daa0a5a36aeee1cab246247597244511b030c2e5"
-          },
-          {
-            "groupId": "io.opentelemetry",
-            "artifactId": "opentelemetry-bom",
-            "version": "1.62.0",
-            "resolved": "https://maven-central.storage.googleapis.com/maven2/io/opentelemetry/opentelemetry-bom/1.62.0/opentelemetry-bom-1.62.0.pom",
-            "repositoryId": "google-maven-central",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "d854f79a86be682184cf1d7f721fa74483dc7234a8434172ccf843036a344f98"
+            "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
           }
         ]
       },
-      "selectedVersion": "1.0-SNAPSHOT",
-      "included": true,
-      "id": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
-      "children": [
-        {
-          "groupId": "com.google.protobuf",
-          "artifactId": "protobuf-java",
-          "version": "3.25.8.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "c7a7d111c9a648ab6ea62882321a49188cf7cf4679f8b3396e8d9298ec4a20f7",
-          "scope": "compile",
-          "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java/3.25.8.redhat-00001/protobuf-java-3.25.8.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
+      "selectedVersion": "3.25.8.redhat-00001",
+      "included": false,
+      "id": "com.google.protobuf:protobuf-java:3.25.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
+      "children": [],
+      "boms": []
+    },
+    {
+      "groupId": "com.google.protobuf",
+      "artifactId": "protobuf-java-util",
+      "version": "3.25.8.redhat-00001",
+      "checksumAlgorithm": "SHA-256",
+      "checksum": "13f1293aa8c50978f3d8229c9494c60d990620fe473487e164623ab9da9b0775",
+      "scope": "compile",
+      "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java-util/3.25.8.redhat-00001/protobuf-java-util-3.25.8.redhat-00001.jar",
+      "repositoryId": "redhat",
+      "parentPom": {
+        "groupId": "com.google.protobuf",
+        "artifactId": "protobuf-parent",
+        "version": "3.25.8.redhat-00001",
+        "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
+        "repositoryId": "redhat",
+        "checksumAlgorithm": "SHA-256",
+        "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
+        "boms": [
+          {
             "groupId": "com.google.protobuf",
-            "artifactId": "protobuf-parent",
+            "artifactId": "protobuf-bom",
             "version": "3.25.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
+            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
             "repositoryId": "redhat",
             "checksumAlgorithm": "SHA-256",
-            "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
-            "boms": [
-              {
-                "groupId": "com.google.protobuf",
-                "artifactId": "protobuf-bom",
-                "version": "3.25.8.redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
-              }
-            ]
-          },
-          "selectedVersion": "3.25.8.redhat-00001",
-          "included": false,
-          "id": "com.google.protobuf:protobuf-java:3.25.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        },
-        {
-          "groupId": "com.google.protobuf",
-          "artifactId": "protobuf-java-util",
-          "version": "3.25.8.redhat-00001",
-          "checksumAlgorithm": "SHA-256",
-          "checksum": "13f1293aa8c50978f3d8229c9494c60d990620fe473487e164623ab9da9b0775",
-          "scope": "compile",
-          "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-java-util/3.25.8.redhat-00001/protobuf-java-util-3.25.8.redhat-00001.jar",
-          "repositoryId": "redhat",
-          "parentPom": {
-            "groupId": "com.google.protobuf",
-            "artifactId": "protobuf-parent",
-            "version": "3.25.8.redhat-00001",
-            "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-parent/3.25.8.redhat-00001/protobuf-parent-3.25.8.redhat-00001.pom",
-            "repositoryId": "redhat",
-            "checksumAlgorithm": "SHA-256",
-            "checksum": "b3666d3a4a70c5ce672c866672053667746ce81d5dad7a2ff9e817a8674068e1",
-            "boms": [
-              {
-                "groupId": "com.google.protobuf",
-                "artifactId": "protobuf-bom",
-                "version": "3.25.8.redhat-00001",
-                "resolved": "https://maven.repository.redhat.com/ga/com/google/protobuf/protobuf-bom/3.25.8.redhat-00001/protobuf-bom-3.25.8.redhat-00001.pom",
-                "repositoryId": "redhat",
-                "checksumAlgorithm": "SHA-256",
-                "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
-              }
-            ]
-          },
-          "selectedVersion": "3.25.8.redhat-00001",
-          "included": false,
-          "id": "com.google.protobuf:protobuf-java-util:3.25.8.redhat-00001",
-          "parent": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
-          "children": [],
-          "boms": []
-        }
-      ],
+            "checksum": "e83f3df4fb4e0ec89dd4599ba3e76f4a8bfe6cda4cd116966efc6ba331cae088"
+          }
+        ]
+      },
+      "selectedVersion": "3.25.8.redhat-00001",
+      "included": false,
+      "id": "com.google.protobuf:protobuf-java-util:3.25.8.redhat-00001",
+      "parent": "dev.knative.eventing.kafka.broker:contract:1.0-SNAPSHOT",
+      "children": [],
       "boms": []
     },
     {
